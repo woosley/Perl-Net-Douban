@@ -1,0 +1,16 @@
+--- #YAML:1.0
+name:                Net-Douban
+version:             0.01
+abstract:            Perl\-Net\-Douban\ based\ on\ Moose\ and\ XML\:\:Atom
+license:             perl
+author:              
+    - woosley\.xu
+generated_by:        ExtUtils::MakeMaker version 6.42
+distribution_type:   module
+requires:     
+    Any::Moose:                    0.09
+    Moose:                         0.81
+    XML::Atom:                     0.35
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3
