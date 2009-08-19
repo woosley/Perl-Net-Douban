@@ -1,5 +1,5 @@
 package Net::Douban::Roles;
-our $VERSION = '0.07';
+our $VERSION = '0.11';
 
 use Any::Moose 'Role';
 use LWP::UserAgent;
@@ -56,7 +56,7 @@ has 'max-results' => (
 sub args {
     my $self = shift;
     my %ret;
-    for my $arg (qw/ ua apikey start-index max-result oauth/) {
+    for my $arg (qw/ ua apikey start-index max-result oauth token/) {
         $ret{$arg} = $self->{$arg};
     }
     return %ret;

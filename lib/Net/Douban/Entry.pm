@@ -1,5 +1,5 @@
 package Net::Douban::Entry;
-our $VERSION = '0.07';
+our $VERSION = '0.11';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -15,8 +15,8 @@ sub new {
     my $class = shift;
     my %args  = @_;
     my $ns    = delete $args{namespace};
-    my $obj   = $class->SUPER::new(%args);
-    return $class->meta->new_object( __INSTANCE__ => $obj, namespace => $ns );
+    my $self  = $class->SUPER::new(%args);
+    return $class->meta->new_object( __INSTANCE__ => $self, namespace => $ns );
 }
 
 sub get {
@@ -34,7 +34,7 @@ sub get {
     }
     else {
         ( $ns, $field ) = @_;
-        $ns = $self->namespace->{$ns} unless $ns =~ m{ ^http : // };
+        $ns = $self->namespace->{$ns} unless $ns =~ m{^http://};
     }
     $ns or croak "No Namespace found!";
     $self->SUPER::get( $ns, $field );
@@ -45,14 +45,36 @@ sub content {
 }
 
 sub attributes {
-    my $obj = shift;
-    my $ns  = $obj->namespace->{db};
+    my $self = shift;
+    my $ns   = $self->namespace->{db};
     my %attr;
-    foreach my $node ( $obj->elem->getChildrenByTagNameNS( $ns, 'attribute' ) )
+    foreach my $node ( $self->elem->getChildrenByTagNameNS( $ns, 'attribute' ) )
     {
         $attr{ $node->getAttribute('name') } = $node->textContent;
     }
     \%attr;
+}
+
+sub tags {
+    my $self = shift;
+    my $ns   = $self->namespace->{db};
+    my @tags;
+    foreach my $node ( $self->elem->getChildrenByTagNameNS( $ns, 'tag' ) ) {
+        push @tags, $node->getAttribute('name');
+    }
+    \@tags;
+}
+
+sub rating {
+    my $self = shift;
+    my %rating;
+    my $rate =
+      ( $self->elem->getChildrenByTagNameNS( $self->namespace->{gd}, 'rating' )
+      )[0];
+    foreach my $attr ( $rate->attributes ) {
+        $rating{ $attr->nodeName } = $attr->value;
+    }
+    \%rating;
 }
 
 sub DESTORY { }
@@ -92,6 +114,7 @@ Net::Douban::Entry
 	$entry->get('title');
 	$entry->content;
 	$entry->attributes;
+	$entry->tags;
 
 =head1 DESCRIPTION
 
@@ -101,7 +124,7 @@ Many functions not listed here are documented in L<<<<<<XML::Atom::Entry>>>>>>
 
 =head1 VERSION
 
-0.07
+0.11
 
 =over 4
 
@@ -116,6 +139,26 @@ see L<<<<<<Net::Douban::Atom>>>>>>
 =item content
 
 	$entry->content();
+
+返回content内容	
+
+=item attributes
+	
+	$entry->attributes;
+
+返回包含所有attribute的hash引用
+
+=item tags
+
+	$entry->tags;
+
+返回包括所有tag的数组引用
+
+=item rating
+
+	$entry->rating;
+
+返回一个rating的hash引用
 
 =back
 

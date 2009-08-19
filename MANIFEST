@@ -9,8 +9,8 @@ lib/Net/Douban/Atom.pm
 lib/Net/Douban/Entry.pm
 lib/Net/Douban/Roles.pm
 lib/Net/Douban/Roles/More.pm
+lib/Net/Douban/Subject.pm
 lib/Net/Douban/User.pm
-lib/log
 lib/test.pl
 t/release-pod-coverage.t
 t/release-pod-syntax.t

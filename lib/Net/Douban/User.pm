@@ -1,5 +1,5 @@
 package Net::Douban::User;
-our $VERSION = '0.07';
+our $VERSION = '0.11';
 
 use Any::Moose;
 
@@ -26,7 +26,7 @@ sub search {
 
 sub get_auth_user {
     my $self = shift;
-    return Net::Douban::Atom->new( $self->get( $self->user_url . '/@me' ) );
+    return Net::Douban::Atom->new( $self->get( $self->user_url . '/%40me' ) );
 }
 
 sub get_contacts {
@@ -76,7 +76,7 @@ Interface to douban.com api User section
 
 =head1 VERSION
 
-0.07
+0.11
 
 =head1 AUTHOR
 

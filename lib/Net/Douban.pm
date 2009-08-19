@@ -1,11 +1,12 @@
 package Net::Douban;
-our $VERSION = '0.07';
+our $VERSION = '0.11';
 
 use Any::Moose;
 
 #use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::User;
+use Net::Douban::Subject;
 
 with 'Net::Douban::Roles';
 
@@ -24,6 +25,11 @@ with 'Net::Douban::Roles';
 sub User {
     my $self = shift;
     return Net::Douban::User->new( $self->args, @_ );
+}
+
+sub Subject {
+    my $self = shift;
+    return Net::Douban::Subject->new( $self->args, @_ );
 }
 
 sub authen {
@@ -56,6 +62,7 @@ sub authen {
 
     my $access_token = $consumer->get_access_token( token => $request_token );
     $self->oauth($consumer);
+    $self->token($access_token);
 }
 
 no Any::Moose;

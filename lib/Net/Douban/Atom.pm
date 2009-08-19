@@ -1,10 +1,11 @@
 package Net::Douban::Atom;
+our $VERSION = '0.11';
+
 use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::Entry;
 
 extends qw/XML::Atom::Feed Moose::Object/;
-our $VERSION = 0.07;
 
 has 'feed' => (
     is      => 'ro',
@@ -54,7 +55,7 @@ sub get {
     }
     else {
         ( $ns, $field ) = @_;
-        $ns = $self->namespace->{$ns} unless $ns =~ m{ ^http : // };
+        $ns = $self->namespace->{$ns} unless $ns =~ m{^http://};
     }
 
     $ns or croak "No Namespace found!";
@@ -67,7 +68,6 @@ sub entries {
 
     #	$class .= '::entry';
     my @entries;
-    print $self->namespace;
     if ( $self->elem->nodeName eq 'entry' ) {
         push @entries,
           Net::Douban::Entry->new(
@@ -85,6 +85,17 @@ sub entries {
           );
     }
     @entries;
+}
+
+sub entry {
+    my $self = shift;
+    if ( $self->elem->nodeName eq 'entry' ) {
+        return Net::Douban::Entry->new(
+            Elem      => $self->elem,
+            namespace => $self->namespace,
+        );
+    }
+    return;
 }
 
 sub search_info {
@@ -145,7 +156,7 @@ Many functions not listed here are documented in L<<<<<<XML::Atom::Feed>>>>>>
 
 =head1 VERSION
 
-0.07
+0.11
 
 =over 4
 
@@ -162,26 +173,31 @@ Constructor, even though XML::Atom::Feed support feed auto-discovery from intern
 	$feed->get('db','uid');
 	$feed->get($ns,'uid');
 
-Overrider of XML::Atom::Base::get. If no NS spcefied, try to guess the correct NS from the parameter.
+XML::Atom::Base::get的重载，当没有NS给出时，尽量‘聪明的’猜测对应NS 
 
 =item AUTOLOAD
 
 	$feed->whatever;
 
-Use $feed->get('whatever') internally;
-
+当遇到没有明确定义过的函数时，Net::Douban::Atom内部自动使用$self->get('whatever')
 
 =item search_info
 
 	$feed->searchInfo();
 
-return the search result information
+返回搜索结果的信息	
 
-=item 
+=item  entries
 
 	$feed->entries;
 
-return Net::Douban::Entries instances
+返回当前feed的所有entry
+
+=item entry
+
+	$feed->entry;
+
+返回根entry，应用与情况为feed的root note是entry，即只是获得单个结果的情况(如获得一部电影信息，获得一个用户的信息等)。尽管这时$feed->whaterver也能获得相当多的结果，但仍然强烈建议使用$feed->entry->whatever来获得对应结果。此外，Net::Douban::Entry提供了比Atom更多的特性
 
 =back
 

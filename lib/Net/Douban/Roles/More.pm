@@ -1,5 +1,5 @@
 package Net::Douban::Roles::More;
-our $VERSION = '0.07';
+our $VERSION = '0.11';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
@@ -64,7 +64,7 @@ sub get {
     my %args = @_;
     croak "Use get on a unblessed value" unless blessed $self;
     my $response;
-    if ( $self->has_oauth && $self->has_token ) {
+    if ( $self->oauth && $self->token ) {
         $url = $self->build_url( $url, %args );
         $response = $self->oauth->request(
             method => 'GET',

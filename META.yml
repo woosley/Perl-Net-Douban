@@ -13,4 +13,4 @@ requires:
   Moose: 0.81
   Scalar::Util: 0
   XML::Atom: 0.35
-version: 0.07
+version: 0.11
