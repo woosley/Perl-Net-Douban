@@ -6,9 +6,16 @@ README
 dist.ini
 lib/Net/Douban.pm
 lib/Net/Douban/Atom.pm
+lib/Net/Douban/Collection.pm
+lib/Net/Douban/DBSubject.pm
 lib/Net/Douban/Entry.pm
+lib/Net/Douban/Event.pm
+lib/Net/Douban/Miniblog.pm
+lib/Net/Douban/Note.pm
+lib/Net/Douban/Review.pm
 lib/Net/Douban/Roles.pm
 lib/Net/Douban/Roles/More.pm
+lib/Net/Douban/Roles/More.pm.090820.111812
 lib/Net/Douban/Subject.pm
 lib/Net/Douban/User.pm
 lib/test.pl

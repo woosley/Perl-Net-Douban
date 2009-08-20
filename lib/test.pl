@@ -15,5 +15,9 @@ my $douban = Net::Douban->new(
 #say $use->token;
 #my $use = $douban->User(uid => 'redicaps')->get_auth_user;
 
-my $subj = $douban->Subject( subjectID => '1424406' )->get_movie;
-print Dumper $subj->entry->rating;
+my $search =
+  $douban->Subject->search_movie( tag => 'cowboy', 'max-result' => 10 );
+print Dumper $search->search_info;
+foreach my $entry ( $search->entries ) {
+    say Dumper $entry->summary;
+}

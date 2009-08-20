@@ -1,5 +1,5 @@
 package Net::Douban::Roles::More;
-our $VERSION = '0.11';
+our $VERSION = '0.13';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
@@ -62,7 +62,6 @@ sub get {
     my $self = shift;
     my $url  = shift;
     my %args = @_;
-    croak "Use get on a unblessed value" unless blessed $self;
     my $response;
     if ( $self->oauth && $self->token ) {
         $url = $self->build_url( $url, %args );
@@ -80,6 +79,70 @@ sub get {
     croak $response->status_line unless $response->is_success;
     my $xml = $response->decoded_content;
     return \$xml;
+}
+
+sub post {
+    my ( $self, $url, $xml ) = @_;
+    if ( $self->oauth && $self->token ) {
+        my $response;
+        if ( definded $xml) {
+            $response = $self->oauth->request(
+                method  => 'POST',
+                url     => $url,
+                token   => $self->token,
+                headers => [ 'Content-Type' => q{application/atom+xml} ],
+                content => $xml,
+            ) or croak $!;
+            croak $response->status_line unless $response->is_success;
+            return $response->status_line;
+        }
+        else {
+            $response = $self->oauth->request(
+                method => 'POST',
+                url    => $url,
+                token  => $self->token,
+            ) or croak $!;
+            croak $response->status_line unless $response->is_success;
+            return $response->status_line;
+        }
+    }
+    else {
+        croak "Authen needed!";
+    }
+}
+
+sub put {
+    my ( $self, $url, $xml ) = @_;
+    if ( $self->oauth && $self->token ) {
+        my $response = $self->oauth->request(
+            method  => 'PUT',
+            url     => $url,
+            token   => $self->token,
+            headers => [ 'Content-Type' => q{application/atom+xml} ],
+            content => $xml,
+        ) or croak $!;
+        croak $response->status_line unless $response->is_success;
+        return $response->status_line;
+    }
+    else {
+        croak "Authen needed!";
+    }
+}
+
+sub delete {
+    my ( $self, $url ) = @_;
+    if ( $self->oauth && $self->token ) {
+        my $response = $self->oauth->request(
+            method => 'DELETE',
+            url    => $url,
+            token  => $self->token,
+        ) or croak $!;
+        croak $response->status_line unless $response->is_success;
+        return $response->status_line;
+    }
+    else {
+        croak "Authen needed!";
+    }
 }
 
 sub build_url {

@@ -1,5 +1,5 @@
 package Net::Douban::Subject;
-our $VERSION = '0.11';
+our $VERSION = '0.13';
 
 use Any::Moose;
 use Net::Douban::Atom;
@@ -54,19 +54,19 @@ sub get_music {
 sub search_music {
     my ( $self, %args ) = @_;
     return Net::Douban::Atom->new(
-        $self->get( $self->base_url . "/music/subjects" ) );
+        $self->get( $self->base_url . "/music/subjects", %args ) );
 }
 
 sub search_book {
     my ( $self, %args ) = @_;
     return Net::Douban::Atom->new(
-        $self->get( $self->base_url . "/book/subjects" ) );
+        $self->get( $self->base_url . "/book/subjects", %args ) );
 }
 
 sub search_movie {
     my ( $self, %args ) = @_;
     return Net::Douban::Atom->new(
-        $self->get( $self->base_url . "/movie/subjects" ) );
+        $self->get( $self->base_url . "/movie/subjects", %args ) );
 }
 
 no Any::Moose;

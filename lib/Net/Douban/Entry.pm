@@ -1,7 +1,8 @@
 package Net::Douban::Entry;
-our $VERSION = '0.11';
+our $VERSION = '0.13';
 
 use Moose;
+use Net::Douban::DBSubject;
 use Carp qw/carp croak/;
 extends qw/XML::Atom::Entry/;
 
@@ -77,6 +78,15 @@ sub rating {
     \%rating;
 }
 
+sub subject {
+    my $self = shift;
+    my $subject =
+      ( $self->getChildrenByTagNameNS( $self->namespace->{db}, 'subject' ) )[0];
+    return Net::Douban::DBSubject->new(
+        elem      => $subject,
+        namespace => $self->namespace,
+    );
+}
 sub DESTORY { }
 our $AUTOLOAD;
 

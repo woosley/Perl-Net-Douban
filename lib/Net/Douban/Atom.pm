@@ -1,5 +1,5 @@
 package Net::Douban::Atom;
-our $VERSION = '0.11';
+our $VERSION = '0.13';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -77,10 +77,10 @@ sub entries {
         return @entries;
     }
     my @res = $self->SUPER::entries;
-    foreach (@res) {
+    foreach my $entry (@res) {
         push @entries,
           Net::Douban::Entry->new(
-            Elem      => $self->elem,
+            Elem      => $entry->elem,
             namespace => $self->namespace
           );
     }

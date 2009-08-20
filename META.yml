@@ -7,10 +7,10 @@ license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-name: Net-Douban
+name: Perl-Net-Douban
 requires:
   Any::Moose: 0.09
   Moose: 0.81
   Scalar::Util: 0
   XML::Atom: 0.35
-version: 0.11
+version: 0.13
