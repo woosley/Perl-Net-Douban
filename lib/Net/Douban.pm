@@ -4,33 +4,50 @@ our $VERSION = '0.13';
 use Any::Moose;
 
 #use Moose;
+use Storable;
+use Env qw/HOME/;
 use Carp qw/carp croak/;
-use Net::Douban::User;
-use Net::Douban::Subject;
+
+#use Net::Douban::User;
+#use Net::Douban::Subject;
+#use Net::Douban::Doumail;
+#use Net::Douban::Event;
+#use Net::Douban::Note;
+#use Net::Douban::Tag;
+#use Net::Douban::Token;
+#use Net::Douban::Miniblog;
+#use Net::Douban::Recommendation;
+#use Net::Douban::Collection;
+#use Net::Douban::Review;
 
 with 'Net::Douban::Roles';
 
-#has 'User' => (
-#    is      => 'rw',
-#    isa     => 'Net::Douban::User',
-#    lazy    => 1,
-#    default => sub {
-#        my $self = shift;
-#        my $user = Net::Douban::User->new( $self->args,@_ );
-#		print $user;
-#		return $user;
-#      }
-#);
+our $AUTOLOAD;
 
-sub User {
+sub AUTOLOAD {
     my $self = shift;
-    return Net::Douban::User->new( $self->args, @_ );
+    ( my $name = $AUTOLOAD ) =~ s/.*:://g;
+    return if $name eq 'DESTORY';
+    if ( $name eq 'Token' ) {
+        require Net::Douban::Token;
+        return "Net::Douban::$name"->new(
+            $self->args,
+            instance => $self,
+            @_,
+        );
+    }
+    if ( grep { /^$name$/ }
+        qw/User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog/
+      )
+    {
+        my $class = "Net::Douban::$name";
+        eval " require  $class ";
+        return "Net::Douban::$name"->new( $self->args, @_, );
+    }
+    croak "Unknow Method!";
 }
 
-sub Subject {
-    my $self = shift;
-    return Net::Douban::Subject->new( $self->args, @_ );
-}
+sub DESTORY { }
 
 sub authen {
     eval { require OAuth::Lite::Consumer };

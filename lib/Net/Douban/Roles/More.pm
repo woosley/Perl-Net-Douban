@@ -6,8 +6,16 @@ use Scalar::Util qw/blessed/;
 use Any::Moose 'Role';
 
 #use Moose::Role;
-with 'Net::Douban::Roles';
+with 'Net::Douban::Roles' => { excludes => ['apikey'] };
 
+#with 'Net::Douban::Roles';
+
+has 'apikey' => (
+    is       => 'rw',
+    required => 1,
+    isa      => 'Str',
+);
+has 'wo'       => ();
 has 'base_url' => (
     is      => 'ro',
     default => 'http://api.douban.com',
@@ -56,6 +64,11 @@ has 'recommendation_url' => (
 has 'doumail_url' => (
     is      => 'ro',
     default => "http://api.douban.com/doumail",
+);
+
+has 'token_url' => (
+    is      => 'ro',
+    default => 'http://api.douban.com/access_token',
 );
 
 sub get {

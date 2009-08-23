@@ -1,10 +1,12 @@
 package Net::Douban::Roles;
 our $VERSION = '0.13';
 
+use Carp qw/carp croak/;
 use Any::Moose 'Role';
 use LWP::UserAgent;
 
 #use Moose::Role;
+#use Smart::Comments;
 
 has 'oauth' => (
     is        => 'rw',
@@ -56,9 +58,13 @@ has 'max-results' => (
 sub args {
     my $self = shift;
     my %ret;
-    for my $arg (qw/ ua apikey start-index max-result oauth token/) {
-        $ret{$arg} = $self->{$arg};
+    for my $arg (qw/ ua apikey start-index max-results oauth token/) {
+        if ( defined $self->{$arg} ) {
+            $ret{$arg} = $self->{$arg};
+        }
     }
+
+    #	croak "api key needed" unless $self->apikey;
     return %ret;
 }
 

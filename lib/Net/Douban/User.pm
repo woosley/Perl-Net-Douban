@@ -11,36 +11,32 @@ with 'Net::Douban::Roles::More';
 has 'uid' => ( is => 'rw', isa => 'Str', );
 
 sub get_user {
-    my $self = shift;
-    my %args = @_;
-    my $uid  = $args{uid} || $self->uid;
+    my ( $self, %args ) = @_;
+    my $uid = $args{userID} || $self->uid;
     return Net::Douban::Atom->new( $self->get( $self->user_url . "/$uid" ) );
 }
 
 sub search {
-    my $self = shift;
-    my %args = @_;
+    my ( $self, %args ) = @_;
     croak "no query found in the parameters" unless exists $args{q};
     return Net::Douban::Atom->new( $self->get( $self->user_url, %args ) );
 }
 
 sub get_auth_user {
-    my $self = shift;
+    my ( $self, %args ) = @_;
     return Net::Douban::Atom->new( $self->get( $self->user_url . '/%40me' ) );
 }
 
 sub get_contacts {
-    my $self = shift;
-    my %args = shift;
-    my $uid  = delete $args{uid} || $self->uid;
+    my ( $self, %args ) = @_;
+    my $uid = delete $args{userID} || $self->uid;
     return Net::Douban::Atom->new(
         $self->get( $self->user_url . "/$uid/contacts", %args ) );
 }
 
 sub get_friends {
-    my $self = shift;
-    my %args = shift;
-    my $uid  = delete $args{uid} || $self->uid;
+    my ( $self, %args ) = @_;
+    my $uid = delete $args{userID} || $self->uid;
     return Net::Douban::Atom->new(
         $self->get( $self->user_url . "/$uid/friends", %args ) );
 }
