@@ -9,7 +9,7 @@ WriteMakefile(
   NAME      => 'Perl::Net::Douban',
   AUTHOR    => 'woosley\.xu',
   ABSTRACT  => 'Perl\-Net\-Douban\ based\ on\ Moose\ and\ XML\:\:Atom',
-  VERSION   => '0.13',
+  VERSION   => '0.17',
   EXE_FILES => [ qw() ],
   (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
   PREREQ_PM    => {

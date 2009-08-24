@@ -1,5 +1,5 @@
 package Net::Douban::Note;
-our $VERSION = '0.13';
+our $VERSION = '0.17';
 
 use Any::Moose;
 use Carp qw/carp croak/;

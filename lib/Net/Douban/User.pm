@@ -1,5 +1,5 @@
 package Net::Douban::User;
-our $VERSION = '0.13';
+our $VERSION = '0.17';
 
 use Any::Moose;
 

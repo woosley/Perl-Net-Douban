@@ -1,9 +1,11 @@
 package Net::Douban::Entry;
-our $VERSION = '0.13';
+our $VERSION = '0.17';
 
 use Moose;
 use Net::Douban::DBSubject;
 use Carp qw/carp croak/;
+
+#use Smart::Comments;
 extends qw/XML::Atom::Entry/;
 
 has 'namespace' => (
@@ -79,15 +81,23 @@ sub rating {
 }
 
 sub subject {
-    my $self = shift;
-    my $subject =
-      ( $self->getChildrenByTagNameNS( $self->namespace->{db}, 'subject' ) )[0];
-    return Net::Douban::DBSubject->new(
-        elem      => $subject,
+    my $self    = shift;
+    my $subject = (
+        $self->elem->getChildrenByTagNameNS(
+            $self->namespace->{db}, 'subject'
+        )
+    )[0];
+    ### subject: $subject
+    return unless ref $subject eq 'XML::LibXML::Element';
+    my $k = Net::Douban::DBSubject->new(
+        Elem      => $subject,
         namespace => $self->namespace,
     );
+    $k->{ns} = $self->namespace->{main};
+    return $k;
 }
-sub DESTORY { }
+
+sub DESTROY { }
 our $AUTOLOAD;
 
 sub AUTOLOAD {
@@ -95,7 +105,7 @@ sub AUTOLOAD {
     #	my $self = shift;
     #	my $class = ref $self ? ref $self : $self;
     ( my $name = $AUTOLOAD ) =~ s/.*:://g;
-    return if $name eq 'DESTORY';
+    return if $name eq 'DESTROY';
     my $sub = <<SUB;
 	sub $name {
 		my \$self =  shift;

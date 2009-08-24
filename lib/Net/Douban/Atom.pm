@@ -1,5 +1,5 @@
 package Net::Douban::Atom;
-our $VERSION = '0.13';
+our $VERSION = '0.17';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -81,7 +81,7 @@ sub entries {
         push @entries,
           Net::Douban::Entry->new(
             Elem      => $entry->elem,
-            namespace => $self->namespace
+            namespace => $self->namespace,
           );
     }
     @entries;
@@ -93,6 +93,7 @@ sub entry {
         return Net::Douban::Entry->new(
             Elem      => $self->elem,
             namespace => $self->namespace,
+            ns        => $self->namespace->{main},
         );
     }
     return;
@@ -108,7 +109,7 @@ sub search_info {
     return \%search_info;
 }
 
-sub DESTORY { }
+sub DESTROY { }
 our $AUTOLOAD;
 
 sub AUTOLOAD {
@@ -116,7 +117,7 @@ sub AUTOLOAD {
     #	my $self = shift;
     #	my $class = ref $self ? ref $self : $self;
     ( my $name = $AUTOLOAD ) =~ s/.*:://g;
-    return if $name eq 'DESTORY';
+    return if $name eq 'DESTROY';
     my $sub = <<SUB;
 	sub $name {
 		my \$self =  shift;
@@ -138,6 +139,10 @@ __END__
 
 Net::Douban::Atom
 
+=head1 VERSION
+
+version 0.17
+
 =head1 SYNOPSIS
 	
 	use Net::Douban::Atom;
@@ -153,10 +158,6 @@ Net::Douban::Atom
 This is the parser of douban.com xml based on L<<<<<<XML::Atom::Feed>>>>>> and L<<<<<<Moose>>>>>
 
 Many functions not listed here are documented in L<<<<<<XML::Atom::Feed>>>>>>
-
-=head1 VERSION
-
-0.11
 
 =over 4
 

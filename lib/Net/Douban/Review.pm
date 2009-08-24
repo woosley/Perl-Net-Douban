@@ -1,7 +1,8 @@
 package Net::Douban::Review;
-our $VERSION = '0.13';
+our $VERSION = '0.17';
 
 use Any::Moose;
+use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 

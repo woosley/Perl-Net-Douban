@@ -17,7 +17,6 @@ lib/Net/Douban/Recommendation.pm
 lib/Net/Douban/Review.pm
 lib/Net/Douban/Roles.pm
 lib/Net/Douban/Roles/More.pm
-lib/Net/Douban/Roles/More.pm.090820.111812
 lib/Net/Douban/Subject.pm
 lib/Net/Douban/Tag.pm
 lib/Net/Douban/Token.pm
@@ -27,5 +26,6 @@ t/00-load.t
 t/01-douban.t
 t/02-user.t
 t/03-subject.t
+t/04-review.t
 t/release-pod-coverage.t
 t/release-pod-syntax.t

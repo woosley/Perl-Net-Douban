@@ -1,5 +1,13 @@
-package Net::Douban::subject;
-our $VERSION = '0.13';
+package Net::Douban::DBSubject;
+our $VERSION = '0.17';
 
-use Any::Moose;
+use Moose;
 extends 'Net::Douban::Entry';
+
+sub BUILD {
+    my $self = shift;
+    print "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    $self->ns( $self->namesapce->{main} );
+}
+
+1;
