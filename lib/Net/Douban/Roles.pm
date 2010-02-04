@@ -1,16 +1,13 @@
 package Net::Douban::Roles;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
 use Carp qw/carp croak/;
-use Any::Moose 'Role';
+use Moose::Role;
 use LWP::UserAgent;
-
-#use Moose::Role;
-#use Smart::Comments;
 
 has 'oauth' => (
     is        => 'rw',
-    isa       => 'OAuth::Lite::Consumer|Undef',
+    isa       => 'OAuth::Lite::Consumer||Undef',
     predicate => 'has_oauth',
 );
 
@@ -59,7 +56,7 @@ sub args {
     my $self = shift;
     my %ret;
     for my $arg (qw/ ua apikey start-index max-results oauth token/) {
-        if ( defined $self->{$arg} ) {
+        if (defined $self->{$arg}) {
             $ret{$arg} = $self->{$arg};
         }
     }
@@ -68,6 +65,6 @@ sub args {
     return %ret;
 }
 
-no Any::Moose;
+no Moose::Role;
 1;
 __END__

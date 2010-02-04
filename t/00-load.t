@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use lib './lib';
 use Test::More tests => 13;
 
 use_ok('Net::Douban');

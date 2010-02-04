@@ -1,11 +1,11 @@
 
 
 This archive contains the distribution Perl-Net-Douban, version
-0.17:
+0.23:
 
   Perl-Net-Douban based on Moose and XML::Atom
 
-This software is copyright (c) 2009 by woosley.
+This software is copyright (c) 2010 by woosley.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

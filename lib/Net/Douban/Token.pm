@@ -1,7 +1,7 @@
 package Net::Douban::Token;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
-use Any::Moose;
+use Moose;
 use Env qw/HOME/;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
@@ -13,27 +13,26 @@ has 'instance' => (
 );
 
 sub check {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     $args{token} ||= $self->token;
-    my $return = eval { $self->get( $self->token_url . "/$args{token}" ); };
+    my $return = eval { $self->get($self->token_url . "/$args{token}"); };
     if ($@) {
         return $@ if $@ =~ /unauthorized/i;
         print $@;
         exit;
-    }
-    else {
+    } else {
         return $return;
     }
 }
 
 sub delete {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     $args{token} ||= $self->token;
-    $self->delete( $self->token_url . "/$args{token}" );
+    $self->delete($self->token_url . "/$args{token}");
 }
 
 sub store_token {
-    my ( $self, $file ) = @_;
+    my ($self, $file) = @_;
     croak "No oauth token found!" unless $self->token && $self->oauth;
     $file ||= $HOME . "./.doubanToken";
     my $token = {
@@ -44,14 +43,14 @@ sub store_token {
 }
 
 sub load_token {
-    my ( $self, $file ) = @_;
+    my ($self, $file) = @_;
     $file ||= $HOME . "./.doubanToken";
     my $token = retrieve $file;
-    $self->instance->oauth( $token->{consumer} );
-    $self->instance->token( $token->{token} );
+    $self->instance->oauth($token->{consumer});
+    $self->instance->token($token->{token});
 }
 
-no Any::Moose;
+no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;

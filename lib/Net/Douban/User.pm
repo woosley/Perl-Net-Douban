@@ -1,47 +1,48 @@
 package Net::Douban::User;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
-use Any::Moose;
-
-#use Moose;
+use Moose;
 use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
-has 'uid' => ( is => 'rw', isa => 'Str', );
+has 'uid' => (is => 'rw', isa => 'Str',);
 
 sub get_user {
-    my ( $self, %args ) = @_;
-    my $uid = $args{userID} || $self->uid;
-    return Net::Douban::Atom->new( $self->get( $self->user_url . "/$uid" ) );
+    my ($self, %args) = @_;
+    my $uid = $args{uid} || $self->uid;
+    croak "no userId found!" unless $uid;
+    return Net::Douban::Atom->new($self->get($self->user_url . "/$uid"));
 }
 
 sub search {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     croak "no query found in the parameters" unless exists $args{q};
-    return Net::Douban::Atom->new( $self->get( $self->user_url, %args ) );
+    return Net::Douban::Atom->new($self->get($self->user_url, %args));
 }
 
 sub get_auth_user {
-    my ( $self, %args ) = @_;
-    return Net::Douban::Atom->new( $self->get( $self->user_url . '/%40me' ) );
+    my ($self, %args) = @_;
+    return Net::Douban::Atom->new($self->get($self->user_url . '/%40me'));
 }
 
 sub get_contacts {
-    my ( $self, %args ) = @_;
-    my $uid = delete $args{userID} || $self->uid;
+    my ($self, %args) = @_;
+    my $uid = delete $args{uid} || $self->uid;
+    croak "no userId found!" unless $uid;
     return Net::Douban::Atom->new(
-        $self->get( $self->user_url . "/$uid/contacts", %args ) );
+        $self->get($self->user_url . "/$uid/contacts", %args));
 }
 
 sub get_friends {
-    my ( $self, %args ) = @_;
-    my $uid = delete $args{userID} || $self->uid;
+    my ($self, %args) = @_;
+    my $uid = delete $args{uid} || $self->uid;
+    croak "no userId found!" unless $uid;
     return Net::Douban::Atom->new(
-        $self->get( $self->user_url . "/$uid/friends", %args ) );
+        $self->get($self->user_url . "/$uid/friends", %args));
 }
 
-no Any::Moose;
+no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
 

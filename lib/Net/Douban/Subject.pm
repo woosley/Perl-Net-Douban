@@ -1,74 +1,70 @@
 package Net::Douban::Subject;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
-use Any::Moose;
+use Moose;
 use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
-has 'subjectID' => ( is => 'rw', isa => 'Str' );
+has 'subjectID' => (is => 'rw', isa => 'Str');
 
 sub get_book {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     my $url = $self->base_url;
 
-    if ( exists $args{isbn} ) {
+    if (exists $args{isbn}) {
         $url .= "/book/subject/isbn/$args{isbn}";
-    }
-    elsif ( exists $args{subjectID} ) {
+    } elsif (exists $args{subjectID}) {
         $url .= "/book/subject/$args{subjectID}";
-    }
-    else {
+    } else {
         $self->subjectID or croak "Not enough parameter";
         $url .= "/book/subject/" . $self->subjectID;
     }
 
-    return Net::Douban::Atom->new( $self->get($url) );
+    return Net::Douban::Atom->new($self->get($url));
 }
 
 sub get_movie {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     my $url = $self->base_url;
 
-    if ( exists $args{imdb} ) {
+    if (exists $args{imdb}) {
         $url .= "/movie/subject/isbn/$args{imdb}";
-    }
-    elsif ( exists $args{subjectID} ) {
+    } elsif (exists $args{subjectID}) {
         $url .= "/movie/subject/$args{subjectID}";
-    }
-    else {
+    } else {
         $self->subjectID or croak "Not enough parameter";
         $url .= "/movie/subject/" . $self->subjectID;
     }
 
-    return Net::Douban::Atom->new( $self->get($url) );
+    return Net::Douban::Atom->new($self->get($url));
 }
 
 sub get_music {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     $args{subjectID} ||= $self->subjectID;
     return Net::Douban::Atom->new(
-        $self->get( $self->base_url . "/music/subject/$args{subjectID}" ) );
+        $self->get($self->base_url . "/music/subject/$args{subjectID}"));
 }
 
 sub search_music {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     return Net::Douban::Atom->new(
-        $self->get( $self->base_url . "/music/subjects", %args ) );
+        $self->get($self->base_url . "/music/subjects", %args));
 }
 
 sub search_book {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     return Net::Douban::Atom->new(
-        $self->get( $self->base_url . "/book/subjects", %args ) );
+        $self->get($self->base_url . "/book/subjects", %args));
 }
 
 sub search_movie {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     return Net::Douban::Atom->new(
-        $self->get( $self->base_url . "/movie/subjects", %args ) );
+        $self->get($self->base_url . "/movie/subjects", %args));
 }
 
-no Any::Moose;
+no Moose;
 __PACKAGE__->meta->make_immutable;
 1;

@@ -1,5 +1,5 @@
 package Net::Douban::Atom;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -23,7 +23,7 @@ has 'namespace' => (
         my $elem = $_[0]->elem;
         $elem = $_[0]->{feed} if $_[0]->{feed};
         my %ns;
-        foreach ( $elem->getNamespaces ) {
+        foreach ($elem->getNamespaces) {
             my $prefix = $_->nodeName;
             my $value  = $_->value;
             $prefix =~ s/^xmlns(:)?//g;
@@ -37,29 +37,27 @@ has 'namespace' => (
 sub new {
     my $class = shift;
     my $self  = $class->SUPER::new(@_);
-    return $class->meta->new_object( __INSTANCE__ => $self );
+    return $class->meta->new_object(__INSTANCE__ => $self);
 }
 
 sub get {
     my $self = shift;
-    my ( $ns, $field );
-    if ( @_ == 1 ) {
+    my ($ns, $field);
+    if (@_ == 1) {
         $field = shift;
-        if ( $field =~ /^(.*?):(.*)$/ ) {
+        if ($field =~ /^(.*?):(.*)$/) {
             $ns    = $self->namespace->{$1};
             $field = $2;
-        }
-        else {
+        } else {
             $ns = $self->{ns};
         }
-    }
-    else {
-        ( $ns, $field ) = @_;
+    } else {
+        ($ns, $field) = @_;
         $ns = $self->namespace->{$ns} unless $ns =~ m{^http://};
     }
 
     $ns or croak "No Namespace found!";
-    $self->SUPER::get( $ns, $field );
+    $self->SUPER::get($ns, $field);
 }
 
 sub entries {
@@ -68,7 +66,7 @@ sub entries {
 
     #	$class .= '::entry';
     my @entries;
-    if ( $self->elem->nodeName eq 'entry' ) {
+    if ($self->elem->nodeName eq 'entry') {
         push @entries,
           Net::Douban::Entry->new(
             Elem      => $self->elem,
@@ -89,7 +87,7 @@ sub entries {
 
 sub entry {
     my $self = shift;
-    if ( $self->elem->nodeName eq 'entry' ) {
+    if ($self->elem->nodeName eq 'entry') {
         return Net::Douban::Entry->new(
             Elem      => $self->elem,
             namespace => $self->namespace,
@@ -105,7 +103,7 @@ sub search_info {
     my $ns = $self->namespace->{opensearch};
     my %search_info;
     $search_info{'title'} = $self->get('title');
-    $search_info{'totalResults'} = $self->get( $ns, 'totalResults' );
+    $search_info{'totalResults'} = $self->get($ns, 'totalResults');
     return \%search_info;
 }
 
@@ -116,7 +114,7 @@ sub AUTOLOAD {
 
     #	my $self = shift;
     #	my $class = ref $self ? ref $self : $self;
-    ( my $name = $AUTOLOAD ) =~ s/.*:://g;
+    (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTROY';
     my $sub = <<SUB;
 	sub $name {
@@ -127,7 +125,8 @@ SUB
     eval($sub);    ## the same as *$name = $sub;
     goto &$name;
 }
-
+no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__

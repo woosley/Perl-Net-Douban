@@ -1,5 +1,5 @@
 package Net::Douban::Entry;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
 use Moose;
 use Net::Douban::DBSubject;
@@ -19,28 +19,26 @@ sub new {
     my %args  = @_;
     my $ns    = delete $args{namespace};
     my $self  = $class->SUPER::new(%args);
-    return $class->meta->new_object( __INSTANCE__ => $self, namespace => $ns );
+    return $class->meta->new_object(__INSTANCE__ => $self, namespace => $ns);
 }
 
 sub get {
     my $self = shift;
-    my ( $ns, $field );
-    if ( @_ == 1 ) {
+    my ($ns, $field);
+    if (@_ == 1) {
         $field = shift;
-        if ( $field =~ /^(.*?):(.*)$/ ) {
+        if ($field =~ /^(.*?):(.*)$/) {
             $ns    = $self->namespace->{$1};
             $field = $2;
-        }
-        else {
+        } else {
             $ns = $self->{ns};
         }
-    }
-    else {
-        ( $ns, $field ) = @_;
+    } else {
+        ($ns, $field) = @_;
         $ns = $self->namespace->{$ns} unless $ns =~ m{^http://};
     }
     $ns or croak "No Namespace found!";
-    $self->SUPER::get( $ns, $field );
+    $self->SUPER::get($ns, $field);
 }
 
 sub content {
@@ -51,9 +49,8 @@ sub attributes {
     my $self = shift;
     my $ns   = $self->namespace->{db};
     my %attr;
-    foreach my $node ( $self->elem->getChildrenByTagNameNS( $ns, 'attribute' ) )
-    {
-        $attr{ $node->getAttribute('name') } = $node->textContent;
+    foreach my $node ($self->elem->getChildrenByTagNameNS($ns, 'attribute')) {
+        $attr{$node->getAttribute('name')} = $node->textContent;
     }
     \%attr;
 }
@@ -62,7 +59,7 @@ sub tags {
     my $self = shift;
     my $ns   = $self->namespace->{db};
     my @tags;
-    foreach my $node ( $self->elem->getChildrenByTagNameNS( $ns, 'tag' ) ) {
+    foreach my $node ($self->elem->getChildrenByTagNameNS($ns, 'tag')) {
         push @tags, $node->getAttribute('name');
     }
     \@tags;
@@ -72,10 +69,10 @@ sub rating {
     my $self = shift;
     my %rating;
     my $rate =
-      ( $self->elem->getChildrenByTagNameNS( $self->namespace->{gd}, 'rating' )
-      )[0];
-    foreach my $attr ( $rate->attributes ) {
-        $rating{ $attr->nodeName } = $attr->value;
+      ($self->elem->getChildrenByTagNameNS($self->namespace->{gd}, 'rating'))
+      [0];
+    foreach my $attr ($rate->attributes) {
+        $rating{$attr->nodeName} = $attr->value;
     }
     \%rating;
 }
@@ -104,7 +101,7 @@ sub AUTOLOAD {
 
     #	my $self = shift;
     #	my $class = ref $self ? ref $self : $self;
-    ( my $name = $AUTOLOAD ) =~ s/.*:://g;
+    (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTROY';
     my $sub = <<SUB;
 	sub $name {

@@ -1,21 +1,20 @@
 package Net::Douban::Roles::More;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
-use Any::Moose 'Role';
+use Moose::Role;
 
-#use Moose::Role;
-with 'Net::Douban::Roles' => { excludes => ['apikey'] };
-
-#with 'Net::Douban::Roles';
+with 'Net::Douban::Roles' => {excludes => ['apikey']};
 
 has 'apikey' => (
     is       => 'rw',
     required => 1,
     isa      => 'Str',
 );
-has 'wo'       => ();
+
+has 'wo' => (is => 'ro',);
+
 has 'base_url' => (
     is      => 'ro',
     default => 'http://api.douban.com',
@@ -76,17 +75,16 @@ sub get {
     my $url  = shift;
     my %args = @_;
     my $response;
-    if ( $self->oauth && $self->token ) {
-        $url = $self->build_url( $url, %args );
+    if ($self->oauth && $self->token) {
+        $url = $self->build_url($url, %args);
         $response = $self->oauth->request(
             method => 'GET',
             url    => $url,
             token  => $self->token,
         ) or croak $!;
-    }
-    else {
+    } else {
         $args{apikey} ||= $self->apikey;
-        $url = $self->build_url( $url, %args );
+        $url = $self->build_url($url, %args);
         $response = $self->ua->get($url);
     }
     croak $response->status_line unless $response->is_success;
@@ -95,21 +93,20 @@ sub get {
 }
 
 sub post {
-    my ( $self, $url, $xml ) = @_;
-    if ( $self->oauth && $self->token ) {
+    my ($self, $url, $xml) = @_;
+    if ($self->oauth && $self->token) {
         my $response;
-        if ( definded $xml) {
+        if (definded $xml) {
             $response = $self->oauth->request(
                 method  => 'POST',
                 url     => $url,
                 token   => $self->token,
-                headers => [ 'Content-Type' => q{application/atom+xml} ],
+                headers => ['Content-Type' => q{application/atom+xml}],
                 content => $xml,
             ) or croak $!;
             croak $response->status_line unless $response->is_success;
             return $response->status_line;
-        }
-        else {
+        } else {
             $response = $self->oauth->request(
                 method => 'POST',
                 url    => $url,
@@ -118,33 +115,31 @@ sub post {
             croak $response->status_line unless $response->is_success;
             return $response->status_line;
         }
-    }
-    else {
+    } else {
         croak "Authen needed!";
     }
 }
 
 sub put {
-    my ( $self, $url, $xml ) = @_;
-    if ( $self->oauth && $self->token ) {
+    my ($self, $url, $xml) = @_;
+    if ($self->oauth && $self->token) {
         my $response = $self->oauth->request(
             method  => 'PUT',
             url     => $url,
             token   => $self->token,
-            headers => [ 'Content-Type' => q{application/atom+xml} ],
+            headers => ['Content-Type' => q{application/atom+xml}],
             content => $xml,
         ) or croak $!;
         croak $response->status_line unless $response->is_success;
         return $response->status_line;
-    }
-    else {
+    } else {
         croak "Authen needed!";
     }
 }
 
 sub delete {
-    my ( $self, $url ) = @_;
-    if ( $self->oauth && $self->token ) {
+    my ($self, $url) = @_;
+    if ($self->oauth && $self->token) {
         my $response = $self->oauth->request(
             method => 'DELETE',
             url    => $url,
@@ -152,8 +147,7 @@ sub delete {
         ) or croak $!;
         croak $response->status_line unless $response->is_success;
         return $response->status_line;
-    }
-    else {
+    } else {
         croak "Authen needed!";
     }
 }
@@ -163,12 +157,12 @@ sub build_url {
     my $url  = shift;
     my %args = @_;
     my $mark = $url =~ /\?/ ? '&' : '?';
-    while ( my ( $key, $value ) = each %args ) {
+    while (my ($key, $value) = each %args) {
         $url .= $mark . "$key=$value";
         $mark = '&';
     }
     return $url;
 }
 
-no Any::Moose;
+no Moose;
 1;

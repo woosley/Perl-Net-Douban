@@ -1,24 +1,9 @@
 package Net::Douban;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
-use Any::Moose;
-
-#use Moose;
-use Storable;
+use Moose;
 use Env qw/HOME/;
 use Carp qw/carp croak/;
-
-#use Net::Douban::User;
-#use Net::Douban::Subject;
-#use Net::Douban::Doumail;
-#use Net::Douban::Event;
-#use Net::Douban::Note;
-#use Net::Douban::Tag;
-#use Net::Douban::Token;
-#use Net::Douban::Miniblog;
-#use Net::Douban::Recommendation;
-#use Net::Douban::Collection;
-#use Net::Douban::Review;
 
 with 'Net::Douban::Roles';
 
@@ -26,9 +11,9 @@ our $AUTOLOAD;
 
 sub AUTOLOAD {
     my $self = shift;
-    ( my $name = $AUTOLOAD ) =~ s/.*:://g;
+    (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTORY';
-    if ( $name eq 'Token' ) {
+    if ($name eq 'Token') {
         require Net::Douban::Token;
         return "Net::Douban::$name"->new(
             $self->args,
@@ -36,13 +21,13 @@ sub AUTOLOAD {
             @_,
         );
     }
-    if ( grep { /^$name$/ }
+    if (grep {/^$name$/}
         qw/User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog/
       )
     {
         my $class = "Net::Douban::$name";
         eval " require  $class ";
-        return "Net::Douban::$name"->new( $self->args, @_, );
+        return "Net::Douban::$name"->new($self->args, @_,);
     }
     croak "Unknow Method!";
 }
@@ -58,6 +43,7 @@ sub authen {
     my %args        = @_;
     my $api_key     = $args{apikey} || $self->apikey;
     my $private_key = $args{private_key} || $self->private_key;
+    croak "key needed\n" unless $api_key || $private_key;
 
     my $consumer = OAuth::Lite::Consumer->new(
         consumer_key       => $api_key,
@@ -70,19 +56,19 @@ sub authen {
     my $request_token = $consumer->get_request_token();
 
     print
-"sent this url to anybody whoes you want to access, ask them to click 'Agree'\n";
+      "sent this url to anybody whoes you want to access, ask them to click 'Agree'\n";
     print $consumer->url_to_authorize . "?"
       . $consumer->oauth_response->{'_content'} . "\n\n";
     print "Then press any key to Continue\n";
     <STDIN>;
     print "Please Wait...\n";
 
-    my $access_token = $consumer->get_access_token( token => $request_token );
+    my $access_token = $consumer->get_access_token(token => $request_token);
     $self->oauth($consumer);
     $self->token($access_token);
 }
 
-no Any::Moose;
+no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;

@@ -13,6 +13,8 @@ lib/Net/Douban/Entry.pm
 lib/Net/Douban/Event.pm
 lib/Net/Douban/Miniblog.pm
 lib/Net/Douban/Note.pm
+lib/Net/Douban/OAuth.pm
+lib/Net/Douban/OAuth/Consumer.pm
 lib/Net/Douban/Recommendation.pm
 lib/Net/Douban/Review.pm
 lib/Net/Douban/Roles.pm

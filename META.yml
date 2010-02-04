@@ -2,15 +2,17 @@
 abstract: 'Perl-Net-Douban based on Moose and XML::Atom'
 author:
   - woosley.xu
-generated_by: 'Dist::Zilla::Plugin::MetaYAML version 1.092200'
+generated_by: 'Dist::Zilla version 1.100160'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Perl-Net-Douban
 requires:
-  Any::Moose: 0.09
+  ExtUtils::MakeMaker: 6.11
+  LWP::Useragent: 0
   Moose: 0.81
+  Net::OAuth: 0
   Scalar::Util: 0
   XML::Atom: 0.35
-version: 0.17
+version: 0.23

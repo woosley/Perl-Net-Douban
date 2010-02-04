@@ -1,7 +1,7 @@
 package Net::Douban::Recommendation;
-our $VERSION = '0.17';
+our $VERSION = '0.23';
 
-use Any::Moose;
+use Moose;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
@@ -11,14 +11,14 @@ has 'recommendationID' => (
 );
 
 sub get_recommendation {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     $args{recommendationID} ||= $self->recommendationID;
     return Net::Douban::Atom->new(
-        $self->get( $self->recommendation_url . "/$args{recommendationID}" ) );
+        $self->get($self->recommendation_url . "/$args{recommendationID}"));
 }
 
 sub get_comments {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     $args{recommendationID} ||= $self->recommendationID;
     return Net::Douban::Atom->new(
         $self->get(
@@ -28,41 +28,41 @@ sub get_comments {
 }
 
 sub get_user_recommendations {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     my $uid = delete $args{userID} or croak "userID needed";
     return Net::Douban::Atom->new(
-        $self->get( $self->user_url . "/$uid/recommendations", %args ) );
+        $self->get($self->user_url . "/$uid/recommendations", %args));
 }
 
 sub post_recommendation {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     croak "post xml needed!" unless exists $args{xml};
-    return $self->post( $self->recommendation_url . "s", $args{xml} );
+    return $self->post($self->recommendation_url . "s", $args{xml});
 }
 
 sub delete_recommendation {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     $args{recommendationID} ||= $self->recommendationID;
     return $self->delete(
-        $self->recommendation_url . "/$args{recommendationID}" );
+        $self->recommendation_url . "/$args{recommendationID}");
 }
 
 sub post_comment {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     croak "post xml needed!" unless exists $args{xml};
     $args{recommendationID} ||= $self->recommendationID;
     return $self->delete(
-        $self->recommendation_url . "/$args{recommendationID}/comments" );
+        $self->recommendation_url . "/$args{recommendationID}/comments");
 }
 
 sub delete_comment {
-    my ( $self, %args ) = @_;
+    my ($self, %args) = @_;
     croak "commentID needed!" unless exists $args{commentID};
     $args{recommendationID} ||= $self->recommendationID;
-    return $self->delete( $self->recommendation_url
-          . "/$args{recommendationID}/comment/$args{commentID}" );
+    return $self->delete($self->recommendation_url
+          . "/$args{recommendationID}/comment/$args{commentID}");
 }
 
-no Any::Moose;
+no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
