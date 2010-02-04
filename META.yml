@@ -10,6 +10,8 @@ meta-spec:
 name: Perl-Net-Douban
 requires:
   ExtUtils::MakeMaker: 6.11
+  HTTP::Request: 0
+  HTTP::Request::Common: 0
   LWP::Useragent: 0
   Moose: 0.81
   Net::OAuth: 0

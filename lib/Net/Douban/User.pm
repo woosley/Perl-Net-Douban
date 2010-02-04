@@ -54,6 +54,10 @@ __END__
 
 Net::Douban::User
 
+=head1 VERSION
+
+version 0.23
+
 =head1 SYNOPSIS
 
 	use Net::Douban::User;
@@ -70,10 +74,6 @@ Net::Douban::User
 =head1 DESCRIPTION
 
 Interface to douban.com api User section
-
-=head1 VERSION
-
-0.11
 
 =head1 AUTHOR
 

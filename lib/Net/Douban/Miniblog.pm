@@ -46,3 +46,14 @@ sub get_miniblog {
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
+
+=pod
+=head1 NAME
+
+    Net::Douban::Collection;
+
+=head1 VERSION
+
+version 0.23
+
+=cut

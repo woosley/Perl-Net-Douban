@@ -54,3 +54,15 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
+__END__
+
+=pod
+=head1 NAME
+
+    Net::Douban::Token
+
+=head1 VERSION
+
+version 0.23
+
+=cut

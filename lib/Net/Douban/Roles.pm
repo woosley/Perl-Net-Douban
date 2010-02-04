@@ -67,4 +67,16 @@ sub args {
 
 no Moose::Role;
 1;
+
 __END__
+
+=pod
+=head1 NAME
+
+    Net::Douban::Roles
+
+=head1 VERSION
+
+version 0.23
+
+=cut

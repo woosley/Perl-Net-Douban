@@ -166,3 +166,15 @@ sub build_url {
 
 no Moose;
 1;
+__END__
+
+=pod
+=head1 NAME
+
+    Net::Douban::Roles::More
+
+=head1 VERSION
+
+version 0.23
+
+=cut

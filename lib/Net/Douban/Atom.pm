@@ -131,7 +131,6 @@ __PACKAGE__->meta->make_immutable;
 
 __END__
 
-
 =pod
 
 =head1 NAME
@@ -140,7 +139,7 @@ Net::Douban::Atom
 
 =head1 VERSION
 
-version 0.17
+version 0.23
 
 =head1 SYNOPSIS
 	

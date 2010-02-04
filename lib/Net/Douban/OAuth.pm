@@ -56,5 +56,19 @@ sub authen {
 #    content => qq{<entry xmlns:ns0="http://www.w3.org/2005/Atom" xmlns:db="http://www.douban.com/xmlns/"><content>Perl OAuth 认证成功</content></entry>},
 #);
 #
-
 }
+
+1;
+
+__END__
+
+=pod
+=head1 NAME
+
+    Net::Douban::OAuth;
+
+=head1 VERSION
+
+version 0.23
+
+=cut

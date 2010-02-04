@@ -24,6 +24,8 @@ my %WriteMakefileArgs = (
                                         'ExtUtils::MakeMaker' => '6.11',
                                         'LWP::Useragent' => '0',
                                         'XML::Atom' => '0.35',
+                                        'HTTP::Request::Common' => '0',
+                                        'HTTP::Request' => '0',
                                         'Net::OAuth' => '0',
                                         'Moose' => '0.81'
                                       }
