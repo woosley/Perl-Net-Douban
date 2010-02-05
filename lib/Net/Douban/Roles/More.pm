@@ -1,5 +1,5 @@
 package Net::Douban::Roles::More;
-our $VERSION = '0.23';
+our $VERSION = '0.41';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
@@ -75,13 +75,9 @@ sub get {
     my $url  = shift;
     my %args = @_;
     my $response;
-    if ($self->oauth && $self->token) {
+    if ($self->has_oauth) {
         $url = $self->build_url($url, %args);
-        $response = $self->oauth->request(
-            method => 'GET',
-            url    => $url,
-            token  => $self->token,
-        ) or croak $!;
+        $response = $self->oauth->get(url => $url) or croak $!;
     } else {
         $args{apikey} ||= $self->apikey;
         $url = $self->build_url($url, %args);
@@ -94,24 +90,18 @@ sub get {
 
 sub post {
     my ($self, $url, $xml) = @_;
-    if ($self->oauth && $self->token) {
+    if ($self->has_oauth) {
         my $response;
         if (definded $xml) {
-            $response = $self->oauth->request(
-                method  => 'POST',
+            $response = $self->oauth->post(
                 url     => $url,
-                token   => $self->token,
                 headers => ['Content-Type' => q{application/atom+xml}],
                 content => $xml,
             ) or croak $!;
             croak $response->status_line unless $response->is_success;
             return $response->status_line;
         } else {
-            $response = $self->oauth->request(
-                method => 'POST',
-                url    => $url,
-                token  => $self->token,
-            ) or croak $!;
+            $response = $self->oauth->post(url => $url,) or croak $!;
             croak $response->status_line unless $response->is_success;
             return $response->status_line;
         }
@@ -122,11 +112,9 @@ sub post {
 
 sub put {
     my ($self, $url, $xml) = @_;
-    if ($self->oauth && $self->token) {
-        my $response = $self->oauth->request(
-            method  => 'PUT',
+    if ($self->has_oauth) {
+        my $response = $self->oauth->put(
             url     => $url,
-            token   => $self->token,
             headers => ['Content-Type' => q{application/atom+xml}],
             content => $xml,
         ) or croak $!;
@@ -139,12 +127,8 @@ sub put {
 
 sub delete {
     my ($self, $url) = @_;
-    if ($self->oauth && $self->token) {
-        my $response = $self->oauth->request(
-            method => 'DELETE',
-            url    => $url,
-            token  => $self->token,
-        ) or croak $!;
+    if ($self->has_oauth) {
+        my $response = $self->oauth->delete(url => $url,) or croak $!;
         croak $response->status_line unless $response->is_success;
         return $response->status_line;
     } else {
@@ -165,6 +149,7 @@ sub build_url {
 }
 
 no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 __END__
 
@@ -175,6 +160,6 @@ __END__
 
 =head1 VERSION
 
-version 0.23
+version 0.41
 
 =cut

@@ -21,7 +21,7 @@ say $consumer->access_token_secret;
 say $consumer->request_token;
 say $consumer->request_token_secret;
 my $res = $consumer->get_protected_resource(
-    'request_url' => 'http://api.douban.com/people/%40me',
+    'request_url' => 'http://api.douban.com/people/Net-Douban/miniblog',
     method        => 'GET'
 );
 print $res->decoded_content;

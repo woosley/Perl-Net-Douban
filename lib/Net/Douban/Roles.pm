@@ -1,28 +1,34 @@
 package Net::Douban::Roles;
-our $VERSION = '0.23';
+our $VERSION = '0.41';
 
 use Carp qw/carp croak/;
 use Moose::Role;
-use LWP::UserAgent;
+use Scalar::Util qw/blessed/;
 
 has 'oauth' => (
     is        => 'rw',
-    isa       => 'OAuth::Lite::Consumer||Undef',
     predicate => 'has_oauth',
 );
 
-has 'token' => (
-    is        => 'rw',
-    predicate => 'has_token',
-);
+around 'oauth' => sub {
+    my $orig = shift;
+    my $self = shift;
+    if (@_) {
+        return $self->$orig(shift);
+    } else {
+        my $oauth = ${$self->$orig()};
+        $oauth = ${$oauth} unless blessed $oauth;
+        return $oauth;
+    }
+};
 
 has 'ua' => (
     is      => 'rw',
-    isa     => 'LWP::UserAgent',
     default => sub {
+        eval { require LWP::UserAgent };
+        croak $@ if $@;
         my $ua = LWP::UserAgent->new(
-            agent      => 'Perl-Net-Douban',
-            cookie_jar => {},
+            agent      => 'perl-net-douban',
             keep_alive => 4,
             timeout    => 60,
         );
@@ -77,6 +83,6 @@ __END__
 
 =head1 VERSION
 
-version 0.23
+version 0.41
 
 =cut

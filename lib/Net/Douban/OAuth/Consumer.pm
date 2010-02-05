@@ -1,7 +1,6 @@
 package Net::Douban::OAuth::Consumer;
-our $VERSION = '0.23';
+our $VERSION = 0.41;
 use Net::OAuth;
-use LWP::UserAgent;
 use HTTP::Request::Common;
 use HTTP::Request;
 use HTTP::Headers;
@@ -9,11 +8,8 @@ use Carp qw/croak carp/;
 use Moose;
 
 has 'ua' => (
-    is      => 'rw',
-    default => sub {
-        require LWP::UserAgent;
-        LWP::UserAgent->new;
-    }
+    is         => 'rw',
+    lazy_build => 1,
 );
 
 has 'consumer_key' => (
@@ -53,9 +49,8 @@ has 'access_token_path' => (
 );
 
 has 'authorize_url' => (
-    is       => 'rw',
-    isa      => 'Str',
-    required => 1,
+    is  => 'rw',
+    isa => 'Str',
 );
 
 has 'request_token' => (
@@ -84,6 +79,40 @@ has 'signature_method' => (
     default => 'HMAC-SHA1',
 
 );
+
+has 'authorized' => (
+    is      => 'rw',
+    isa     => 'Int',
+    default => 0,
+);
+### required realm for api.douban.com
+has 'realm' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => " ",
+);
+
+sub _build_ua {
+    eval { require LWP::UserAgent };
+    die $@ if $@;
+    my $ua = LWP::UserAgent->new(
+        agent        => 'perl-net-douban-' . $VERSION,
+        timeout      => 30,
+        max_redirect => 5
+    );
+    $ua->env_proxy;
+    $ua;
+}
+
+sub _gen_nonce {
+
+    my @charset = ('a' .. 'z', '0' .. '9');
+    my $nonce = '';
+    for (1 .. 30) {
+        $nonce .= $charset[rand @charset];
+    }
+    return $nonce;
+}
 
 sub get_request_token {
 
@@ -140,6 +169,7 @@ sub get_access_token {
 
         $self->access_token($res_content->token);
         $self->access_token_secret($res_content->token_secret);
+        $self->authorized(1);
 
     } else {
         croak $res->status_line;
@@ -170,22 +200,16 @@ sub mana_protected_resource {
     } else {
 
         my $header = HTTP::Headers->new(
-            'Authoriztion' => $request->to_authorization_header);
+            'Authorization' =>
+              $request->to_authorization_header($self->realm),
+            @{$args{headers}},
+        );
+
         my $http_request =
-          HTTP::Request->new($args{method}, $request->request_url,
+          HTTP::Request->new($args{method}, $request->request_url, $header,
             $args{content});
         return $self->ua->request($http_request);
     }
-}
-
-sub _gen_nonce {
-
-    my @charset = ('a' .. 'z', '0' .. '9');
-    my $nonce = '';
-    for (1 .. 30) {
-        $nonce .= $charset[rand @charset];
-    }
-    return $nonce;
 }
 
 no Moose;
@@ -203,7 +227,7 @@ Net::Douban::OAuth::Consumer
 
 =head1 VERSION
 
-version 0.23
+version 0.41
 
 =head1 SYNOPSIS
 	

@@ -1,5 +1,5 @@
 package Net::Douban::Recommendation;
-our $VERSION = '0.23';
+our $VERSION = '0.41';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -76,6 +76,6 @@ __END__
 
 =head1 VERSION
 
-version 0.23
+version 0.41
 
 =cut

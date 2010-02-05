@@ -17,16 +17,16 @@ my %WriteMakefileArgs = (
                        'AUTHOR' => 'woosley.xu',
                        'ABSTRACT' => 'Perl-Net-Douban based on Moose and XML::Atom',
                        'EXE_FILES' => [],
-                       'VERSION' => '0.23',
+                       'VERSION' => '0.41',
                        'LICENSE' => 'perl',
                        'PREREQ_PM' => {
                                         'Scalar::Util' => '0',
                                         'ExtUtils::MakeMaker' => '6.11',
-                                        'LWP::Useragent' => '0',
                                         'XML::Atom' => '0.35',
                                         'HTTP::Request::Common' => '0',
-                                        'HTTP::Request' => '0',
+                                        'LWP::UserAgent' => '0',
                                         'Net::OAuth' => '0',
+                                        'HTTP::Request' => '0',
                                         'Moose' => '0.81'
                                       }
                      );

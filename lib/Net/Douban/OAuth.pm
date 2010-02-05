@@ -1,7 +1,7 @@
 package Net::Douban::OAuth;
-our $VERSION = '0.23';
+our $VERSION = '0.41';
 use Moose;
-use OAuth::Lite::Consumer;
+use Net::Douban::OAuth::Consumer;
 
 has 'apikey' => (
     is       => 'ro',
@@ -15,47 +15,107 @@ has 'private_key' => (
     required => 1,
 );
 
-has 'oauth' => (
-    is  => 'rw',
-    isa => 'OAuth::Lite::Consumer||Undef',
+has 'consumer' => (
+    is         => 'rw',
+    lazy_build => 1,
 );
 
-# do the authentication
-sub authen {
-    my $self        = shift;
-    my $api_key     = $self->apikey;
-    my $private_key = $self->private_key;
+has 'site' => (
+    is      => 'rw',
+    default => 'http://www.douban.com',
+);
 
-    my $consumer = OAuth::Lite::Consumer->new(
-        consumer_key       => $api_key,
-        consumer_secret    => $private_key,
-        site               => q{http://www.douban.com},
-        request_token_path => q{/service/auth/request_token},
-        access_token_path  => q{/service/auth/access_token},
-        authorize_path     => q{/service/auth/authorize},
-    ) or die "$!";
-    my $request_token = $consumer->get_request_token();
+has 'request_token_path' => (
+    is      => 'rw',
+    default => '/service/auth/request_token',
+);
 
-    print
-      "sent this url to anybody whoes you want to access, ask them to click 'Agree'\n";
-    print $consumer->url_to_authorize . "?"
-      . $consumer->oauth_response->{'_content'} . "\n\n";
-    print "Then press any key to Continue\n";
-    <STDIN>;
-    print "Please Wait...\n";
+has 'access_token_path' => (
+    is      => 'rw',
+    default => '/service/auth/access_token',
+);
 
-    my $access_token = $consumer->get_access_token(token => $request_token);
-    $self->oauth($consumer);
-    $self->token($access_token);
+sub build_consumer {
 
-#my $res = $consumer->request(
-#    method  => 'POST',
-#    url     => qq{http://api.douban.com/miniblog/saying},
-#    token   => $access_token,
-#    headers => [ 'Content-Type' => q{application/atom+xml} ],
-#    content => qq{<entry xmlns:ns0="http://www.w3.org/2005/Atom" xmlns:db="http://www.douban.com/xmlns/"><content>Perl OAuth 认证成功</content></entry>},
-#);
-#
+    my $self = shift;
+    return Net::Douban::OAuth::Consumer->new(
+        consumer_key       => $self->apikey,
+        consumer_secret    => $self->private_key,
+        request_token_path => $self->request_token_path,
+        access_token_path  => $self->access_token_path,
+    );
+}
+
+sub request_token {
+    shift->consumer->get_request_token;
+}
+
+sub access_token {
+    shift->consumer->get_access_token;
+}
+
+sub get {
+
+    my $self = shift;
+    croak "unauthorized" unless $self->consumer->authorized;
+    (my $request_url = shift) or croak "url needed";
+
+    return $self->consumer->mana_protected_resource(
+        method      => 'GET',
+        request_url => $request_url,
+    );
+}
+
+sub post {
+
+    my $self = shift;
+    croak "unauthorized" unless $self->consumer->authorized;
+    my ($request_url, $content, $header) = @_;
+    croak "Url needed" unless $request_url;
+
+    if ($content) {
+        return $self->consumer->mana_protected_resource(
+            method      => 'POST',
+            request_url => $request_url,
+        );
+    } else {
+        push @{$header}, 'Content-Type' => 'application/atom+xml';
+        return $self->consumer->mana_protected_resource(
+            method      => 'POST',
+            request_url => $request_url,
+            content     => $content,
+            headers     => $header,
+        );
+    }
+}
+
+sub put {
+
+    my $self = shift;
+    croak "unauthorized" unless $self->consumer->authorized;
+    my ($request_url, $content, $header) = @_;
+    croak "Url/content needed" unless $request_url && $content;
+    push @{$header}, 'Content-Type' => 'application/atom+xml';
+
+    return $self->consumer->mana_protected_resource(
+        method      => 'PUT',
+        request_url => $request_url,
+        content     => $content,
+        headers     => $header,
+
+    );
+}
+
+sub delete {
+
+    my ($self, $request_url) = @_;
+    croak "unauthorized" unless $self->consumer->authorized;
+    croak "Url needed"   unless $request_url;
+
+    return $self->consumer->mana_protected_resource(
+        method      => 'DELETE',
+        request_url => $request_url,
+    );
 }
 
 1;
@@ -69,6 +129,6 @@ __END__
 
 =head1 VERSION
 
-version 0.23
+version 0.41
 
 =cut
