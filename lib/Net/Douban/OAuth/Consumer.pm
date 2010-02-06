@@ -1,5 +1,5 @@
 package Net::Douban::OAuth::Consumer;
-our $VERSION = 0.41;
+our $VERSION = '0.61';
 use Net::OAuth;
 use HTTP::Request::Common;
 use HTTP::Request;
@@ -11,6 +11,18 @@ has 'ua' => (
     is         => 'rw',
     lazy_build => 1,
 );
+
+sub _build_ua {
+    eval { require LWP::UserAgent };
+    die $@ if $@;
+    my $ua = LWP::UserAgent->new(
+        agent        => 'perl-net-douban-' . $VERSION,
+        timeout      => 30,
+        max_redirect => 5
+    );
+    $ua->env_proxy;
+    $ua;
+}
 
 has 'consumer_key' => (
     is       => 'rw',
@@ -91,18 +103,6 @@ has 'realm' => (
     isa     => 'Str',
     default => " ",
 );
-
-sub _build_ua {
-    eval { require LWP::UserAgent };
-    die $@ if $@;
-    my $ua = LWP::UserAgent->new(
-        agent        => 'perl-net-douban-' . $VERSION,
-        timeout      => 30,
-        max_redirect => 5
-    );
-    $ua->env_proxy;
-    $ua;
-}
 
 sub _gen_nonce {
 
@@ -227,7 +227,7 @@ Net::Douban::OAuth::Consumer
 
 =head1 VERSION
 
-version 0.41
+version 0.61
 
 =head1 SYNOPSIS
 	

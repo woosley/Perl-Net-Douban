@@ -1,5 +1,5 @@
 package Net::Douban::Miniblog;
-our $VERSION = '0.41';
+our $VERSION = '0.61';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -27,7 +27,7 @@ sub get_contact_miniblog {
 sub post_saying {
     my ($self, %args) = @_;
     croak "post xml needed!" unless exists $args{xml};
-    return $self->post($self->miniblog_url . "/saying", $args{xml});
+    return $self->post($self->miniblog_url . "/saying", %args);
 }
 
 sub delete_miniblog {
@@ -54,6 +54,6 @@ __PACKAGE__->meta->make_immutable;
 
 =head1 VERSION
 
-version 0.41
+version 0.61
 
 =cut

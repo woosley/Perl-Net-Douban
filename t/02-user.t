@@ -1,14 +1,15 @@
 use strict;
 use warnings;
+use lib 't/lib';
+use Test::Douban;
 
 #use Smart::Comments;
+my $keys = pdkeys();
 
 use Test::More tests => 10;    # last test to print
 use_ok('Net::Douban::User') or exit;
-my $user = Net::Douban::User->new(
-    apikey => '095a6df68741aaca1c0f49e395c5005e',
-    uid    => 'Net-Douban'
-);
+my $user =
+  Net::Douban::User->new(apikey => $keys->{apikey}, uid => 'Net-Douban');
 isa_ok($user, 'Net::Douban::User');
 
 my $atom = $user->get_user;

@@ -16,5 +16,6 @@ requires:
   Moose: 0.81
   Net::OAuth: 0
   Scalar::Util: 0
+  Test::More: 0
   XML::Atom: 0.35
-version: 0.41
+version: 0.61

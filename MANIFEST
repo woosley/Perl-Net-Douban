@@ -29,5 +29,7 @@ t/01-douban.t
 t/02-user.t
 t/03-subject.t
 t/04-review.t
+t/Token.t
+t/lib/Test/Douban.pm
 t/release-pod-coverage.t
 t/release-pod-syntax.t

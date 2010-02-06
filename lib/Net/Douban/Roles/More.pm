@@ -1,5 +1,5 @@
 package Net::Douban::Roles::More;
-our $VERSION = '0.41';
+our $VERSION = '0.61';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
@@ -75,9 +75,9 @@ sub get {
     my $url  = shift;
     my %args = @_;
     my $response;
-    if ($self->has_oauth) {
+    if ($self->oauth) {
         $url = $self->build_url($url, %args);
-        $response = $self->oauth->get(url => $url) or croak $!;
+        $response = $self->oauth->get($url) or croak $!;
     } else {
         $args{apikey} ||= $self->apikey;
         $url = $self->build_url($url, %args);
@@ -89,48 +89,45 @@ sub get {
 }
 
 sub post {
-    my ($self, $url, $xml) = @_;
-    if ($self->has_oauth) {
+    my ($self, $url, %args) = @_;
+    if ($self->oauth) {
         my $response;
-        if (definded $xml) {
-            $response = $self->oauth->post(
-                url     => $url,
-                headers => ['Content-Type' => q{application/atom+xml}],
-                content => $xml,
-            ) or croak $!;
+        if ($args{xml}) {
+            $response =
+              $self->oauth->post($url, $args{xml},
+                ['Content-Type' => q{application/atom+xml}],
+              ) or croak $!;
             croak $response->status_line unless $response->is_success;
-            return $response->status_line;
         } else {
             $response = $self->oauth->post(url => $url,) or croak $!;
             croak $response->status_line unless $response->is_success;
-            return $response->status_line;
         }
+        return $response;
     } else {
         croak "Authen needed!";
     }
 }
 
 sub put {
-    my ($self, $url, $xml) = @_;
-    if ($self->has_oauth) {
-        my $response = $self->oauth->put(
-            url     => $url,
-            headers => ['Content-Type' => q{application/atom+xml}],
-            content => $xml,
-        ) or croak $!;
+    my ($self, $url, %args) = @_;
+    if ($self->oauth) {
+        my $response =
+          $self->oauth->put($url, $args{xml},
+            ['Content-Type' => q{application/atom+xml}],
+          ) or croak $!;
         croak $response->status_line unless $response->is_success;
-        return $response->status_line;
+        return $response;
     } else {
         croak "Authen needed!";
     }
 }
 
 sub delete {
-    my ($self, $url) = @_;
-    if ($self->has_oauth) {
-        my $response = $self->oauth->delete(url => $url,) or croak $!;
+    my ($self, $url, %args) = @_;
+    if ($self->oauth) {
+        my $response = $self->oauth->delete($url,) or croak $!;
         croak $response->status_line unless $response->is_success;
-        return $response->status_line;
+        return $response;
     } else {
         croak "Authen needed!";
     }
@@ -148,8 +145,7 @@ sub build_url {
     return $url;
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+no Moose::Role;
 1;
 __END__
 
@@ -160,6 +156,6 @@ __END__
 
 =head1 VERSION
 
-version 0.41
+version 0.61
 
 =cut

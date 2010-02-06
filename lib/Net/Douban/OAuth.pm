@@ -1,23 +1,22 @@
 package Net::Douban::OAuth;
-our $VERSION = '0.41';
+our $VERSION = '0.61';
 use Moose;
+use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;
 
-has 'apikey' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
+has 'comsumer_key' => (
+    is  => 'ro',
+    isa => 'Str',
 );
 
-has 'private_key' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
+has 'consumer_secret' => (
+    is  => 'ro',
+    isa => 'Str',
 );
 
 has 'consumer' => (
-    is         => 'rw',
-    lazy_build => 1,
+    is      => 'rw',
+    default => \&_build_consumer,
 );
 
 has 'site' => (
@@ -35,16 +34,49 @@ has 'access_token_path' => (
     default => '/service/auth/access_token',
 );
 
-sub build_consumer {
+sub _build_consumer {
 
     my $self = shift;
+
     return Net::Douban::OAuth::Consumer->new(
-        consumer_key       => $self->apikey,
-        consumer_secret    => $self->private_key,
+        consumer_key       => $self->consumer_key,
+        consumer_secret    => $self->consumer_secret,
         request_token_path => $self->request_token_path,
         access_token_path  => $self->access_token_path,
+        site               => $self->site,
     );
 }
+
+around 'BUILDARGS' => sub {
+    my $orig = shift;
+    my $self = shift;
+    my %args = @_;
+
+    if (   $args{access_token}
+        || $args{access_token_secret}
+        || $args{request_token}
+        || $args{request_token_secret})
+    {
+        my $consumer = Net::Douban::OAuth::Consumer->new(%args);
+        return $self->$orig(@_, consumer => $consumer);
+    }
+    return $self->$orig(@_);
+};
+
+####不能new?
+#sub new_authorized {
+#    my ($self, %args) = @_;
+#    $self->BUILD(%args);
+#    $args{consumer_key} = delete $args{apikey};
+#    $args{consumer_secret} = delete $args{private_key};
+#    my $consumer = Net::Douban::OAuth::Consumer->new(
+#        authorized => 1,
+#        %args,
+#    );
+#    $self->consumer($consumer);
+#    $self->authorized(1);
+#    return $self;
+#}
 
 sub request_token {
     shift->consumer->get_request_token;
@@ -73,13 +105,12 @@ sub post {
     my ($request_url, $content, $header) = @_;
     croak "Url needed" unless $request_url;
 
-    if ($content) {
+    unless ($content) {
         return $self->consumer->mana_protected_resource(
             method      => 'POST',
             request_url => $request_url,
         );
     } else {
-        push @{$header}, 'Content-Type' => 'application/atom+xml';
         return $self->consumer->mana_protected_resource(
             method      => 'POST',
             request_url => $request_url,
@@ -95,7 +126,6 @@ sub put {
     croak "unauthorized" unless $self->consumer->authorized;
     my ($request_url, $content, $header) = @_;
     croak "Url/content needed" unless $request_url && $content;
-    push @{$header}, 'Content-Type' => 'application/atom+xml';
 
     return $self->consumer->mana_protected_resource(
         method      => 'PUT',
@@ -129,6 +159,6 @@ __END__
 
 =head1 VERSION
 
-version 0.41
+version 0.61
 
 =cut

@@ -1,5 +1,5 @@
 package Net::Douban::Entry;
-our $VERSION = '0.41';
+our $VERSION = '0.61';
 
 use Moose;
 use Net::Douban::DBSubject;

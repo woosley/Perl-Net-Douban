@@ -1,40 +1,40 @@
 package Net::Douban::Roles;
-our $VERSION = '0.41';
+our $VERSION = '0.61';
 
 use Carp qw/carp croak/;
 use Moose::Role;
 use Scalar::Util qw/blessed/;
 
-has 'oauth' => (
-    is        => 'rw',
-    predicate => 'has_oauth',
-);
+has 'oauth' => (is => 'rw');
 
 around 'oauth' => sub {
     my $orig = shift;
     my $self = shift;
     if (@_) {
-        return $self->$orig(shift);
+        $self->$orig(shift);
     } else {
-        my $oauth = ${$self->$orig()};
+        my $oauth = $self->$orig;
         $oauth = ${$oauth} unless blessed $oauth;
         return $oauth;
     }
 };
 
 has 'ua' => (
-    is      => 'rw',
-    default => sub {
-        eval { require LWP::UserAgent };
-        croak $@ if $@;
-        my $ua = LWP::UserAgent->new(
-            agent      => 'perl-net-douban',
-            keep_alive => 4,
-            timeout    => 60,
-        );
-        return $ua;
-    }
+    is         => 'rw',
+    lazy_build => 1,
 );
+
+sub _build_ua {
+    eval { require LWP::UserAgent };
+    die $@ if $@;
+    my $ua = LWP::UserAgent->new(
+        agent        => 'perl-net-douban-' . $VERSION,
+        timeout      => 30,
+        max_redirect => 5
+    );
+    $ua->env_proxy;
+    $ua;
+}
 
 has 'apikey' => (
     is  => 'rw',
@@ -61,9 +61,9 @@ has 'max-results' => (
 sub args {
     my $self = shift;
     my %ret;
-    for my $arg (qw/ ua apikey start-index max-results oauth token/) {
-        if (defined $self->{$arg}) {
-            $ret{$arg} = $self->{$arg};
+    for my $arg (qw/ ua apikey start-index max-results oauth/) {
+        if (defined $self->$arg) {
+            $ret{$arg} = $self->$arg;
         }
     }
 
@@ -83,6 +83,6 @@ __END__
 
 =head1 VERSION
 
-version 0.41
+version 0.61
 
 =cut
