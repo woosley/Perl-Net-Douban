@@ -1,10 +1,10 @@
 package Test::Douban;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 use strict;
 use warnings;
 use base qw/Exporter/;
 
-our @EXPORT    = qw/pdurls pdkeys pdtokens/;
+our @EXPORT    = qw/pdurls pdkeys pdtokens pdakeys/;
 our @EXPORT_OK = qw//;
 
 use Test::Builder;
@@ -39,6 +39,13 @@ sub pdtokens {
 
 sub pdurls {
     return $pdus;
+}
+
+sub pdakeys {
+    my $pdtsb = $pdts;
+    $pdtsb->{consumer_key}    = $pdks->{apikey};
+    $pdtsb->{consumer_secret} = $pdks->{api_secret};
+    return $pdtsb;
 }
 
 1;

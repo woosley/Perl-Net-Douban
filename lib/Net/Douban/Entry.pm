@@ -1,5 +1,5 @@
 package Net::Douban::Entry;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 
 use Moose;
 use Net::Douban::DBSubject;
@@ -123,6 +123,10 @@ __END__
 
 Net::Douban::Entry
 
+=head1 VERSION
+
+version 0.91
+
 =head1 SYNOPSIS
 	
 	use Net::Douban::Atom;
@@ -138,10 +142,6 @@ Net::Douban::Entry
 This is the parser of douban.com xml entry based on L<<<<<<XML::Atom::Entry>>>>>> and L<<<<<<Moose>>>>>
 
 Many functions not listed here are documented in L<<<<<<XML::Atom::Entry>>>>>>
-
-=head1 VERSION
-
-0.11
 
 =over 4
 

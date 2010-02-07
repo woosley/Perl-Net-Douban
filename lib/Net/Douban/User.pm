@@ -1,5 +1,5 @@
 package Net::Douban::User;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 
 use Moose;
 use Net::Douban::Atom;
@@ -56,7 +56,7 @@ Net::Douban::User
 
 =head1 VERSION
 
-version 0.61
+version 0.91
 
 =head1 SYNOPSIS
 

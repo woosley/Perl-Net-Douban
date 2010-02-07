@@ -21,7 +21,6 @@ lib/Net/Douban/Roles.pm
 lib/Net/Douban/Roles/More.pm
 lib/Net/Douban/Subject.pm
 lib/Net/Douban/Tag.pm
-lib/Net/Douban/Token.pm
 lib/Net/Douban/User.pm
 lib/test.pl
 t/00-load.t
@@ -29,7 +28,7 @@ t/01-douban.t
 t/02-user.t
 t/03-subject.t
 t/04-review.t
-t/Token.t
 t/lib/Test/Douban.pm
+t/oauth.t
 t/release-pod-coverage.t
 t/release-pod-syntax.t

@@ -1,19 +1,13 @@
 package Net::Douban::Roles::More;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
 use Moose::Role;
 
-with 'Net::Douban::Roles' => {excludes => ['apikey']};
+with 'Net::Douban::Roles';
 
-has 'apikey' => (
-    is       => 'rw',
-    required => 1,
-    isa      => 'Str',
-);
-
-has 'wo' => (is => 'ro',);
+#has 'wo' => (is => 'ro',);
 
 has 'base_url' => (
     is      => 'ro',
@@ -156,6 +150,6 @@ __END__
 
 =head1 VERSION
 
-version 0.61
+version 0.91
 
 =cut

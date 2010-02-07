@@ -1,5 +1,5 @@
 package Net::Douban::Atom;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -107,7 +107,6 @@ sub search_info {
     return \%search_info;
 }
 
-sub DESTROY { }
 our $AUTOLOAD;
 
 sub AUTOLOAD {
@@ -125,8 +124,11 @@ SUB
     eval($sub);    ## the same as *$name = $sub;
     goto &$name;
 }
+sub DESTROY { }
+
 no Moose;
-__PACKAGE__->meta->make_immutable;
+
+#__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -139,7 +141,7 @@ Net::Douban::Atom
 
 =head1 VERSION
 
-version 0.61
+version 0.91
 
 =head1 SYNOPSIS
 	

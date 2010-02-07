@@ -1,13 +1,14 @@
 package Net::Douban;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 
 use Moose;
 use Env qw/HOME/;
 use Carp qw/carp croak/;
 
-with 'Net::Douban::Roles' => {exculdes => ['oauth']};
+with 'Net::Douban::Roles';
 has 'oauth' => (is => 'rw');
-my $oauth;    ## magic global variable
+
+#my $oauth;    ## magic global variable
 ## use this to enable globle value
 #sub oauth {
 #    my $self = shift;
@@ -19,16 +20,16 @@ my $oauth;    ## magic global variable
 #    }
 #}
 
-around 'oauth' => sub {
-    my $orig = shift;
-    my $self = shift;
-    if (@_) {
-        $oauth = shift;
-        return \$oauth;
-    } else {
-        return \$oauth;
-    }
-};
+#around 'oauth' => sub {
+#    my $orig = shift;
+#    my $self = shift;
+#    if(@_){
+#        $oauth = shift;
+#        return \$oauth;
+#    }else{
+#        return \$oauth;
+#    }
+#};
 
 our $AUTOLOAD;
 
@@ -58,15 +59,16 @@ sub AUTOLOAD {
 
 sub DESTORY { }
 
-around 'BUILDARGS' => sub {
-    my $orig = shift;
-    my $self = shift;
-    my %args = @_;
-    my $auth = delete $args{oauth} if exists $args{oauth};
-    $oauth = $auth;
-    $self->$orig(%args);
-};
-
+#deprecated in order to keep it simple
+#around 'BUILDARGS' => sub {
+#    my $orig = shift;
+#    my $self = shift;
+#    my %args = @_;
+#    my $auth = delete $args{oauth} if exists $args{oauth};
+#    $oauth = $auth;
+#    $self->$orig(%args);
+#};
+#
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
@@ -81,6 +83,6 @@ Net::Douban
 
 =head1 VERSION
 
-version 0.61
+version 0.91
 
 =cut

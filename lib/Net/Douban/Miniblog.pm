@@ -1,7 +1,8 @@
 package Net::Douban::Miniblog;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 
 use Moose;
+use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
@@ -54,6 +55,6 @@ __PACKAGE__->meta->make_immutable;
 
 =head1 VERSION
 
-version 0.61
+version 0.91
 
 =cut

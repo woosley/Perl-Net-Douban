@@ -22,15 +22,17 @@ my $consumer = Net::Douban::OAuth->new(
     authorized           => 1,
 );
 my $douban = Net::Douban->new(
-    oauth      => $consumer,
-    apikey     => $key,
-    api_secret => $sec_key,
+    oauth => $consumer,
+
+#    apikey => $key,
+#    api_secret => $sec_key,);
 );
 print $douban->oauth();
-my $content = <<'EOF';
+my $time    = localtime(time);
+my $content = <<"EOF";
 <?xml version='1.0' encoding='UTF-8'?>
 <entry xmlns:ns0="http://www.w3.org/2005/Atom" xmlns:db="http://www.douban.com/xmlns/">
-<content>test from junxter</content>
+<content>test Perl-Net-Douban: $time</content>
 </entry>
 EOF
 my $res = $douban->Miniblog->post_saying(xml => $content);

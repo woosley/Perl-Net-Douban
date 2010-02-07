@@ -1,5 +1,5 @@
 package Net::Douban::Roles;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 
 use Carp qw/carp croak/;
 use Moose::Role;
@@ -7,17 +7,17 @@ use Scalar::Util qw/blessed/;
 
 has 'oauth' => (is => 'rw');
 
-around 'oauth' => sub {
-    my $orig = shift;
-    my $self = shift;
-    if (@_) {
-        $self->$orig(shift);
-    } else {
-        my $oauth = $self->$orig;
-        $oauth = ${$oauth} unless blessed $oauth;
-        return $oauth;
-    }
-};
+#around 'oauth'  => sub {
+#    my $orig = shift;
+#    my $self = shift;
+#    if (@_) {
+#        $self->$orig(shift);
+#    }else{
+#        my $oauth = $self->$orig;
+#        $oauth = ${$oauth} unless blessed $oauth;
+#        return $oauth;
+#    }
+#};
 
 has 'ua' => (
     is         => 'rw',
@@ -28,7 +28,7 @@ sub _build_ua {
     eval { require LWP::UserAgent };
     die $@ if $@;
     my $ua = LWP::UserAgent->new(
-        agent        => 'perl-net-douban-' . $VERSION,
+        agent        => 'perl-net-douban-',
         timeout      => 30,
         max_redirect => 5
     );
@@ -71,6 +71,15 @@ sub args {
     return %ret;
 }
 
+#around 'BUILDARGS' => sub {
+#    my $orig = shift;
+#    my $self = shift;
+#    my %args = @_;
+#    unless ($args{oauth} || $args{apikey}){
+#        croak "oauth or apikey needed";
+#    }
+#}
+
 no Moose::Role;
 1;
 
@@ -83,6 +92,6 @@ __END__
 
 =head1 VERSION
 
-version 0.61
+version 0.91
 
 =cut

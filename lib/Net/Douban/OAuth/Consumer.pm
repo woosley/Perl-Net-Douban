@@ -1,5 +1,5 @@
 package Net::Douban::OAuth::Consumer;
-our $VERSION = '0.61';
+our $VERSION = '0.91';
 use Net::OAuth;
 use HTTP::Request::Common;
 use HTTP::Request;
@@ -16,7 +16,7 @@ sub _build_ua {
     eval { require LWP::UserAgent };
     die $@ if $@;
     my $ua = LWP::UserAgent->new(
-        agent        => 'perl-net-douban-' . $VERSION,
+        agent        => 'perl-net-douban-',
         timeout      => 30,
         max_redirect => 5
     );
@@ -227,7 +227,7 @@ Net::Douban::OAuth::Consumer
 
 =head1 VERSION
 
-version 0.61
+version 0.91
 
 =head1 SYNOPSIS
 	
