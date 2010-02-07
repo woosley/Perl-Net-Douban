@@ -1,5 +1,5 @@
 package Net::Douban::Doumail;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -77,6 +77,57 @@ __PACKAGE__->meta->make_immutable;
 
 =head1 VERSION
 
-version 0.91
+version 1.01
+
+=head1 SYNOPSIS
+
+	use Net::Douban::Doumail;
+	my $user = Net::Douban::Doumail->new(
+        ...
+	);
+
+=head1 DESCRIPTION
+
+Interface to douban.com API  mail section
+
+=head1 METHODS
+
+=over
+
+=item B<inbox>
+
+=item B<unread>
+
+=item B<outbox>
+
+=item B<get_doumail>
+
+=item B<post_doumail>
+
+=item B<delete_doumail>
+
+=item B<mark_read>
+
+=item B<delete>
+
+=item B<mark>
+
+=back
+
+=head1 SEE ALSO
+
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+
+=head1 AUTHOR
+
+woosley.xu<woosley.xu@gmail.com>
+
+=head1 COPYRIGHT
+	
+Copyright (C) 2010 by Woosley.Xu
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.10.0 or,
+at your option, any later version of Perl 5 you may have available.
 
 =cut

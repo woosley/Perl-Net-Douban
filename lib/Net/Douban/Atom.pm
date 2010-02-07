@@ -1,5 +1,5 @@
 package Net::Douban::Atom;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -141,7 +141,7 @@ Net::Douban::Atom
 
 =head1 VERSION
 
-version 0.91
+version 1.01
 
 =head1 SYNOPSIS
 	
@@ -161,13 +161,13 @@ Many functions not listed here are documented in L<<<<<<XML::Atom::Feed>>>>>>
 
 =over 4
 
-=item new
+=item B<new>
 	
 	$feed = Net::Douban::Atom->new(\$xml);
 
 Constructor, even though XML::Atom::Feed support feed auto-discovery from internet, I do not recommend to do that.
 
-=item get
+=item B<get>
 	
 	$feed->get('title');
 	$feed->get('db:uid');
@@ -176,40 +176,46 @@ Constructor, even though XML::Atom::Feed support feed auto-discovery from intern
 
 XML::Atom::Base::get的重载，当没有NS给出时，尽量‘聪明的’猜测对应NS 
 
-=item AUTOLOAD
-
-	$feed->whatever;
-
-当遇到没有明确定义过的函数时，Net::Douban::Atom内部自动使用$self->get('whatever')
-
-=item search_info
+=item B<search_info>
 
 	$feed->searchInfo();
 
 返回搜索结果的信息	
 
-=item  entries
+=item  B<entries>
 
 	$feed->entries;
 
 返回当前feed的所有entry
 
-=item entry
+=item B<entry>
 
 	$feed->entry;
 
 返回根entry，应用与情况为feed的root note是entry，即只是获得单个结果的情况(如获得一部电影信息，获得一个用户的信息等)。尽管这时$feed->whaterver也能获得相当多的结果，但仍然强烈建议使用$feed->entry->whatever来获得对应结果。此外，Net::Douban::Entry提供了比Atom更多的特性
 
+=item B<AUTOLOAD>
+
+	$feed->whatever;
+
+当遇到没有明确定义过的函数时，Net::Douban::Atom内部自动使用$self->get('whatever')
+
 =back
+
+=head1 SEE ALSO
+
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
 
 =head1 AUTHOR
 
-woosley.xu
+woosley.xu<woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
-
-Copyright (C) 2009 by Woosley.Xu
+	
+Copyright (C) 2010 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,
 at your option, any later version of Perl 5 you may have available.
+
+=cut

@@ -1,5 +1,5 @@
 package Net::Douban::Subject;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 
 use Moose;
 use Net::Douban::Atom;
@@ -77,6 +77,6 @@ __END__
 
 =head1 VERSION
 
-version 0.91
+version 1.01
 
 =cut

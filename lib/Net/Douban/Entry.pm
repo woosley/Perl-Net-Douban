@@ -1,5 +1,5 @@
 package Net::Douban::Entry;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 
 use Moose;
 use Net::Douban::DBSubject;
@@ -125,7 +125,7 @@ Net::Douban::Entry
 
 =head1 VERSION
 
-version 0.91
+version 1.01
 
 =head1 SYNOPSIS
 	
@@ -179,13 +179,17 @@ see L<<<<<<Net::Douban::Atom>>>>>>
 
 =back
 
+=head1 SEE ALSO
+
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+
 =head1 AUTHOR
 
-woosley.xu
+woosley.xu<redicaps@gmail.com>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009 by Woosley.Xu
+Copyright (C) 2010 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

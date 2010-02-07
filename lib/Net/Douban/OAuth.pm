@@ -1,5 +1,5 @@
 package Net::Douban::OAuth;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;
@@ -163,6 +163,60 @@ __END__
 
 =head1 VERSION
 
-version 0.91
+version 1.01
+
+=head1 SYNOPSIS
+    
+    my $oauth = Net::Douban::OAuth->new(
+        consumer_key => ,
+        consumer_secret => ,
+        site => ,
+        request_token_path => ,
+        access_token_path =>, 
+    );
+
+    $oauth->request_token;
+    $oauth->access_token;
+
+
+=head1 DESCRIPTION
+    
+OAuth object for douban.com base on L<Net::OAuth>
+
+=head1 METHOD
+
+=over
+
+=item B<request_token>
+
+get request token into $oauth->consumer
+
+=item B<access_token>
+    
+get access_token into $oauth->consumer
+
+=item B<HTTP Request Methods>
+    
+    get
+    post
+    put
+    delete
+
+=back
+
+=head1 SEE ALSO
+    
+L<Net::Douban> L<Net::OAuth> L<Moose> 
+
+=head1 AUTHOR
+
+woosley.xu<redicaps@gmail.com>
+
+=head1 COPYRIGHT & LICENSE
+
+This software is copyright (c) 2010 by woosley.xu.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

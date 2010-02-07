@@ -1,5 +1,5 @@
 package Net::Douban::Collection;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -54,12 +54,59 @@ __PACKAGE__->meta->make_immutable;
 __END__
 
 =pod
+
 =head1 NAME
 
     Net::Douban::Collection;
 
 =head1 VERSION
 
-version 0.91
+version 1.01
+
+=head1 SYNOPSIS
+
+	use Net::Douban::Collection;
+	my $user = Net::Douban::Collection->new(
+        
+		collectionID => '....',
+        # or
+        oauth => $consumer,
+	);
+
+=head1 DESCRIPTION
+
+Interface to douban.com API collection section
+
+=head1 METHODS
+
+=over
+
+=item B<get_collection>
+
+=item B<get_user_collection>
+
+=item B<add_collection>
+
+=item B<put_collection>
+
+=item B<delete_collection>
+
+=back
+
+=head1 SEE ALSO
+
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+
+=head1 AUTHOR
+
+woosley.xu<woosley.xu@gmail.com>
+
+=head1 COPYRIGHT
+	
+Copyright (C) 2010 by Woosley.Xu
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.10.0 or,
+at your option, any later version of Perl 5 you may have available.
 
 =cut

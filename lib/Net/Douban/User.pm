@@ -1,18 +1,18 @@
 package Net::Douban::User;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 
 use Moose;
 use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
-has 'uid' => (is => 'rw', isa => 'Str',);
+has 'userID' => (is => 'rw', isa => 'Str',);
 
 sub get_user {
     my ($self, %args) = @_;
-    my $uid = $args{uid} || $self->uid;
-    croak "no userId found!" unless $uid;
-    return Net::Douban::Atom->new($self->get($self->user_url . "/$uid"));
+    my $userID = $args{userID} || $self->userID;
+    croak "no userId found!" unless $userID;
+    return Net::Douban::Atom->new($self->get($self->user_url . "/$userID"));
 }
 
 sub search {
@@ -28,18 +28,18 @@ sub get_auth_user {
 
 sub get_contacts {
     my ($self, %args) = @_;
-    my $uid = delete $args{uid} || $self->uid;
-    croak "no userId found!" unless $uid;
+    my $userID = delete $args{userID} || $self->userID;
+    croak "no userId found!" unless $userID;
     return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$uid/contacts", %args));
+        $self->get($self->user_url . "/$userID/contacts", %args));
 }
 
 sub get_friends {
     my ($self, %args) = @_;
-    my $uid = delete $args{uid} || $self->uid;
-    croak "no userId found!" unless $uid;
+    my $userID = delete $args{userID} || $self->userID;
+    croak "no userId found!" unless $userID;
     return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$uid/friends", %args));
+        $self->get($self->user_url . "/$userID/friends", %args));
 }
 
 no Moose;
@@ -56,32 +56,54 @@ Net::Douban::User
 
 =head1 VERSION
 
-version 0.91
+version 1.01
 
 =head1 SYNOPSIS
 
 	use Net::Douban::User;
 	my $user = Net::Douban::User->new(
-		uid => 'redicaps',
+		userID => 'Net-Douban',
 		apikey => '....',
-		private_key => '....',
+        # or
+        oauth => $consumer,
 	);
-	$user->get_user;
-	$user->get_friends;
-	$user->get_contacts;
-	$user->uid('abei');
+	$user->userID('abei');
+
+	$atom = $user->get_user;
+	$atom = $user->get_friends;
+	$atom = $user->get_contacts;
 
 =head1 DESCRIPTION
 
-Interface to douban.com api User section
+Interface to douban.com API User section
+
+=head1 METHODS
+
+=over
+
+=item B<get_user>
+
+=item B<get_contacts>
+
+=item B<get_friends>
+
+=item B<get_auth_user>
+
+=item B<search>
+
+=back
+
+=head1 SEE ALSO
+
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
 
 =head1 AUTHOR
 
-woosley.xu
+woosley.xu<redicaps@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2009 by Woosley.Xu
+Copyright (C) 2010 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

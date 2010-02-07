@@ -1,5 +1,5 @@
 package Net::Douban::DBSubject;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 
 use Moose;
 extends 'Net::Douban::Entry';
@@ -11,14 +11,3 @@ sub BUILD {
 }
 
 1;
-
-=pod
-=head1 NAME
-
-    Net::Douban::Collection;
-
-=head1 VERSION
-
-version 0.91
-
-=cut

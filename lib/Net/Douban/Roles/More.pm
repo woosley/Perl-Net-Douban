@@ -1,5 +1,5 @@
 package Net::Douban::Roles::More;
-our $VERSION = '0.91';
+our $VERSION = '1.01';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
@@ -150,6 +150,6 @@ __END__
 
 =head1 VERSION
 
-version 0.91
+version 1.01
 
 =cut
