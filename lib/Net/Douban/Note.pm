@@ -1,5 +1,5 @@
 package Net::Douban::Note;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -56,6 +56,6 @@ __END__
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =cut

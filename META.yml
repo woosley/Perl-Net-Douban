@@ -1,5 +1,5 @@
 ---
-abstract: 'Perl-Net-Douban based on Moose and XML::Atom'
+abstract: 'Perl client wrapper for Chinese website douban.com API'
 author:
   - woosley.xu
 generated_by: 'Dist::Zilla version 1.100160'
@@ -18,4 +18,4 @@ requires:
   Scalar::Util: 0
   Test::More: 0
   XML::Atom: 0.35
-version: 1.02
+version: 1.03

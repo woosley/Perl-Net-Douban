@@ -1,5 +1,5 @@
 package Net::Douban::Entry;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use Moose;
 use Net::Douban::DBSubject;
@@ -116,8 +116,9 @@ SUB
 
 __END__
 
-
 =pod
+
+=encoding utf8
 
 =head1 NAME
 
@@ -125,7 +126,7 @@ Net::Douban::Entry
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =head1 SYNOPSIS
 	
@@ -139,19 +140,19 @@ version 1.02
 
 =head1 DESCRIPTION
 
-This is the parser of douban.com xml entry based on L<<<<<<XML::Atom::Entry>>>>>> and L<<<<<<Moose>>>>>
+This is the parser of douban.com xml entry based on L<XML::Atom::Entry> and L<Moose>
 
-Many functions not listed here are documented in L<<<<<<XML::Atom::Entry>>>>>>
+Many functions not listed here are documented in L<XML::Atom::Entry>
 
 =over 4
 
 =item get
 
-see L<<<<<<Net::Douban::Atom>>>>>>
+see L<Net::Douban::Atom>
 
 =item AUTOLOAD
 
-see L<<<<<<Net::Douban::Atom>>>>>>
+see L<Net::Douban::Atom>
 
 =item content
 

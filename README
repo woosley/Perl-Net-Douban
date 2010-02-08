@@ -1,9 +1,9 @@
 
 
 This archive contains the distribution Perl-Net-Douban, version
-1.02:
+1.03:
 
-  Perl-Net-Douban based on Moose and XML::Atom
+  Perl client wrapper for Chinese website douban.com API
 
 This software is copyright (c) 2010 by woosley.xu.
 

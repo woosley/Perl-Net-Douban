@@ -1,5 +1,5 @@
 package Net::Douban::OAuth;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;
@@ -157,13 +157,16 @@ sub validate {
 __END__
 
 =pod
+
+=encoding utf8
+
 =head1 NAME
 
-    Net::Douban::OAuth;
+    Net::Douban::OAuth
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =head1 SYNOPSIS
     

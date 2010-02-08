@@ -1,5 +1,5 @@
 package Net::Douban::Collection;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -57,11 +57,11 @@ __END__
 
 =head1 NAME
 
-    Net::Douban::Collection;
+    Net::Douban::Collection
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =head1 SYNOPSIS
 
@@ -95,7 +95,7 @@ Interface to douban.com API collection section
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
 
 =head1 AUTHOR
 

@@ -1,5 +1,5 @@
 package Net::Douban::Atom;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -135,13 +135,15 @@ __END__
 
 =pod
 
+=encoding utf8
+
 =head1 NAME
 
 Net::Douban::Atom
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =head1 SYNOPSIS
 	
@@ -204,7 +206,7 @@ XML::Atom::Base::get的重载，当没有NS给出时，尽量‘聪明的’猜�
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
 
 =head1 AUTHOR
 

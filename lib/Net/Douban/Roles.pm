@@ -1,5 +1,5 @@
 package Net::Douban::Roles;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use Carp qw/carp croak/;
 use Moose::Role;
@@ -86,12 +86,13 @@ no Moose::Role;
 __END__
 
 =pod
+
 =head1 NAME
 
     Net::Douban::Roles
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =cut

@@ -1,5 +1,5 @@
 package Net::Douban;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -81,7 +81,7 @@ Net::Douban
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =head1 SYNOPSIS
     
@@ -90,7 +90,7 @@ version 1.02
     my $consumer = Net::Douban::OAuth->new(...);
     my $client = Net::Douban->new( oauth =>$consumer);
 
-    my $atom = $client->User(uid => 'Net-Douban')->get_user;
+    my $atom = $client->User(userID => 'Net-Douban')->get_user;
     print $atom->id;
     ....
 
@@ -114,13 +114,14 @@ Net::Douban is a perl client wapper on the Chinese website 'Douban.com' API.
     #Net::Douban::Event object
     $clent->Event;
     ...
+
 Auto-generated objects include: B<User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog OAuth>
 
 =back
 
 =head1 SEE ALSO
     
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
 
 =head1 AUTHOR
 

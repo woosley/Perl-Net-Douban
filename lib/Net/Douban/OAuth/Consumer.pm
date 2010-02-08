@@ -1,5 +1,5 @@
 package Net::Douban::OAuth::Consumer;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 use Net::OAuth;
 use HTTP::Request::Common;
 use HTTP::Request;
@@ -227,74 +227,19 @@ Net::Douban::OAuth::Consumer
 
 =head1 VERSION
 
-version 1.02
-
-=head1 SYNOPSIS
-	
-	use Net::Douban::Atom;
-	my $feed = Net::Douban::Atom->new(\$xml);
-	$feed->title;
-	$feed->id;
-	$feed->get('db:uid');
-	$feed->content;
-	my @entries = $feed->entries;
+version 1.03
 
 =head1 DESCRIPTION
 
-This is the parser of douban.com xml based on L<<<<<<XML::Atom::Feed>>>>>> and L<<<<<<Moose>>>>>
-
-Many functions not listed here are documented in L<<<<<<XML::Atom::Feed>>>>>>
-
-=over 4
-
-=item new
-	
-	$feed = Net::Douban::Atom->new(\$xml);
-
-Constructor, even though XML::Atom::Feed support feed auto-discovery from internet, I do not recommend to do that.
-
-=item get
-	
-	$feed->get('title');
-	$feed->get('db:uid');
-	$feed->get('db','uid');
-	$feed->get($ns,'uid');
-
-XML::Atom::Base::get的重载，当没有NS给出时，尽量‘聪明的’猜测对应NS 
-
-=item AUTOLOAD
-
-	$feed->whatever;
-
-当遇到没有明确定义过的函数时，Net::Douban::Atom内部自动使用$self->get('whatever')
-
-=item search_info
-
-	$feed->searchInfo();
-
-返回搜索结果的信息	
-
-=item  entries
-
-	$feed->entries;
-
-返回当前feed的所有entry
-
-=item entry
-
-	$feed->entry;
-
-返回根entry，应用与情况为feed的root note是entry，即只是获得单个结果的情况(如获得一部电影信息，获得一个用户的信息等)。尽管这时$feed->whaterver也能获得相当多的结果，但仍然强烈建议使用$feed->entry->whatever来获得对应结果。此外，Net::Douban::Entry提供了比Atom更多的特性
-
-=back
+consumer client for Net::Douban
 
 =head1 AUTHOR
 
-woosley.xu
+woosley.xu<redicaps@gmail.com>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009 by Woosley.Xu
+Copyright (C) 2010 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,
