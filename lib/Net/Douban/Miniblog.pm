@@ -1,5 +1,5 @@
 package Net::Douban::Miniblog;
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 use Moose;
 use Net::Douban::Atom;
@@ -55,6 +55,6 @@ __PACKAGE__->meta->make_immutable;
 
 =head1 VERSION
 
-version 1.01
+version 1.02
 
 =cut

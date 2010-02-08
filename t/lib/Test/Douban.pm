@@ -1,5 +1,5 @@
 package Test::Douban;
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 use strict;
 use warnings;
 use base qw/Exporter/;
@@ -7,8 +7,8 @@ use base qw/Exporter/;
 our @EXPORT    = qw/pdurls pdkeys pdtokens pdakeys/;
 our @EXPORT_OK = qw//;
 
-use Test::Builder;
-my $test = Test::Builder->new();
+#use Test::Builder;
+#my $test = Test::Builder->new();
 
 ## Net-Douban Test Predefined Vars
 my $site = 'http:://www.douban.com/';

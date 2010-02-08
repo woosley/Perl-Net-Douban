@@ -1,5 +1,5 @@
 package Net::Douban::OAuth;
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;
@@ -163,7 +163,7 @@ __END__
 
 =head1 VERSION
 
-version 1.01
+version 1.02
 
 =head1 SYNOPSIS
     

@@ -9,7 +9,7 @@ my $keys = pdkeys();
 use Test::More tests => 10;    # last test to print
 use_ok('Net::Douban::User') or exit;
 my $user =
-  Net::Douban::User->new(apikey => $keys->{apikey}, uid => 'Net-Douban');
+  Net::Douban::User->new(apikey => $keys->{apikey}, userID => 'Net-Douban');
 isa_ok($user, 'Net::Douban::User');
 
 my $atom = $user->get_user;
