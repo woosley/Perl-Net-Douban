@@ -1,5 +1,5 @@
 package Net::Douban::OAuth;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;
@@ -166,7 +166,7 @@ __END__
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 SYNOPSIS
     
@@ -188,7 +188,11 @@ OAuth object for douban.com base on L<Net::OAuth>
 
 =head1 METHOD
 
-=over
+=over 4
+
+=item B<new>
+
+Create the OAuth object for authentication. If the authenticated tokens are passed as the arguments, do remember to pass authorized => 1 too.
 
 =item B<request_token>
 
@@ -209,7 +213,7 @@ get access_token into $oauth->consumer
 
 =head1 SEE ALSO
     
-L<Net::Douban> L<Net::OAuth> L<Moose> 
+L<Net::Douban> L<Moose> L<Net::OAuth> L<http://douban.com/service/apidoc>
 
 =head1 AUTHOR
 

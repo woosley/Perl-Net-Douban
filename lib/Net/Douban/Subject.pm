@@ -1,5 +1,5 @@
 package Net::Douban::Subject;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use Moose;
 use Net::Douban::Atom;
@@ -69,14 +69,3 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
 __END__
-
-=pod
-=head1 NAME
-
-    Net::Douban::Subject
-
-=head1 VERSION
-
-version 1.03
-
-=cut

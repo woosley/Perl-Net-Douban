@@ -1,10 +1,10 @@
 package Test::Douban;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 use strict;
 use warnings;
 use base qw/Exporter/;
 
-our @EXPORT    = qw/pdurls pdkeys pdtokens pdakeys/;
+our @EXPORT    = qw/pdurls pdkeys pdtokens pdakeys consumer/;
 our @EXPORT_OK = qw//;
 
 #use Test::Builder;
@@ -48,7 +48,18 @@ sub pdakeys {
     return $pdtsb;
 }
 
+sub consumer {
+
+    my $all_tokens = pdakeys;
+    my $urls       = pdurls;
+    require Net::Douban::OAuth;
+    my $oauth =
+      Net::Douban::OAuth->new(%{$all_tokens}, %{$urls}, authorized => 1,);
+    return $oauth;
+}
+
 1;
+
 __DATA__
 a big xml file
 __END__

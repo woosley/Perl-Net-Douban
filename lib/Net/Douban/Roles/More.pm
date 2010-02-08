@@ -7,8 +7,6 @@ use Moose::Role;
 
 with 'Net::Douban::Roles';
 
-#has 'wo' => (is => 'ro',);
-
 has 'base_url' => (
     is      => 'ro',
     default => 'http://api.douban.com',
@@ -142,15 +140,3 @@ sub build_url {
 no Moose::Role;
 1;
 __END__
-
-=pod
-
-=head1 NAME
-
-    Net::Douban::Roles::More
-
-=head1 VERSION
-
-version 1.03
-
-=cut

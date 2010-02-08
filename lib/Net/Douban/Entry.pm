@@ -1,5 +1,5 @@
 package Net::Douban::Entry;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use Moose;
 use Net::Douban::DBSubject;
@@ -126,7 +126,7 @@ Net::Douban::Entry
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 SYNOPSIS
 	
@@ -143,6 +143,8 @@ version 1.03
 This is the parser of douban.com xml entry based on L<XML::Atom::Entry> and L<Moose>
 
 Many functions not listed here are documented in L<XML::Atom::Entry>
+
+=head1 METHODS
 
 =over 4
 
@@ -182,7 +184,7 @@ see L<Net::Douban::Atom>
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
 
 =head1 AUTHOR
 

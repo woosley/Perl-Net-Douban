@@ -7,7 +7,7 @@ license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-name: Perl-Net-Douban
+name: Net-Douban
 requires:
   ExtUtils::MakeMaker: 6.11
   HTTP::Request: 0
@@ -18,4 +18,4 @@ requires:
   Scalar::Util: 0
   Test::More: 0
   XML::Atom: 0.35
-version: 1.03
+version: 1.04

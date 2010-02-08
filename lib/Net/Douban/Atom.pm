@@ -1,5 +1,5 @@
 package Net::Douban::Atom;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -143,7 +143,7 @@ Net::Douban::Atom
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 SYNOPSIS
 	
@@ -157,9 +157,11 @@ version 1.03
 
 =head1 DESCRIPTION
 
-This is the parser of douban.com xml based on L<<<<<<XML::Atom::Feed>>>>>> and L<<<<<<Moose>>>>>
+This is the parser of douban.com xml based on L<XML::Atom::Feed> and L<Moose>
 
-Many functions not listed here are documented in L<<<<<<XML::Atom::Feed>>>>>>
+Many functions not listed here are documented in L<XML::Atom::Feed>
+
+=head1 METHODS
 
 =over 4
 
@@ -206,11 +208,11 @@ XML::Atom::Base::get的重载，当没有NS给出时，尽量‘聪明的’猜�
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
+L<Net::Douban> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
 
 =head1 AUTHOR
 
-woosley.xu<woosley.xu@gmail.com>
+woosley.xu<redicaps@gmail.com>
 
 =head1 COPYRIGHT
 	

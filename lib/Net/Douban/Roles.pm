@@ -1,5 +1,5 @@
 package Net::Douban::Roles;
-our $VERSION = '1.03';
+our $VERSION = '1.02';
 
 use Carp qw/carp croak/;
 use Moose::Role;
@@ -28,7 +28,7 @@ sub _build_ua {
     eval { require LWP::UserAgent };
     die $@ if $@;
     my $ua = LWP::UserAgent->new(
-        agent        => 'perl-net-douban-',
+        agent        => 'perl-net-douban-' . $VERSION,
         timeout      => 30,
         max_redirect => 5
     );
@@ -66,8 +66,6 @@ sub args {
             $ret{$arg} = $self->$arg;
         }
     }
-
-    #	croak "api key needed" unless $self->apikey;
     return %ret;
 }
 
@@ -82,17 +80,3 @@ sub args {
 
 no Moose::Role;
 1;
-
-__END__
-
-=pod
-
-=head1 NAME
-
-    Net::Douban::Roles
-
-=head1 VERSION
-
-version 1.03
-
-=cut

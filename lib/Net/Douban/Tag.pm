@@ -1,5 +1,5 @@
 package Net::Douban::Tag;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -38,15 +38,3 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
 __END__
-
-=pod
-
-=head1 NAME
-
-    Net::Douban::Tag
-
-=head1 VERSION
-
-version 1.03
-
-=cut

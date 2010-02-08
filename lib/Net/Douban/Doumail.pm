@@ -1,5 +1,5 @@
 package Net::Douban::Doumail;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -73,11 +73,11 @@ __PACKAGE__->meta->make_immutable;
 =pod
 =head1 NAME
 
-    Net::Douban::Collection;
+    Net::Douban::Doumail
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 SYNOPSIS
 
@@ -116,7 +116,7 @@ Interface to douban.com API  mail section
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http//douban.com/service/apidoc>
 
 =head1 AUTHOR
 

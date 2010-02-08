@@ -16,7 +16,7 @@ sub _build_ua {
     eval { require LWP::UserAgent };
     die $@ if $@;
     my $ua = LWP::UserAgent->new(
-        agent        => 'perl-net-douban-',
+        agent        => 'perl-net-douban-' . $VERSION,
         timeout      => 30,
         max_redirect => 5
     );
@@ -227,11 +227,42 @@ Net::Douban::OAuth::Consumer
 
 =head1 VERSION
 
-version 1.03
+version 1.04
+
+=head1 SYNOPSIS
+    
+    my $consumer = Net::Douban::OAuth::Consumer->new(
+        ....
+    );
+
+    $consumer->get_request_token;
+    print $consumer->request_token;
+    print $consumer->request_token_secret;
+    $consumer->get_access_token;
+    print $consumer->access_token;
+    print $consumer->access_token_secret;
+
+    $consumer->mana_protected_resource;
 
 =head1 DESCRIPTION
 
-consumer client for Net::Douban
+consumer client for OAuth
+
+=head1 METHODS
+
+=over 4
+
+=item B<new>
+
+Required arguments: B<consumer_secret consumer_key site request_token_path access_token_path>
+
+=item B<get_request_token>
+
+=item B<get_access_token>
+
+=item B<mana_protected_resource>
+
+=back
 
 =head1 AUTHOR
 

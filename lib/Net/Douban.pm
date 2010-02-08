@@ -1,5 +1,5 @@
 package Net::Douban;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -75,19 +75,23 @@ __END__
 
 =pod
 
-=head1 NAME1
+=head1 NAME
 
 Net::Douban
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 SYNOPSIS
     
     use Net::Douban;
     use Net::Douban::OAuth;
     my $consumer = Net::Douban::OAuth->new(...);
+    # do authenticate 
+    $consumer->request_token;
+    $consumer->access_token;
+
     my $client = Net::Douban->new( oauth =>$consumer);
 
     my $atom = $client->User(userID => 'Net-Douban')->get_user;
@@ -96,7 +100,7 @@ version 1.03
 
 =head1 DESCRIPTION
 
-Net::Douban is a perl client wapper on the Chinese website 'Douban.com' API.
+Net::Douban is a perl client wrapper on the Chinese website 'Douban.com' API.
 
 =head1 METHODS
 
@@ -112,16 +116,26 @@ Net::Douban is a perl client wapper on the Chinese website 'Douban.com' API.
     $client->User;
 
     #Net::Douban::Event object
-    $clent->Event;
+    $client->Event;
     ...
 
 Auto-generated objects include: B<User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog OAuth>
 
 =back
 
+=head1 Website data Access
+
+Generally an apikey is required for you to access the douban.com service. Goto L<http://www.douban.com/service/apikey/> for an apikey
+
+If you want to access some private or so called protected data, you have to use a authenticated oauth object, which has basic implements on the HTTP methods just like "GET POST PUT DELETE", to access the protected data,  L<Net::Douban::OAuth> can do this for you. Goto L<http://www.douban.com/service/apidoc/auth> for more douban.com OAuth document.
+
+=head2 We don't generate XML for you
+    
+If you want to post data to some page. Net::Douban::* can do the basic POST/DELETE/PUT works, but it won't generate any XML for you, so you have to call those methods with a (xml => $XML) argument;
+
 =head1 SEE ALSO
     
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Net::Douban::OAuth> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
 
 =head1 AUTHOR
 

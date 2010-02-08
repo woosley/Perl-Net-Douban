@@ -1,5 +1,5 @@
 package Net::Douban::Event;
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use Moose;
 use Carp qw/carp croak/;

@@ -1,10 +1,14 @@
 use strict;
 use warnings;
+use lib 't/lib';
+use Test::Douban;
+
 use Test::More tests => 6;
 use_ok('Net::Douban::Review');
 
-my $review =
-  Net::Douban::Review->new(apikey => '04e6b457934823350eb41d06b9d8699f');
+my $keys = pdkeys();
+
+my $review = Net::Douban::Review->new(apikey => $keys->{apikey});
 isa_ok($review, 'Net::Douban::Review');
 
 my $atom = $review->get_review(reviewID => '1138468');

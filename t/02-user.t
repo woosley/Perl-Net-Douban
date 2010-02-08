@@ -3,7 +3,6 @@ use warnings;
 use lib 't/lib';
 use Test::Douban;
 
-#use Smart::Comments;
 my $keys = pdkeys();
 
 use Test::More tests => 10;    # last test to print
