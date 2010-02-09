@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use lib 't/lib';
+use lib './lib';
 use Test::Douban;
 
 my $keys = pdkeys();

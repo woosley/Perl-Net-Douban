@@ -1,5 +1,5 @@
 package Net::Douban;
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -35,22 +35,26 @@ sub AUTOLOAD {
     my $self = shift;
     (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTORY';
-    if ($name eq 'OAuth') {
-        require Net::Douban::OAuth;
-        return "Net::Douban::OAuth"->new(
-            $self->args,
-            instance => $self,
-            @_,
-        );
-    }
     if (grep {/^$name$/}
         qw/User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog OAuth/
       )
     {
-        my $class = "Net::Douban::$name";
-        eval "require $class";
-        my $obj = "Net::Douban::$name"->new($self->args, @_,);
-        return $obj;
+        my $sub = <<"SUB";
+        sub $name {
+            my \$self = shift;
+
+              if (\$self->{$name}) {
+                return \$self->{$name};
+            } else {
+                my \$class = "Net::Douban::$name";
+                eval "require \$class";
+                my \$obj = "Net::Douban::$name"->new(\$self->args, \@_,);
+                \$self->{$name} = \$obj;
+                return \$obj;
+            }
+          };
+SUB
+        goto &$sub;
     }
     croak "Unknow Method!";
 }
@@ -77,11 +81,11 @@ __END__
 
 =head1 NAME
 
-Net::Douban
+Net::Douban - Perl client for douban.com
 
 =head1 VERSION
 
-version 1.04
+version 1.05
 
 =head1 SYNOPSIS
     

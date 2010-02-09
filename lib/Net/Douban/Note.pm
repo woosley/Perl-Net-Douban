@@ -1,5 +1,5 @@
 package Net::Douban::Note;
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -48,14 +48,3 @@ __PACKAGE__->meta->make_immutable;
 1;
 
 __END__
-
-=pod
-=head1 NAME
-
-    Net::Douban::Collection;
-
-=head1 VERSION
-
-version 1.04
-
-=cut

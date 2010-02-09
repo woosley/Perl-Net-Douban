@@ -1,5 +1,5 @@
 package Net::Douban::Miniblog;
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 use Moose;
 use Net::Douban::Atom;
@@ -47,14 +47,3 @@ sub get_miniblog {
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
-
-=pod
-=head1 NAME
-
-    Net::Douban::Collection;
-
-=head1 VERSION
-
-version 1.04
-
-=cut

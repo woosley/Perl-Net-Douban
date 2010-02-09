@@ -20,4 +20,4 @@ requires:
   XML::Atom: 0.35
 resources:
   repository: http://github.com/woosley/Perl-Net-Douban
-version: 1.04
+version: 1.05

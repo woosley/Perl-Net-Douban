@@ -1,5 +1,5 @@
 package Net::Douban::OAuth;
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;
@@ -150,6 +150,7 @@ sub delete {
 
 sub validate {
 
+    # to do
 }
 
 1;
@@ -162,11 +163,11 @@ __END__
 
 =head1 NAME
 
-    Net::Douban::OAuth
+    Net::Douban::OAuth - OAuth object for Net::Douban
 
 =head1 VERSION
 
-version 1.04
+version 1.05
 
 =head1 SYNOPSIS
     
