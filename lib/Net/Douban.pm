@@ -1,5 +1,5 @@
 package Net::Douban;
-our $VERSION = '1.05';
+our $VERSION = '1.06';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -32,7 +32,8 @@ with 'Net::Douban::Roles';
 our $AUTOLOAD;
 
 sub AUTOLOAD {
-    my $self = shift;
+
+#    my $self = shift;     ### shift @_ is terribly wrong
     (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTORY';
     if (grep {/^$name$/}
@@ -52,9 +53,10 @@ sub AUTOLOAD {
                 \$self->{$name} = \$obj;
                 return \$obj;
             }
-          };
+          }
 SUB
-        goto &$sub;
+        eval($sub);
+        goto &$name;
     }
     croak "Unknow Method!";
 }
@@ -85,7 +87,7 @@ Net::Douban - Perl client for douban.com
 
 =head1 VERSION
 
-version 1.05
+version 1.06
 
 =head1 SYNOPSIS
     

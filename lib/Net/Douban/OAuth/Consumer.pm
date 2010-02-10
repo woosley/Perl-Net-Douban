@@ -227,7 +227,7 @@ Net::Douban::OAuth::Consumer - Base consumer object for Net::Douban::OAuth
 
 =head1 VERSION
 
-version 1.05
+version 1.06
 
 =head1 SYNOPSIS
     

@@ -1,5 +1,5 @@
 package Net::Douban::Subject;
-our $VERSION = '1.05';
+our $VERSION = '1.06';
 
 use Moose;
 use Net::Douban::Atom;
