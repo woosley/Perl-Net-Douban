@@ -111,8 +111,6 @@ our $AUTOLOAD;
 
 sub AUTOLOAD {
 
-    #	my $self = shift;
-    #	my $class = ref $self ? ref $self : $self;
     (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTROY';
     my $sub = <<SUB;
@@ -128,7 +126,6 @@ sub DESTROY { }
 
 no Moose;
 
-#__PACKAGE__->meta->make_immutable;
 1;
 
 __END__

@@ -6,34 +6,10 @@ use Carp qw/carp croak/;
 
 with 'Net::Douban::Roles';
 
-#my $oauth;    ## magic global variable
-## use this to enable globle value
-#sub oauth {
-#    my $self = shift;
-#    if (@_) {
-#        $oauth = shift;
-#        return \$oauth;
-#    } else {
-#        return \$oauth;
-#    }
-#}
-
-#around 'oauth' => sub {
-#    my $orig = shift;
-#    my $self = shift;
-#    if(@_){
-#        $oauth = shift;
-#        return \$oauth;
-#    }else{
-#        return \$oauth;
-#    }
-#};
-
 our $AUTOLOAD;
 
 sub AUTOLOAD {
 
-#    my $self = shift;     ### shift @_ is terribly wrong
     (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTORY';
     if (grep {/^$name$/}
@@ -63,16 +39,6 @@ SUB
 
 sub DESTORY { }
 
-#deprecated in order to keep it simple
-#around 'BUILDARGS' => sub {
-#    my $orig = shift;
-#    my $self = shift;
-#    my %args = @_;
-#    my $auth = delete $args{oauth} if exists $args{oauth};
-#    $oauth = $auth;
-#    $self->$orig(%args);
-#};
-#
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
