@@ -7,9 +7,7 @@ use Carp qw/carp croak/;
 with 'Net::Douban::Roles';
 
 our $AUTOLOAD;
-
 sub AUTOLOAD {
-
     (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTORY';
     if (grep {/^$name$/}

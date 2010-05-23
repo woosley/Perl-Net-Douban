@@ -8,6 +8,13 @@ with 'Net::Douban::Roles::More';
 
 has 'subjectID' => (is => 'rw', isa => 'Str');
 
+has 'subject_url' => (
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub { shift->base_url . '/subject' },
+);
+
 sub get_book {
     my ($self, %args) = @_;
     my $url = $self->base_url;

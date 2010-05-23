@@ -11,6 +11,13 @@ has 'reviewID' => (
     isa => 'Str',
 );
 
+has 'review_url' => (
+	is => 'rw',
+	isa => 'Str',
+	lazy => 1,
+	default => sub { shift->base_url . '/review'}
+);
+
 sub get_review {
     my ($self, %args) = @_;
     $args{reviewID} ||= $self->reviewID;

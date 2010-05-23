@@ -11,6 +11,13 @@ has 'collectionID' => (
     isa => 'Str',
 );
 
+has 'collection_url' => (
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub { shift->base_url . '/collection' },
+);
+
 sub get_collection {
     my ($self, %args) = @_;
     $args{collectionID} ||= $self->collectionID;

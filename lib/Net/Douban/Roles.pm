@@ -1,5 +1,5 @@
 package Net::Douban::Roles;
-our $VERSION = '1.03';
+our $VERSION = '1.06';
 
 use Carp qw/carp croak/;
 use Moose::Role;
@@ -69,14 +69,7 @@ sub args {
     return %ret;
 }
 
-#around 'BUILDARGS' => sub {
-#    my $orig = shift;
-#    my $self = shift;
-#    my %args = @_;
-#    unless ($args{oauth} || $args{apikey}){
-#        croak "oauth or apikey needed";
-#    }
-#}
 
 no Moose::Role;
 1;
+__END__

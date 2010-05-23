@@ -11,6 +11,13 @@ has 'miniblogID' => (
     isa => 'Str',
 );
 
+has 'miniblog_url' => (
+	is => 'rw',
+	isa => 'Str',
+	lazy => 1,
+	default => sub { shift->base_url . '/miniblog'}
+);
+
 sub get_user_miniblog {
     my ($self, %args) = @_;
     my $uid = delete $args{userID} or croak "userID needed";

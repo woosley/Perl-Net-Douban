@@ -7,6 +7,12 @@ use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
 has 'userID' => (is => 'rw', isa => 'Str',);
+has 'user_url' => (
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub {shift->base_url . '/people'},
+);
 
 sub get_user {
     my ($self, %args) = @_;

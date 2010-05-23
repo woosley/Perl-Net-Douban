@@ -1,5 +1,5 @@
 package Net::Douban::Roles::More;
-our $VERSION = '1.03';
+our $VERSION = '1.06';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
@@ -8,19 +8,19 @@ use Moose::Role;
 with 'Net::Douban::Roles';
 
 has 'base_url' => (
-    is      => 'ro',
+    is      => 'rw',
     default => 'http://api.douban.com',
 );
 
-has 'user_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/people',
-);
+#has 'user_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/people',
+#);
 
-has 'collection_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/collection',
-);
+#has 'collection_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/collection',
+#);
 
 has 'subject_url' => (
     is      => 'ro',
@@ -91,7 +91,7 @@ sub post {
               ) or croak $!;
             croak $response->status_line unless $response->is_success;
         } else {
-            $response = $self->oauth->post(url => $url,) or croak $!;
+            $response = $self->oauth->post(url => $url) or croak $!;
             croak $response->status_line unless $response->is_success;
         }
         return $response;
