@@ -1,5 +1,5 @@
 package Net::Douban::OAuth::Consumer;
-our $VERSION = '1.03';
+our $VERSION = '1.06_1';
 use Net::OAuth;
 use HTTP::Request::Common;
 use HTTP::Request;
@@ -227,7 +227,7 @@ Net::Douban::OAuth::Consumer - Base consumer object for Net::Douban::OAuth
 
 =head1 VERSION
 
-version 1.06
+version 1.06_1
 
 =head1 SYNOPSIS
     

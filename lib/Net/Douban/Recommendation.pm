@@ -1,5 +1,4 @@
 package Net::Douban::Recommendation;
-our $VERSION = '1.06';
 
 use Moose;
 use Carp qw/carp croak/;

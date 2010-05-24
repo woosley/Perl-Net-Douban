@@ -1,5 +1,4 @@
 package Net::Douban::Atom;
-our $VERSION = '1.06';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -137,10 +136,6 @@ __END__
 =head1 NAME
 
 Net::Douban::Atom - Atom parser
-
-=head1 VERSION
-
-version 1.06
 
 =head1 SYNOPSIS
 	

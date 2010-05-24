@@ -1,5 +1,4 @@
 package Net::Douban::Miniblog;
-our $VERSION = '1.06';
 
 use Moose;
 use Net::Douban::Atom;

@@ -1,5 +1,4 @@
 package Net::Douban::Doumail;
-our $VERSION = '1.06';
 
 use Moose;
 use Carp qw/carp croak/;
@@ -74,10 +73,6 @@ __PACKAGE__->meta->make_immutable;
 =head1 NAME
 
     Net::Douban::Doumail
-
-=head1 VERSION
-
-version 1.06
 
 =head1 SYNOPSIS
 

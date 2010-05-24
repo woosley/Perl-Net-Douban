@@ -1,5 +1,4 @@
 package Net::Douban::Token;
-our $VERSION = '0.71';
 
 use Moose;
 use Env qw/HOME/;
@@ -60,9 +59,5 @@ __END__
 =head1 NAME
 
     Net::Douban::Token
-
-=head1 VERSION
-
-version 0.71
 
 =cut

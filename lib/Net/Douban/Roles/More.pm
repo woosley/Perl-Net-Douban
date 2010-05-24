@@ -1,5 +1,4 @@
 package Net::Douban::Roles::More;
-our $VERSION = '1.06';
 
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
