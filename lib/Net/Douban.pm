@@ -101,7 +101,7 @@ If you want to post data to some page. Net::Douban::* can do the basic POST/DELE
 
 =head1 Paging
 
-Paging is support by passing argment 'start_index' and 'max_results' to search functions.
+Paging is support by passing argments 'start_index' and 'max_results' to search functions.
 
 =head1 SEE ALSO
     
