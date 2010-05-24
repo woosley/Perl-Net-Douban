@@ -8,11 +8,13 @@ with 'Net::Douban::Roles';
 
 has 'base_url' => (
     is      => 'rw',
+	isa 	=> 'Url',
     default => 'http://api.douban.com',
 );
 
 has 'user_url' => (
     is      => 'rw',
+	isa		=> 'Url',
     default => 'http://api.douban.com/people',
 );
 

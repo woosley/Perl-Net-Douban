@@ -1,10 +1,9 @@
 package Net::Douban::Roles;
-our $VERSION = '1.06_1';
 
+our $VERSION = '1.06_1';
 use Carp qw/carp croak/;
 use Moose::Role;
 use Scalar::Util qw/blessed/;
-
 has 'oauth' => (is => 'rw');
 
 #around 'oauth'  => sub {
@@ -71,5 +70,14 @@ sub args {
 
 
 no Moose::Role;
+
+package Net::Douban::Type;
+use Moose::Util::TypeConstraints;
+
+subtype 'Url'
+	=> as 'Str',
+	=> where { $_ =~ m/^http:\/\/.*\w$/},
+	=> message {"invalid url!"};
+
 1;
 __END__
