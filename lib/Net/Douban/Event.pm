@@ -9,6 +9,13 @@ has 'eventID' => (
     isa => 'Str',
 );
 
+has 'event_url' => (
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub { shift->base_url . '/event' },
+);
+
 sub get_event {
     my ($self, %args) = @_;
     $args{eventID} ||= $self->eventID;

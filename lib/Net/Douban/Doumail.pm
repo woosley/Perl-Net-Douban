@@ -9,6 +9,13 @@ has 'doumailID' => (
     isa => 'Str',
 );
 
+has 'doumail_url' => (
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub { shift->base_url . '/doumail' },
+);
+
 sub inbox {
     my ($self, %args) = @_;
     return Net::Douban::Atom->new(

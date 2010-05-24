@@ -9,6 +9,13 @@ has 'recommendationID' => (
     isa => 'Str',
 );
 
+has 'recommendation_url' => (
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub { shift->base_url . '/recommendation' },
+);
+
 sub get_recommendation {
     my ($self, %args) = @_;
     $args{recommendationID} ||= $self->recommendationID;

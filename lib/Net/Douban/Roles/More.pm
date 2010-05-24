@@ -11,55 +11,55 @@ has 'base_url' => (
     default => 'http://api.douban.com',
 );
 
-#has 'user_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/people',
-#);
+has 'user_url' => (
+    is      => 'rw',
+    default => 'http://api.douban.com/people',
+);
 
 #has 'collection_url' => (
 #    is      => 'ro',
 #    default => 'http://api.douban.com/collection',
 #);
 
-has 'subject_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/subject',
-);
+#has 'subject_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/subject',
+#);
 
-has 'review_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/review',
-);
+#has 'review_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/review',
+#);
 
-has 'miniblog_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/miniblog',
-);
+#has 'miniblog_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/miniblog',
+#);
+#
+#has 'note_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/note',
+#);
 
-has 'note_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/note',
-);
-
-has 'event_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/event',
-);
-
-has 'recommendation_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/recommendation',
-);
-
-has 'doumail_url' => (
-    is      => 'ro',
-    default => "http://api.douban.com/doumail",
-);
-
-has 'token_url' => (
-    is      => 'ro',
-    default => 'http://api.douban.com/access_token',
-);
+#has 'event_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/event',
+#);
+#
+#has 'recommendation_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/recommendation',
+#);
+#
+#has 'doumail_url' => (
+#    is      => 'ro',
+#    default => "http://api.douban.com/doumail",
+#);
+#
+#has 'token_url' => (
+#    is      => 'ro',
+#    default => 'http://api.douban.com/access_token',
+#);
 
 sub get {
     my $self = shift;

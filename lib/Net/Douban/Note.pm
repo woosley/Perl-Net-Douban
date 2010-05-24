@@ -9,6 +9,13 @@ has 'noteID' => (
     isa => 'Str',
 );
 
+has 'note_url' => (
+	is	=> 'rw',
+	isa => 'Str',
+	lazy => 1,
+	default => sub { shift->base_url . '/note'},
+);
+
 sub get_note {
     my ($self, %args) = @_;
     $args{noteID} ||= $self->noteID;

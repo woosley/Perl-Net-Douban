@@ -11,10 +11,10 @@ has 'miniblogID' => (
 );
 
 has 'miniblog_url' => (
-	is => 'rw',
-	isa => 'Str',
-	lazy => 1,
-	default => sub { shift->base_url . '/miniblog'}
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub { shift->base_url . '/miniblog' }
 );
 
 sub get_user_miniblog {

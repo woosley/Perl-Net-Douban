@@ -11,6 +11,13 @@ has 'instance' => (
     required => 1,
 );
 
+has 'token_url' => (
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub { shift->base_url . '/access_token' },
+);
+
 sub check {
     my ($self, %args) = @_;
     $args{token} ||= $self->token;
