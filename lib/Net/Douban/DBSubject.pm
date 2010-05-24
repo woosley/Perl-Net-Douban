@@ -1,6 +1,7 @@
 package Net::Douban::DBSubject;
 
 use Moose;
+use MooseX::StrictConstructor;
 extends 'Net::Douban::Entry';
 
 sub BUILD {

@@ -1,6 +1,7 @@
 package Net::Douban::Review;
 
 use Moose;
+use MooseX::StrictConstructor;
 use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
@@ -12,7 +13,7 @@ has 'reviewID' => (
 
 has 'review_url' => (
 	is => 'rw',
-	isa => 'Str',
+	isa => 'Url',
 	lazy => 1,
 	default => sub { shift->base_url . '/review'}
 );

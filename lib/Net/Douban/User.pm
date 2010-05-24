@@ -1,14 +1,15 @@
 package Net::Douban::User;
 
 use Moose;
+with 'Net::Douban::Roles::More';
 use Net::Douban::Atom;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles::More';
+use MooseX::StrictConstructor;
 
 has 'userID' => (is => 'rw', isa => 'Str',);
 has 'user_url' => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => 'Url',
     lazy    => 1,
     default => sub {shift->base_url . '/people'},
 );
@@ -79,6 +80,8 @@ Net::Douban::User
 Interface to douban.com API User section
 
 =head1 METHODS
+
+Those methods return a Net::Douban::Atom object which can be use to get data conveniently
 
 =over
 

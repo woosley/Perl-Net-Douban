@@ -1,8 +1,10 @@
 package Net::Douban::Tag;
 
 use Moose;
+use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
+
 
 sub get_movie_tag {
     my ($self, %args) = @_;

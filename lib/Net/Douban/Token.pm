@@ -1,6 +1,7 @@
 package Net::Douban::Token;
 
 use Moose;
+use MooseX::StrictConstructor;
 use Env qw/HOME/;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
@@ -13,7 +14,7 @@ has 'instance' => (
 
 has 'token_url' => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => 'Url',
     lazy    => 1,
     default => sub { shift->base_url . '/access_token' },
 );

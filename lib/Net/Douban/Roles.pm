@@ -4,19 +4,8 @@ our $VERSION = '1.06_1';
 use Carp qw/carp croak/;
 use Moose::Role;
 use Scalar::Util qw/blessed/;
-has 'oauth' => (is => 'rw');
 
-#around 'oauth'  => sub {
-#    my $orig = shift;
-#    my $self = shift;
-#    if (@_) {
-#        $self->$orig(shift);
-#    }else{
-#        my $oauth = $self->$orig;
-#        $oauth = ${$oauth} unless blessed $oauth;
-#        return $oauth;
-#    }
-#};
+has 'oauth' => (is => 'rw');
 
 has 'ua' => (
     is         => 'rw',
@@ -45,22 +34,22 @@ has 'private_key' => (
     isa => 'Str',
 );
 
-has 'start-index' => (
+has 'start_index' => (
     is      => 'rw',
-    isa     => 'Int',
+    isa     => 'PInt',
     default => 0,
 );
 
-has 'max-results' => (
+has 'max_results' => (
     is      => 'rw',
-    isa     => 'Int',
+    isa     => 'PInt',
     default => 10,
 );
 
 sub args {
     my $self = shift;
     my %ret;
-    for my $arg (qw/ ua apikey start-index max-results oauth/) {
+    for my $arg (qw/ ua apikey start_index max_results oauth/) {
         if (defined $self->$arg) {
             $ret{$arg} = $self->$arg;
         }
@@ -71,13 +60,76 @@ sub args {
 
 no Moose::Role;
 
-package Net::Douban::Type;
+package Net::Douban::Types;
 use Moose::Util::TypeConstraints;
 
+## url
 subtype 'Url'
 	=> as 'Str',
 	=> where { $_ =~ m/^http:\/\/.*\w$/},
 	=> message {"invalid url!"};
 
+## positive int
+subtype 'PInt'
+	=> as 'Int',
+	=> where { $_ >= 0 },
+	=> message {"not a positive int"};
 1;
 __END__
+
+=pod
+
+=head1 NAME
+
+Net::Douban::Roles - basic Moose role for Net::Douban
+
+=head1 SYNOPSIS
+	
+	with 'Net::Douban::Roles'
+
+=head1 DESCRIPTION
+
+This PM file includes Net::Douban::Roles and Net::Douban::Types. Net::Douban::Roles provides most of the attributes for Net::Douban::*; Net::Douban::Types is the type constraint system for Net::Douban 
+
+=head1 ATTRIBUTES
+
+=over 4
+
+=item B<oauth>
+
+oauth object for Net::Douban
+
+=item B<ua>
+
+user-agent object for Net::Douban, provided by default
+
+=item B<apikey>
+
+=item B<private_key>
+
+=item B<start_index>
+
+url start-index argument, set to 0 by default
+
+=item B<max_results>
+
+url max-results argument, set to 10 by default
+
+=back
+
+=head1 SEE ALSO
+    
+L<Net::Douban> L<Net::Douban::Roles::More> L<Moose> L<http://douban.com/service/apidoc>
+
+=head1 AUTHOR
+
+woosley.xu<redicaps@gmail.com>
+
+=head1 COPYRIGHT & LICENSE
+
+This software is copyright (c) 2010 by woosley.xu.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

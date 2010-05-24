@@ -1,6 +1,7 @@
 package Net::Douban::Collection;
 
 use Moose;
+use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
 use Net::Douban::Atom;
 with 'Net::Douban::Roles::More';
@@ -12,7 +13,7 @@ has 'collectionID' => (
 
 has 'collection_url' => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => 'Url',
     lazy    => 1,
     default => sub { shift->base_url . '/collection' },
 );

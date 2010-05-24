@@ -18,51 +18,6 @@ has 'user_url' => (
     default => 'http://api.douban.com/people',
 );
 
-#has 'collection_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/collection',
-#);
-
-#has 'subject_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/subject',
-#);
-
-#has 'review_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/review',
-#);
-
-#has 'miniblog_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/miniblog',
-#);
-#
-#has 'note_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/note',
-#);
-
-#has 'event_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/event',
-#);
-#
-#has 'recommendation_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/recommendation',
-#);
-#
-#has 'doumail_url' => (
-#    is      => 'ro',
-#    default => "http://api.douban.com/doumail",
-#);
-#
-#has 'token_url' => (
-#    is      => 'ro',
-#    default => 'http://api.douban.com/access_token',
-#);
-
 sub get {
     my $self = shift;
     my $url  = shift;
@@ -132,6 +87,7 @@ sub build_url {
     my %args = @_;
     my $mark = $url =~ /\?/ ? '&' : '?';
     while (my ($key, $value) = each %args) {
+		$key =~ s/-/_/g;
         $url .= $mark . "$key=$value";
         $mark = '&';
     }
@@ -141,3 +97,5 @@ sub build_url {
 no Moose::Role;
 1;
 __END__
+
+

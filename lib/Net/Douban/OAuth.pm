@@ -1,4 +1,5 @@
 package Net::Douban::OAuth;
+
 use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;

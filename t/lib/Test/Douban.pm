@@ -7,8 +7,6 @@ use base qw/Exporter/;
 our @EXPORT    = qw/pdurls pdkeys pdtokens pdakeys consumer/;
 our @EXPORT_OK = qw//;
 
-#use Test::Builder;
-#my $test = Test::Builder->new();
 
 ## Net-Douban Test Predefined Vars
 my $site = 'http:://www.douban.com/';

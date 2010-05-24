@@ -21,6 +21,9 @@ like(
 );
 is($atom->get('db:uid'), 'Net-Douban', 'I am Net-Douban@douban.com');
 
+my $contacts = $user->get_contacts->search_info;
+is($contacts->{totalResults}, 3, 'I have 3 contacts');
+
 # get user's friends disabled by douban.com
 #my $friends = $user->get_friends;
 #isa_ok($friends, 'Net::Douban::Atom');
@@ -30,5 +33,3 @@ is($atom->get('db:uid'), 'Net-Douban', 'I am Net-Douban@douban.com');
 #isa_ok($entry, 'Net::Douban::Entry');
 #like($entry->id, qr{^http://api.douban.com/.*}, "should return a url");
 
-my $contacts = $user->get_contacts->search_info;
-is($contacts->{totalResults}, 3, 'I have 3 contacts');

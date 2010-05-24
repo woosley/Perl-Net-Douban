@@ -1,6 +1,7 @@
 package Net::Douban::Entry;
 
 use Moose;
+use MooseX::StrictConstructor;
 use Net::Douban::DBSubject;
 use Carp qw/carp croak/;
 

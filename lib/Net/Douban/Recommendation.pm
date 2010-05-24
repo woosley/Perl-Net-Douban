@@ -1,6 +1,7 @@
 package Net::Douban::Recommendation;
 
 use Moose;
+use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
@@ -11,7 +12,7 @@ has 'recommendationID' => (
 
 has 'recommendation_url' => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => 'Url',
     lazy    => 1,
     default => sub { shift->base_url . '/recommendation' },
 );

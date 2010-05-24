@@ -6,6 +6,7 @@ use Carp qw/carp croak/;
 with 'Net::Douban::Roles';
 
 our $AUTOLOAD;
+
 sub AUTOLOAD {
     (my $name = $AUTOLOAD) =~ s/.*:://g;
     return if $name eq 'DESTORY';
@@ -17,7 +18,7 @@ sub AUTOLOAD {
         sub $name {
             my \$self = shift;
 
-              if (\$self->{$name}) {
+            if (ref \$self->{$name}) {
                 return \$self->{$name};
             } else {
                 my \$class = "Net::Douban::$name";
@@ -25,13 +26,13 @@ sub AUTOLOAD {
                 my \$obj = "Net::Douban::$name"->new(\$self->args, \@_,);
                 \$self->{$name} = \$obj;
                 return \$obj;
-            }
+			}
           }
 SUB
         eval($sub);
         goto &$name;
     }
-    croak "Unknow Method!";
+    croak "Unknow Method $name!";
 }
 
 sub DESTORY { }
@@ -53,7 +54,7 @@ Net::Douban - Perl client for douban.com
     use Net::Douban;
     use Net::Douban::OAuth;
     my $consumer = Net::Douban::OAuth->new(...);
-    # do authenticate 
+    # do authentication here for protected data 
     $consumer->request_token;
     $consumer->access_token;
 
@@ -65,7 +66,7 @@ Net::Douban - Perl client for douban.com
 
 =head1 DESCRIPTION
 
-Net::Douban is a perl client wrapper on the Chinese website 'Douban.com' API.
+Net::Douban is a perl client wrapper on the Chinese website 'douban.com' API.
 
 =head1 METHODS
 
@@ -97,6 +98,10 @@ If you want to access some private or so called protected data, you have to use 
 =head2 We don't generate XML for you
     
 If you want to post data to some page. Net::Douban::* can do the basic POST/DELETE/PUT works, but it won't generate any XML for you, so you have to call those methods with a (xml => $XML) argument;
+
+=head1 Paging
+
+Paging is support by passing argment 'start_index' and 'max_results' to search functions.
 
 =head1 SEE ALSO
     
