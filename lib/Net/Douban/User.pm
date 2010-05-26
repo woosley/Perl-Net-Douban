@@ -7,12 +7,6 @@ use Carp qw/carp croak/;
 use MooseX::StrictConstructor;
 
 has 'userID' => (is => 'rw', isa => 'Str',);
-has 'user_url' => (
-    is      => 'rw',
-    isa     => 'Url',
-    lazy    => 1,
-    default => sub {shift->base_url . '/people'},
-);
 
 sub get_user {
     my ($self, %args) = @_;
@@ -74,6 +68,7 @@ Net::Douban::User
 	$atom = $user->get_user;
 	$atom = $user->get_friends;
 	$atom = $user->get_contacts;
+    $atom = $user->search(q => 'douban', start_index => 5, max_results => 10);
 
 =head1 DESCRIPTION
 
