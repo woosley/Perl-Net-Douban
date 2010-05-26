@@ -71,7 +71,7 @@ __DATA__
 xmlns:gd="http://schemas.google.com/g/2005"
 xmlns:opensearch="http://a9.com/-/spec/opensearchrss/1.0/"
 xmlns:db="http://www.douban.com/xmlns/">
-<title>Cowboy Bebop 的评论</title>
+<title>Cowboy Bebop</title>
 <opensearch:totalResults>24</opensearch:totalResults>
 <link rel="alternate"
     href="http://movie.douban.com/subject/1424406/reviews" />
@@ -131,4 +131,3 @@ xmlns:db="http://www.douban.com/xmlns/">
 </entry>
 <opensearch:itemsPerPage>2</opensearch:itemsPerPage>
 </feed>
-__END__
