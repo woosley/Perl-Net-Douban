@@ -5,7 +5,7 @@ use Carp qw/carp croak/;
 use Moose::Role;
 use Scalar::Util qw/blessed/;
 
-has 'oauth' => (is => 'rw');
+has 'oauth' => (is => 'rw', predicate => 'has_oauth');
 
 has 'ua' => (
     is         => 'rw',
@@ -14,7 +14,7 @@ has 'ua' => (
 
 sub _build_ua {
     eval { require LWP::UserAgent };
-    die $@ if $@;
+    croak $@ if $@;
     my $ua = LWP::UserAgent->new(
         agent        => 'perl-net-douban-' . $VERSION,
         timeout      => 30,

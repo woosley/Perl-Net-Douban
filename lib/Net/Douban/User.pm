@@ -94,7 +94,7 @@ Those methods return a Net::Douban::Atom object which can be use to get data con
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<http://www.douban.com/service/apidoc/reference/user>
 
 =head1 AUTHOR
 

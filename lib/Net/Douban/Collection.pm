@@ -21,22 +21,23 @@ has 'collection_url' => (
 sub get_collection {
     my ($self, %args) = @_;
     $args{collectionID} ||= $self->collectionID;
+    croak "collectionID missing" unless $args{collectionID};
     return Net::Douban::Atom->new(
-        $self->collection_url . "/$args{collectionID}");
+        $self->get($self->collection_url . "/$args{collectionID}"));
 }
 
 sub get_user_collection {
     my ($self, %args) = @_;
     my $uid = delete $args{userID} or croak "userID needed!";
-    exists $args{cat} or croak "cat needed!";
-    return Net::Douban::Atom->new($self->user_url . "/$uid/collection", %args,
-    );
+    exists $args{cat} or croak "cat(category) needed!";
+    return Net::Douban::Atom->new(
+        $self->get($self->user_url . "/$uid/collection", %args));
 }
 
 sub add_collection {
     my ($self, %args) = @_;
     croak "post xml needed" unless exists $args{xml};
-    return $self->post($self->collection_url, $args{xml},);
+    return $self->post($self->collection_url, xml => $args{xml});
 }
 
 sub put_collection {
@@ -44,12 +45,13 @@ sub put_collection {
     $args{collectionID} ||= $self->collectionID;
     croak "put xml needed" unless exists $args{xml};
     return $self->put($self->collection_url . "/$args{collectionID}",
-        $args{xml},);
+        xml => $args{xml},);
 }
 
 sub delete_collection {
     my ($self, %args) = @_;
     $args{collectionID} ||= $self->collectionID;
+    croak "collectionID missing" unless $args{collectionID};
     return $self->delete($self->collection_url . "/$args{collectionID}");
 
 }
@@ -98,7 +100,7 @@ Interface to douban.com API collection section
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://www.douban.com/service/apidoc/reference/collection>
 
 =head1 AUTHOR
 

@@ -23,7 +23,7 @@ sub get {
     my $url  = shift;
     my %args = @_;
     my $response;
-    if ($self->oauth) {
+    if ($self->has_oauth) {
         $url = $self->build_url($url, %args);
         $response = $self->oauth->get($url) or croak $!;
     } else {
@@ -38,7 +38,7 @@ sub get {
 
 sub post {
     my ($self, $url, %args) = @_;
-    if ($self->oauth) {
+    if ($self->has_oauth) {
         my $response;
         if ($args{xml}) {
             $response =
@@ -58,7 +58,7 @@ sub post {
 
 sub put {
     my ($self, $url, %args) = @_;
-    if ($self->oauth) {
+    if ($self->has_oauth) {
         my $response =
           $self->oauth->put($url, $args{xml},
             ['Content-Type' => q{application/atom+xml}],
@@ -72,7 +72,7 @@ sub put {
 
 sub delete {
     my ($self, $url, %args) = @_;
-    if ($self->oauth) {
+    if ($self->has_oauth) {
         my $response = $self->oauth->delete($url,) or croak $!;
         croak $response->status_line unless $response->is_success;
         return $response;
