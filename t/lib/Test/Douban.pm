@@ -1,5 +1,5 @@
 package Test::Douban;
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 use strict;
 use warnings;
 use base qw/Exporter/;
