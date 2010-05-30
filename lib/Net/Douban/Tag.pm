@@ -2,6 +2,7 @@ package Net::Douban::Tag;
 
 use Moose;
 use MooseX::StrictConstructor;
+use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 

@@ -106,22 +106,22 @@ sub search_info {
     return \%search_info;
 }
 
-our $AUTOLOAD;
-
-sub AUTOLOAD {
-
-    (my $name = $AUTOLOAD) =~ s/.*:://g;
-    return if $name eq 'DESTROY';
-    my $sub = <<SUB;
-	sub $name {
-		my \$self =  shift;
-		return \$self->get($name);
-	}
-SUB
-    eval($sub);    ## the same as *$name = $sub;
-    goto &$name;
-}
-sub DESTROY { }
+#our $AUTOLOAD;
+#
+#sub AUTOLOAD {
+#
+#    (my $name = $AUTOLOAD) =~ s/.*:://g;
+#    return if $name eq 'DESTROY';
+#    my $sub = <<SUB;
+#	sub $name {
+#		my \$self =  shift;
+#		return \$self->get($name);
+#	}
+#SUB
+#    eval($sub);    ## the same as *$name = $sub;
+#    goto &$name;
+#}
+#sub DESTROY { }
 
 no Moose;
 
@@ -189,12 +189,6 @@ XML::Atom::Base::get的重载，当没有NS给出时，尽量‘聪明的’猜�
 	$feed->entry;
 
 返回根entry，应用与情况为feed的root note是entry，即只是获得单个结果的情况(如获得一部电影信息，获得一个用户的信息等)。尽管这时$feed->whaterver也能获得相当多的结果，但仍然强烈建议使用$feed->entry->whatever来获得对应结果。此外，Net::Douban::Entry提供了比Atom更多的特性
-
-=item B<AUTOLOAD>
-
-	$feed->whatever;
-
-当遇到没有明确定义过的函数时，Net::Douban::Atom内部自动使用$self->get('whatever')
 
 =back
 

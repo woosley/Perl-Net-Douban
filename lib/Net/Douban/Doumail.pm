@@ -2,6 +2,7 @@ package Net::Douban::Doumail;
 
 use Moose;
 use MooseX::StrictConstructor;
+use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
@@ -16,6 +17,10 @@ has 'doumail_url' => (
     lazy    => 1,
     default => sub { shift->base_url . '/doumail' },
 );
+
+before qw/inbox unread outbox get_doumail/ => sub {
+    croak "oauth needed" unless $_[0]->has_oauth;
+};
 
 sub inbox {
     my ($self, %args) = @_;
@@ -37,33 +42,37 @@ sub outbox {
 
 sub get_doumail {
     my ($self, %args) = @_;
-    $args{doumailID} ||= $self->doumailID;
+    $args{mailID} ||= $self->mailID;
+    croak "mailID needed" unless defined $args{mailID};
     return Net::Douban::Atom->new(
-        $self->get($self->doumail_url . "/$args{doumailID}", %args));
+        $self->get($self->doumail_url . "/$args{mailID}", %args));
 }
 
 sub post_doumail {
     my ($self, %args) = @_;
     croak "post xml needed!" unless $args{xml};
-    return $self->post($self->doumail_url . 's', $args{xml},);
+    return $self->post($self->doumail_url . 's', xml => $args{xml});
 }
 
 sub delete_doumail {
     my ($self, %args) = @_;
-    $args{doumailID} ||= $self->doumailID;
-    return $self->delete($self->doumail_url . "/$args{doumailID}",);
+    $args{mailID} ||= $self->mailID;
+    croak "mailID needed" unless defined $args{mailID};
+    return $self->delete($self->doumail_url . "/$args{mailID}");
 }
 
 sub mark_read {
     my ($self, %args) = @_;
-    $args{doumailID} ||= $self->doumailID;
-    croak "post xml needed!" unless $args{xml};
-    return $self->put($self->doumail_url . "/$args{doumailID}", $args{xml},);
+    $args{mailID} ||= $self->mailID;
+    croak "mailID needed" unless defined $args{mailID};
+    croak "put xml needed!" unless $args{xml};
+    return $self->put($self->doumail_url . "/$args{mailID}",
+        xml => $args{xml});
 }
 
 sub delete {
     my ($self, %args) = @_;
-    croak "post xml needed!" unless $args{xml};
+    croak "delete xml needed!" unless $args{xml};
     return $self->delete($self->doumail_url, $args{xml});
 }
 
@@ -119,7 +128,7 @@ Interface to douban.com API  mail section
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http//douban.com/service/apidoc>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http//douban.com/service/apidoc/reference/douamil>
 
 =head1 AUTHOR
 
