@@ -62,7 +62,7 @@ __END__
 
 =head1 NAME
 
-Net::Douban::Note;
+Net::Douban::Note
 
 =head1 SYNOPSIS
 
