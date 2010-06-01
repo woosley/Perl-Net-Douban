@@ -4,7 +4,7 @@ use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;
 
-has 'comsumer_key' => (
+has 'consumer_key' => (
     is  => 'ro',
     isa => 'Str',
 );
@@ -16,23 +16,43 @@ has 'consumer_secret' => (
 
 has 'consumer' => (
     is      => 'rw',
+    lazy    => 1,
     default => \&_build_consumer,
 );
 
 has 'site' => (
     is      => 'rw',
-	isa		=> 'Str',
+    isa     => 'Maybe[Str]',
     default => 'http://www.douban.com',
 );
 
 has 'request_token_path' => (
     is      => 'rw',
+    isa     => 'Maybe[Str]',
     default => '/service/auth/request_token',
+);
+
+has 'authorize_path' => (
+    is      => 'rw',
+    isa     => 'Maybe[Str]',
+    default => '/service/auth/authorize',
 );
 
 has 'access_token_path' => (
     is      => 'rw',
+    isa     => 'Maybe[Str]',
     default => '/service/auth/access_token',
+);
+
+has 'authorize_url' => (
+    is       => 'rw',
+    isa      => 'Maybe[Str]',
+    init_arg => undef,
+);
+
+has 'callback_url' => (
+    is      => 'rw',
+    isa     => 'Maybe[Str]',
 );
 
 sub _build_consumer {
@@ -65,7 +85,12 @@ around 'BUILDARGS' => sub {
 };
 
 sub request_token {
-    shift->consumer->get_request_token;
+    my $self = shift;
+    $self->consumer->get_request_token;
+    $self->authorize_url($self->site
+          . $self->authorize_path
+          . '?oauth_token='
+          . $self->consumer->request_token);
 }
 
 sub access_token {
@@ -135,6 +160,7 @@ sub validate {
     # to do
 }
 
+
 1;
 
 __END__
@@ -152,14 +178,12 @@ __END__
     my $oauth = Net::Douban::OAuth->new(
         consumer_key => ,
         consumer_secret => ,
-        site => ,
-        request_token_path => ,
-        access_token_path =>, 
     );
 
     $oauth->request_token;
-    $oauth->access_token;
-
+    print $oauth->authorize_url; # paste this url to your user
+    $oauth->access_token; # now this object is authorized 
+    $agent = Net::Douban->new(oauth => $oauth);
 
 =head1 DESCRIPTION
     
@@ -192,7 +216,7 @@ get access_token into $oauth->consumer
 
 =head1 SEE ALSO
     
-L<Net::Douban> L<Moose> L<Net::OAuth> L<http://douban.com/service/apidoc>
+L<Net::Douban> L<Moose> L<Net::OAuth> L<http://douban.com/service/apidoc/auth>
 
 =head1 AUTHOR
 
