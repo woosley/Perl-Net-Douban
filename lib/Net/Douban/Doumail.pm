@@ -128,7 +128,7 @@ Interface to douban.com API  mail section
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http//douban.com/service/apidoc/reference/douamil>
+L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc/reference/douamil>
 
 =head1 AUTHOR
 

@@ -109,11 +109,11 @@ __END__
 
 =head1 NAME
 
-Net::Douban::Subject
+Net::Douban::Review
 
 =head1 SYNOPSIS
 
-	use Net::Douban::Subject;
+	use Net::Douban::Review;
 	my $user = Net::Douban::Review->new(
 		apikey => '....',
         # or
@@ -129,7 +129,7 @@ Interface to douban.com API Review section
 
 =head1 METHODS
 
-Those methods return a Net::Douban::Atom object which can be use to get data conveniently
+Those get methods return a Net::Douban::Atom object which can be use to get data conveniently
 
 =over
 

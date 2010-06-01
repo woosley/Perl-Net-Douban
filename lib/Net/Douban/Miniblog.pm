@@ -71,7 +71,7 @@ __END__
 
 =head1 NAME
 
-Net::Douban::Miniblog;
+Net::Douban::Miniblog
 
 =head1 SYNOPSIS
 
