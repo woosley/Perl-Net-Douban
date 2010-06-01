@@ -51,8 +51,8 @@ has 'authorize_url' => (
 );
 
 has 'callback_url' => (
-    is      => 'rw',
-    isa     => 'Maybe[Str]',
+    is  => 'rw',
+    isa => 'Maybe[Str]',
 );
 
 sub _build_consumer {
@@ -68,21 +68,22 @@ sub _build_consumer {
     );
 }
 
-around 'BUILDARGS' => sub {
-    my $orig = shift;
-    my $self = shift;
-    my %args = @_;
+sub BUILD {
+    my ($self, $arg) = @_;
+    my %args = %{$arg};
 
     if (   $args{access_token}
         || $args{access_token_secret}
         || $args{request_token}
         || $args{request_token_secret})
     {
+        $args{request_token_path} ||= $self->request_token_path;
+        $args{access_token_path}  ||= $self->access_token_path;
+        $args{site}               ||= $self->site;
         my $consumer = Net::Douban::OAuth::Consumer->new(%args);
-        return $self->$orig(@_, consumer => $consumer);
+        $self->consumer($consumer);
     }
-    return $self->$orig(@_);
-};
+}
 
 sub request_token {
     my $self = shift;
@@ -159,7 +160,6 @@ sub validate {
 
     # to do
 }
-
 
 1;
 

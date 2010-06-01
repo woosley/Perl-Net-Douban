@@ -1,6 +1,6 @@
 package Net::Douban::Roles;
 
-our $VERSION = '1.07';
+our $VERSION = '1.07_1';
 use Carp qw/carp croak/;
 use Moose::Role;
 use Scalar::Util qw/blessed/;
