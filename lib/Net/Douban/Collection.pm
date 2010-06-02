@@ -71,7 +71,7 @@ __END__
 =head1 SYNOPSIS
 
 	use Net::Douban::Collection;
-	my $user = Net::Douban::Collection->new(
+	my $coll = Net::Douban::Collection->new(
         
 		collectionID => '....',
         # or

@@ -94,15 +94,15 @@ Net::Douban::Subject
 =head1 SYNOPSIS
 
 	use Net::Douban::Subject;
-	my $user = Net::Douban::Subject->new(
+	my $subject = Net::Douban::Subject->new(
         subjectID => 2023013,
 		apikey => '....',
         # or
         oauth => $consumer,
 	);
 
-	$atom = $user->get_book(isbnID => 7543639103);
-    $atom = $user->search_book(tag => 'cowboy', start_index => 5, max_results => 10);
+	$atom = $subject->get_book(isbnID => 7543639103);
+    $atom = $subject->search_book(tag => 'cowboy', start_index => 5, max_results => 10);
 
 =head1 DESCRIPTION
 

@@ -51,8 +51,9 @@ has 'authorize_url' => (
 );
 
 has 'callback_url' => (
-    is  => 'rw',
-    isa => 'Maybe[Str]',
+    is        => 'rw',
+    isa       => 'Maybe[Str]',
+    predicate => 'has_callback',
 );
 
 sub _build_consumer {
@@ -88,10 +89,13 @@ sub BUILD {
 sub request_token {
     my $self = shift;
     $self->consumer->get_request_token;
-    $self->authorize_url($self->site
-          . $self->authorize_path
-          . '?oauth_token='
-          . $self->consumer->request_token);
+    my $url =
+        $self->site
+      . $self->authorize_path
+      . '?oauth_token='
+      . $self->consumer->request_token;
+    $url .= '&oauth_callback=' . $self->callback_url if $self->has_callback;
+    $self->authorize_url($url);
 }
 
 sub access_token {
@@ -180,6 +184,7 @@ __END__
         consumer_secret => ,
     );
 
+    $oauth->callback_url($url);
     $oauth->request_token;
     print $oauth->authorize_url; # paste this url to your user
     $oauth->access_token; # now this object is authorized 

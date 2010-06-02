@@ -94,7 +94,7 @@ __PACKAGE__->meta->make_immutable;
 =head1 SYNOPSIS
 
 	use Net::Douban::Doumail;
-	my $user = Net::Douban::Doumail->new(
+	my $mail= Net::Douban::Doumail->new(
         ...
 	);
 

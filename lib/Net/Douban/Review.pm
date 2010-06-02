@@ -114,14 +114,14 @@ Net::Douban::Review
 =head1 SYNOPSIS
 
 	use Net::Douban::Review;
-	my $user = Net::Douban::Review->new(
+	my $review = Net::Douban::Review->new(
 		apikey => '....',
         # or
         oauth => $consumer,
 	);
 
-	$atom = $user->get_review(reviewID => 1138468);
-    $atom = $user->get_user_review(userID => '2265138', start_index => 5, max_results => 10);
+	$atom = $review->get_review(reviewID => 1138468);
+    $atom = $review->get_user_review(userID => '2265138', start_index => 5, max_results => 10);
 
 =head1 DESCRIPTION
 

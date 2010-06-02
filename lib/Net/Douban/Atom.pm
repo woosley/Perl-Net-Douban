@@ -174,7 +174,7 @@ XML::Atom::Base::get的重载，当没有NS给出时，尽量‘聪明的’猜�
 
 =item B<search_info>
 
-	$feed->searchInfo();
+	$feed->search_info();
 
 返回搜索结果的信息	
 
