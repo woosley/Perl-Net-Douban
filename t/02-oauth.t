@@ -3,6 +3,7 @@ use warnings;
 use lib './lib';
 use lib 't/lib';
 use Test::Douban;
+use Smart::Comments;
 use Test::More tests => 1;
 use Net::Douban;
 use Net::Douban::OAuth;
@@ -14,6 +15,8 @@ my $oauth =
 
 isa_ok($oauth, 'Net::Douban::OAuth');
 
+my $a = $oauth->validate;
+### res : $a
 #my $douban = Net::Douban->new(oauth => $oauth,);
 #
 #my $saying = $douban->Miniblog->get_user_miniblog(userID => 'Net-Douban');

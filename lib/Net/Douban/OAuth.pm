@@ -9,6 +9,12 @@ has 'consumer_key' => (
     isa => 'Str',
 );
 
+has 'access_token_url' => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => 'http://api.douban.com/access_token',
+);
+
 has 'consumer_secret' => (
     is  => 'ro',
     isa => 'Str',
@@ -107,10 +113,12 @@ sub get {
     croak "unauthorized" unless $self->consumer->authorized;
     (my $request_url = shift) or croak "url needed";
 
-    return $self->consumer->mana_protected_resource(
+    my $res = $self->consumer->mana_protected_resource(
         method      => 'GET',
         request_url => $request_url,
     );
+    croak $res->status_line unless $res->is_success;
+    return $res;
 }
 
 sub post {
@@ -119,19 +127,23 @@ sub post {
     my ($request_url, $content, $header) = @_;
     croak "Url needed" unless $request_url;
 
+    my $res;
     unless ($content) {
-        return $self->consumer->mana_protected_resource(
+        $res = $self->consumer->mana_protected_resource(
             method      => 'POST',
             request_url => $request_url,
         );
     } else {
-        return $self->consumer->mana_protected_resource(
+        $res = $self->consumer->mana_protected_resource(
             method      => 'POST',
             request_url => $request_url,
             content     => $content,
             headers     => $header,
         );
     }
+
+    croak $res->status_line unless $res->is_success;
+    return $res;
 }
 
 sub put {
@@ -140,13 +152,16 @@ sub put {
     my ($request_url, $content, $header) = @_;
     croak "Url/content needed" unless $request_url && $content;
 
-    return $self->consumer->mana_protected_resource(
+    my $res = $self->consumer->mana_protected_resource(
         method      => 'PUT',
         request_url => $request_url,
         content     => $content,
         headers     => $header,
 
     );
+
+    croak $res->status_line unless $res->is_success;
+    return $res;
 }
 
 sub delete {
@@ -154,15 +169,21 @@ sub delete {
     croak "unauthorized" unless $self->consumer->authorized;
     croak "Url needed"   unless $request_url;
 
-    return $self->consumer->mana_protected_resource(
+    my $res = $self->consumer->mana_protected_resource(
         method      => 'DELETE',
         request_url => $request_url,
     );
+
+    croak $res->status_line unless $res->is_success;
+    return $res;
 }
 
 sub validate {
-
-    # to do
+    my $self = shift;
+    my $token = shift || $self->consumer->access_token;
+    eval { $self->get($self->access_token_url . "/$token") };
+    return if $@;
+    return 1;
 }
 
 1;
