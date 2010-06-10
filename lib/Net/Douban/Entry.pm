@@ -2,6 +2,7 @@ package Net::Douban::Entry;
 
 use Moose;
 use MooseX::StrictConstructor;
+use MooseX::NonMoose;
 use Net::Douban::DBSubject;
 use Carp qw/carp croak/;
 
@@ -114,6 +115,7 @@ sub subject {
 #}
 1;
 
+__PACKAGE__->meta->make_immutable;
 __END__
 
 =pod

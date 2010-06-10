@@ -1,10 +1,11 @@
 package Net::Douban::Atom;
 
 use Moose;
+use MooseX::NonMoose;
 use Carp qw/carp croak/;
 use Net::Douban::Entry;
 
-extends qw/XML::Atom::Feed Moose::Object/;
+extends qw/XML::Atom::Feed/; 
 
 has 'feed' => (
     is      => 'ro',
@@ -124,6 +125,7 @@ sub search_info {
 #sub DESTROY { }
 
 no Moose;
+__PACKAGE__->meta->make_immutable;
 
 1;
 
