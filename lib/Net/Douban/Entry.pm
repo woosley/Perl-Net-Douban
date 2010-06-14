@@ -14,15 +14,15 @@ has 'namespace' => (
     isa      => 'HashRef',
     required => 1,
 );
-
-sub new {
-    my $class = shift;
-    my %args  = @_;
-    my $ns    = delete $args{namespace};
-    my $self  = $class->SUPER::new(%args);
-    return $class->meta->new_object(__INSTANCE__ => $self, namespace => $ns);
-}
-
+#
+#sub new {
+#    my $class = shift;
+#    my %args  = @_;
+#    my $ns    = delete $args{namespace};
+#    my $self  = $class->SUPER::new(%args);
+#    return $class->meta->new_object(__INSTANCE__ => $self, namespace => $ns);
+#}
+#
 sub get {
     my $self = shift;
     my ($ns, $field);

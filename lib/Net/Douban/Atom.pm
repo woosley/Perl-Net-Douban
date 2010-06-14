@@ -33,11 +33,16 @@ has 'namespace' => (
         \%ns;
     }
 );
+#
+#sub new {
+#    my $class = shift;
+#    my $self  = $class->SUPER::new(@_);
+#    return $class->meta->new_object(__INSTANCE__ => $self);
+#}
 
-sub new {
-    my $class = shift;
-    my $self  = $class->SUPER::new(@_);
-    return $class->meta->new_object(__INSTANCE__ => $self);
+sub FOREIGNBUILDARGS {
+	my ($self, %args) = @_;
+	return ($args{xml});
 }
 
 sub get {
