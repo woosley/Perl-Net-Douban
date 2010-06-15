@@ -9,7 +9,7 @@ use Test::More tests => 5;
 
 my $xml = gtxml;
 
-my $atom = Net::Douban::Atom->new(\$xml);
+my $atom = Net::Douban::Atom->new(xml => \$xml);
 isa_ok($atom, 'Net::Douban::Atom');
 
 is($atom->title, 'Cowboy Bebop', 'title: Cowboy Bebop');

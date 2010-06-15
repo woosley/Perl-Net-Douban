@@ -42,7 +42,7 @@ has 'namespace' => (
 
 sub FOREIGNBUILDARGS {
 	my ($self, %args) = @_;
-	return ($args{xml});
+	return $args{xml};
 }
 
 sub get {
@@ -130,7 +130,8 @@ sub search_info {
 #sub DESTROY { }
 
 no Moose;
-__PACKAGE__->meta->make_immutable;
+## make_immutable cause errors
+#__PACKAGE__->meta->make_immutable;
 
 1;
 
