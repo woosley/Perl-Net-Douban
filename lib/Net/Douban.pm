@@ -5,38 +5,23 @@ use Carp qw/carp croak/;
 
 with 'Net::Douban::Roles';
 
-our $AUTOLOAD;
+for my $name (
+    qw/User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog/
+  )
+{
+    my $lowercased = lc $name;
+    no strict 'refs';
+    my $builder = '_build_' . "$lowercased";
+    *{__PACKAGE__ . "::" . $builder} = sub {
+        my $self = shift;
+        my $class = "Net::Douban::$name";
+        eval "require $class";
+        croak $@ if $@;
+        my $obj = "Net::Douban::$name"->new($self->args, @_,);
+    };
 
-sub AUTOLOAD {
-    (my $name = $AUTOLOAD) =~ s/.*:://g;
-    return if $name eq 'DESTORY';
-    if (grep {/^$name$/}
-        qw/User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog OAuth/
-      )
-    {
-        my $sub = <<"SUB";
-        sub $name {
-            my \$self = shift;
-
-            if (ref \$self->{$name}) {
-                return \$self->{$name};
-            } else {
-                my \$class = "Net::Douban::$name";
-                eval "require \$class";
-                my \$obj = "Net::Douban::$name"->new(\$self->args, \@_,);
-                \$self->{$name} = \$obj;
-                return \$obj;
-			}
-          }
-SUB
-        eval($sub);
-        goto &$name;
-    }
-    croak "Unknow Method $name!";
+    has $lowercased => (is => 'ro', lazy => 1, builder => $builder);
 }
-
-sub DESTORY { }
-
 no Moose;
 __PACKAGE__->meta->make_immutable;
 

@@ -3,7 +3,6 @@ use warnings;
 use lib './lib';
 use lib 't/lib';
 use Test::Douban;
-use Smart::Comments;
 use Test::More tests => 1;
 use Net::Douban;
 use Net::Douban::OAuth;
@@ -17,10 +16,10 @@ isa_ok($oauth, 'Net::Douban::OAuth');
 
 my $a = $oauth->validate;
 ### res : $a
-#my $douban = Net::Douban->new(oauth => $oauth,);
+my $douban = Net::Douban->new(oauth => $oauth,);
 #
-#my $saying = $douban->Miniblog->get_user_miniblog(userID => 'Net-Douban');
-#isa_ok($saying, 'Net::Douban::Atom', 'Return value from get_user_miniblog');
+my $saying = $douban->Miniblog->get_user_miniblog(userID => 'Net-Douban');
+isa_ok($saying, 'Net::Douban::Atom', 'Return value from get_user_miniblog');
 #my @a = $saying->entries;
 #isa_ok($a[0], 'Net::Douban::Entry', 'Content returned from $saying->entires');
 #

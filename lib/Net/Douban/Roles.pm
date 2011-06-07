@@ -48,6 +48,7 @@ has 'max_results' => (
 
 sub args {
     my $self = shift;
+    return unless blessed($self) && $self->isa("Net::Douban");
     my %ret;
     for my $arg (qw/ ua apikey start_index max_results oauth/) {
         if (defined $self->$arg) {
