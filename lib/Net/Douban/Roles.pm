@@ -1,16 +1,21 @@
 package Net::Douban::Roles;
 
-our $VERSION = '1.07_2';
 use Carp qw/carp croak/;
 use Moose::Role;
 use Scalar::Util qw/blessed/;
 
-has 'oauth' => (is => 'rw', predicate => 'has_oauth');
+has 'oauth' => (is => 'rw', predicate => 'has_oauth', lazy_build => 1);
+has 'ua' => (is => 'rw', lazy_build => 1,);
+has 'apikey'      => (is => 'rw', isa => 'Str');
+has 'private_key' => (is => 'rw', isa => 'Str');
+has 'start_index' => (is => 'rw', isa => 'PInt', default => 0,);
+has 'max_results' => (is => 'rw', isa => 'PInt', default => 10);
 
-has 'ua' => (
-    is         => 'rw',
-    lazy_build => 1,
-);
+sub _build_oauth {
+    eval { require Net::Douban::OAuth};
+    croak $@ if $@;
+    Net::Douban::OAuth->new();
+}
 
 sub _build_ua {
     eval { require LWP::UserAgent };
@@ -24,28 +29,6 @@ sub _build_ua {
     $ua;
 }
 
-has 'apikey' => (
-    is  => 'rw',
-    isa => 'Str',
-);
-
-has 'private_key' => (
-    is  => 'rw',
-    isa => 'Str',
-);
-
-has 'start_index' => (
-    is      => 'rw',
-    isa     => 'PInt',
-    default => 0,
-);
-
-has 'max_results' => (
-    is      => 'rw',
-    isa     => 'PInt',
-    default => 10,
-);
-
 sub args {
     my $self = shift;
     return unless blessed($self) && $self->isa("Net::Douban");
@@ -58,23 +41,22 @@ sub args {
     return %ret;
 }
 
-
 no Moose::Role;
 
 package Net::Douban::Types;
 use Moose::Util::TypeConstraints;
 
 ## url
-subtype 'Url'
-	=> as 'Str',
-	=> where { $_ =~ m/^http:\/\/.*\w$/},
-	=> message {"invalid url!"};
+subtype
+  'Url' => as 'Str',
+  => where { $_ =~ m/^http:\/\/.*\w$/ },
+  => message {"invalid url!"};
 
 ## positive int
-subtype 'PInt'
-	=> as 'Int',
-	=> where { $_ >= 0 },
-	=> message {"not a positive int"};
+subtype
+  'PInt' => as 'Int',
+  => where { $_ >= 0 },
+  => message {"not a positive int"};
 1;
 __END__
 

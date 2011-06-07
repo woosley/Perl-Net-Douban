@@ -4,26 +4,15 @@ use Moose;
 use Carp qw/carp croak/;
 use Net::Douban::OAuth::Consumer;
 
-has 'consumer_key' => (
-    is  => 'ro',
-    isa => 'Str',
-);
+has 'consumer_key'    => (is => 'rw', isa        => 'Str');
+has 'consumer_secret' => (is => 'rw', isa        => 'Str');
+has 'consumer'        => (is => 'rw', lazy_build => 1);
+has 'authorize_url' => (is => 'rw', isa => 'Maybe[Str]', init_arg => undef);
 
 has 'access_token_url' => (
     is      => 'ro',
     isa     => 'Str',
     default => 'http://api.douban.com/access_token',
-);
-
-has 'consumer_secret' => (
-    is  => 'ro',
-    isa => 'Str',
-);
-
-has 'consumer' => (
-    is      => 'rw',
-    lazy    => 1,
-    default => \&_build_consumer,
 );
 
 has 'site' => (
@@ -50,11 +39,6 @@ has 'access_token_path' => (
     default => '/service/auth/access_token',
 );
 
-has 'authorize_url' => (
-    is       => 'rw',
-    isa      => 'Maybe[Str]',
-    init_arg => undef,
-);
 
 has 'callback_url' => (
     is        => 'rw',
