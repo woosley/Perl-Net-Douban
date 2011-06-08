@@ -1,47 +1,66 @@
 package Net::Douban::User;
-
 use Moose;
 with 'Net::Douban::Roles::More';
-use Net::Douban::Atom;
 use Carp qw/carp croak/;
 use MooseX::StrictConstructor;
 
 has 'userID' => (is => 'rw', isa => 'Str',);
 
-sub get_user {
-    my ($self, %args) = @_;
-    my $userID = $args{userID} || $self->userID;
-    croak "no userId found!" unless $userID;
-    return Net::Douban::Atom->new($self->get($self->user_url . "/$userID"));
-}
+our %api_hash = (
+    get_user => {
+        url_param => 'userID',
+        path      => '/people/{userID}',
+        method    => 'get'
+    },
+    get_contacts => {
+        url_param => 'userID',
+        path      => '/people/{userID}/contacts',
+        method    => 'get',
+    },
+    get_friends => {
+        url_param => 'userID',
+        path      => '/people/{userID}/friends',
+        method    => 'get',
+    },
+    search => {param => 'q', path => '/people/', method => 'get'},
+    me => {path => '/people/%40me', method => 'get'},
+);
 
-sub search {
-    my ($self, %args) = @_;
-    croak "no query found in the parameters" unless exists $args{q};
-    return Net::Douban::Atom->new($self->get($self->user_url, %args));
-}
+#sub get_user {
+#    my ($self, %args) = @_;
+#    my $userID = $args{userID} || $self->userID;
+#    croak "no userId found!" unless $userID;
+#    return Net::Douban::Atom->new($self->get($self->user_url . "/$userID"));
+#}
+#
+#sub search {
+#    my ($self, %args) = @_;
+#    croak "no query found in the parameters" unless exists $args{q};
+#    return Net::Douban::Atom->new($self->get($self->user_url, %args));
+#}
+#
+#sub get_auth_user {
+#    my ($self, %args) = @_;
+#    return Net::Douban::Atom->new($self->get($self->user_url . '/%40me'));
+#}
+#
+#sub get_contacts {
+#    my ($self, %args) = @_;
+#    my $userID = delete $args{userID} || $self->userID;
+#    croak "no userId found!" unless $userID;
+#    return Net::Douban::Atom->new(
+#        $self->get($self->user_url . "/$userID/contacts", %args));
+#}
+#
+#sub get_friends {
+#    my ($self, %args) = @_;
+#    my $userID = delete $args{userID} || $self->userID;
+#    croak "no userId found!" unless $userID;
+#    return Net::Douban::Atom->new(
+#        $self->get($self->user_url . "/$userID/friends", %args));
+#}
 
-sub get_auth_user {
-    my ($self, %args) = @_;
-    return Net::Douban::Atom->new($self->get($self->user_url . '/%40me'));
-}
-
-sub get_contacts {
-    my ($self, %args) = @_;
-    my $userID = delete $args{userID} || $self->userID;
-    croak "no userId found!" unless $userID;
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$userID/contacts", %args));
-}
-
-sub get_friends {
-    my ($self, %args) = @_;
-    my $userID = delete $args{userID} || $self->userID;
-    croak "no userId found!" unless $userID;
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$userID/friends", %args));
-}
-
+__PACKAGE__->_build_method(%api_hash);
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;

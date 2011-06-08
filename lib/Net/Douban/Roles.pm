@@ -2,17 +2,18 @@ package Net::Douban::Roles;
 
 use Carp qw/carp croak/;
 use Moose::Role;
-use Scalar::Util qw/blessed/;
+our $VERSION = '1.08';
 
+our $url_base = 'http://api.douban.com';
 has 'oauth' => (is => 'rw', predicate => 'has_oauth', lazy_build => 1);
-has 'ua' => (is => 'rw', lazy_build => 1,);
-has 'apikey'      => (is => 'rw', isa => 'Str');
-has 'private_key' => (is => 'rw', isa => 'Str');
-has 'start_index' => (is => 'rw', isa => 'PInt', default => 0,);
-has 'max_results' => (is => 'rw', isa => 'PInt', default => 10);
+has 'ua'          => (is => 'rw', lazy_build => 1,);
+has 'apikey'      => (is => 'rw', isa        => 'Str');
+has 'private_key' => (is => 'rw', isa        => 'Str');
+has 'start_index' => (is => 'rw', isa        => 'PInt', default => 0,);
+has 'max_results' => (is => 'rw', isa        => 'PInt', default => 10);
 
 sub _build_oauth {
-    eval { require Net::Douban::OAuth};
+    eval { require Net::Douban::OAuth };
     croak $@ if $@;
     Net::Douban::OAuth->new();
 }
@@ -39,6 +40,27 @@ sub args {
         }
     }
     return %ret;
+}
+
+sub _make_reqeust { }
+
+sub _build_method {
+    my ($self, %api_hash) = @_;
+    for my $method (keys %api_hash) {
+        my $des         = $api_hash{$method};
+        my $request_url = $url_base . $des->{path};
+        my $sub         = sub {
+            my ($self, %args) = @_;
+            if (my $url_param = $des->{url_param}) {
+                if (!$args{$url_param}) {
+                    croak "Missing Augument: $url_param";
+                }
+                $request_url =~ s/\Q{$url_param}\E/$args{url_param}/g;
+            }
+            $self->_make_request($method, $request_url);
+        };
+        $self->meta->add_method($method, $sub);
+    }
 }
 
 no Moose::Role;
