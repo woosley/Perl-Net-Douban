@@ -2,39 +2,29 @@ package Net::Douban::Roles;
 
 use Carp qw/carp croak/;
 use Moose::Role;
+use namespace::autoclean;
+use MIME::Base64;
+
+with "Net::Douban::OAuth";
 our $VERSION = '1.08';
-
-our $url_base = 'http://api.douban.com';
-has 'oauth' => (is => 'rw', predicate => 'has_oauth', lazy_build => 1);
-has 'ua'          => (is => 'rw', lazy_build => 1,);
-has 'apikey'      => (is => 'rw', isa        => 'Str');
-has 'private_key' => (is => 'rw', isa        => 'Str');
-has 'start_index' => (is => 'rw', isa        => 'PInt', default => 0,);
-has 'max_results' => (is => 'rw', isa        => 'PInt', default => 10);
-
-sub _build_oauth {
-    eval { require Net::Douban::OAuth };
-    croak $@ if $@;
-    Net::Douban::OAuth->new();
-}
-
-sub _build_ua {
-    eval { require LWP::UserAgent };
-    croak $@ if $@;
-    my $ua = LWP::UserAgent->new(
-        agent        => 'perl-net-douban-' . $VERSION,
-        timeout      => 30,
-        max_redirect => 5
-    );
-    $ua->env_proxy;
-    $ua;
-}
+has 'apikey'      => (is => 'rw', isa => 'Str');
+has 'private_key' => (is => 'rw', isa => 'Str');
+has 'start_index' => (is => 'rw', isa => 'PInt', default => 0);
+has 'max_results' => (is => 'rw', isa => 'PInt', default => 10);
+has 'api_base' =>
+  (is => 'ro', isa => 'Str', default => 'http://api.douban.com');
+has 'res_callback' => (
+    is      => 'rw',
+    isa     => 'CodeRef',
+    lazy    => 1,
+    default => sub { \&_wrape_response },
+);
 
 sub args {
     my $self = shift;
     return unless blessed($self) && $self->isa("Net::Douban");
     my %ret;
-    for my $arg (qw/ ua apikey start_index max_results oauth/) {
+    for my $arg (qw/apikey start_index max_results/) {
         if (defined $self->$arg) {
             $ret{$arg} = $self->$arg;
         }
@@ -42,28 +32,71 @@ sub args {
     return %ret;
 }
 
-sub _make_reqeust { }
-
 sub _build_method {
     my ($self, %api_hash) = @_;
-    for my $method (keys %api_hash) {
-        my $des         = $api_hash{$method};
-        my $request_url = $url_base . $des->{path};
-        my $sub         = sub {
-            my ($self, %args) = @_;
-            if (my $url_param = $des->{url_param}) {
-                if (!$args{$url_param}) {
-                    croak "Missing Augument: $url_param";
-                }
-                $request_url =~ s/\Q{$url_param}\E/$args{url_param}/g;
+    for my $key (keys %api_hash) {
+
+        my $sub = sub {
+            my $self        = shift;
+            my %args        = @_;
+            my $url_param   = $api_hash{$key}{url_param};
+            my $method      = $api_hash{$key}{method};
+            my $content     = $api_hash{$key}{content};
+            my $params      = $api_hash{$key}{params};
+            my $request_url = $self->api_base . $api_hash{$key}{path};
+            my @args        = ($method);
+
+            ## try to build request url
+            if ($url_param) {
+                croak "Argument $url_param missing"
+                  if (!exists $args{$url_param});
+                my $x = '${' . uc $url_param . '}';
+                $request_url =~ s/\Q$x\E/$args{$url_param}/g;
             }
-            $self->_make_request($method, $request_url);
+
+            if ($params) {
+                croak "Argument $params missing" if (!exists $args{$params});
+                push @args, $params => $args{$params};
+            }
+
+#push @args, 'alt' => 'json' if $method eq 'GET';
+            push @args, 'alt' => 'json';
+
+            if ($content && $method eq 'POST') {
+                croak 'Missing param' unless @_;
+                my $decoded_content = decode_base64($content);
+                my $c               = $self->escape($_[0]);
+                my $mark            = '${CONTENT}';
+                $decoded_content =~ s/\Q$mark\E/$c/g;
+                push @args,
+                  Content      => $decoded_content,
+                  Content_Type => q{application/atom+xml};
+            }
+            push @args, request_url => $request_url;
+            $self->res_callback->($self->_restricted_request(@args));
         };
-        $self->meta->add_method($method, $sub);
+        $self->meta->add_method($key, $sub);
     }
 }
 
-no Moose::Role;
+sub _wrape_response {
+    my $res = shift;
+    croak $res->status_line unless $res->is_success;
+    return $res->decoded_content;
+}
+
+sub build_url {
+    my $self = shift;
+    my $url  = shift;
+    my %args = @_;
+    my $mark = $url =~ /\?/ ? '&' : '?';
+    while (my ($key, $value) = each %args) {
+        $key =~ s/-/_/g;
+        $url .= $mark . "$key=$value";
+        $mark = '&';
+    }
+    return $url;
+}
 
 package Net::Douban::Types;
 use Moose::Util::TypeConstraints;
@@ -71,7 +104,7 @@ use Moose::Util::TypeConstraints;
 ## url
 subtype
   'Url' => as 'Str',
-  => where { $_ =~ m/^http:\/\/.*\w$/ },
+  => where { $_ =~ m/^https?:\/\/.*\w$/ },
   => message {"invalid url!"};
 
 ## positive int

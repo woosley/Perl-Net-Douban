@@ -2,7 +2,6 @@ package Net::Douban::Doumail;
 
 use Moose;
 use MooseX::StrictConstructor;
-use Net::Douban::Atom;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles::More';
 
@@ -28,61 +27,60 @@ sub inbox {
         $self->get($self->doumail_url . "/inbox", %args));
 }
 
-sub unread {
-    my ($self, %args) = @_;
-    return Net::Douban::Atom->new(
-        $self->get($self->doumail_url . "/inbox/unread", %args));
-}
+#sub unread {
+#    my ($self, %args) = @_;
+#    return Net::Douban::Atom->new(
+#        $self->get($self->doumail_url . "/inbox/unread", %args));
+#}
+#
+#sub outbox {
+#    my ($self, %args) = @_;
+#    return Net::Douban::Atom->new(
+#        $self->get($self->doumail_url . "/outbox", %args));
+#}
+#
+#sub get_doumail {
+#    my ($self, %args) = @_;
+#    $args{mailID} ||= $self->mailID;
+#    croak "mailID needed" unless defined $args{mailID};
+#    return Net::Douban::Atom->new(
+#        $self->get($self->doumail_url . "/$args{mailID}", %args));
+#}
+#
+#sub post_doumail {
+#    my ($self, %args) = @_;
+#    croak "post xml needed!" unless $args{xml};
+#    return $self->post($self->doumail_url . 's', xml => $args{xml});
+#}
+#
+#sub delete_doumail {
+#    my ($self, %args) = @_;
+#    $args{mailID} ||= $self->mailID;
+#    croak "mailID needed" unless defined $args{mailID};
+#    return $self->delete($self->doumail_url . "/$args{mailID}");
+#}
+#
+#sub mark_read {
+#    my ($self, %args) = @_;
+#    $args{mailID} ||= $self->mailID;
+#    croak "mailID needed" unless defined $args{mailID};
+#    croak "put xml needed!" unless $args{xml};
+#    return $self->put($self->doumail_url . "/$args{mailID}",
+#        xml => $args{xml});
+#}
+#
+#sub delete {
+#    my ($self, %args) = @_;
+#    croak "delete xml needed!" unless $args{xml};
+#    return $self->delete($self->doumail_url, $args{xml});
+#}
+#
+#sub mark {
+#    my ($self, %args) = @_;
+#    croak "post xml needed!" unless $args{xml};
+#    return $self->put($self->doumail_url . '/delete', $args{xml},);
+#}
 
-sub outbox {
-    my ($self, %args) = @_;
-    return Net::Douban::Atom->new(
-        $self->get($self->doumail_url . "/outbox", %args));
-}
-
-sub get_doumail {
-    my ($self, %args) = @_;
-    $args{mailID} ||= $self->mailID;
-    croak "mailID needed" unless defined $args{mailID};
-    return Net::Douban::Atom->new(
-        $self->get($self->doumail_url . "/$args{mailID}", %args));
-}
-
-sub post_doumail {
-    my ($self, %args) = @_;
-    croak "post xml needed!" unless $args{xml};
-    return $self->post($self->doumail_url . 's', xml => $args{xml});
-}
-
-sub delete_doumail {
-    my ($self, %args) = @_;
-    $args{mailID} ||= $self->mailID;
-    croak "mailID needed" unless defined $args{mailID};
-    return $self->delete($self->doumail_url . "/$args{mailID}");
-}
-
-sub mark_read {
-    my ($self, %args) = @_;
-    $args{mailID} ||= $self->mailID;
-    croak "mailID needed" unless defined $args{mailID};
-    croak "put xml needed!" unless $args{xml};
-    return $self->put($self->doumail_url . "/$args{mailID}",
-        xml => $args{xml});
-}
-
-sub delete {
-    my ($self, %args) = @_;
-    croak "delete xml needed!" unless $args{xml};
-    return $self->delete($self->doumail_url, $args{xml});
-}
-
-sub mark {
-    my ($self, %args) = @_;
-    croak "post xml needed!" unless $args{xml};
-    return $self->put($self->doumail_url . '/delete', $args{xml},);
-}
-
-no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
 

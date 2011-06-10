@@ -1,242 +1,220 @@
 package Net::Douban::OAuth;
-
-use Moose;
+use Moose::Role;
 use Carp qw/carp croak/;
-use Net::Douban::OAuth::Consumer;
+use Net::OAuth;
+use HTTP::Request::Common qw/PUT DELETE POST GET/;
+use namespace::autoclean;
 
-has 'consumer_key'    => (is => 'rw', isa        => 'Str');
-has 'consumer_secret' => (is => 'rw', isa        => 'Str');
-has 'consumer'        => (is => 'rw', lazy_build => 1);
-has 'authorize_url' => (is => 'rw', isa => 'Maybe[Str]', init_arg => undef);
+for my $rw_attr (
+    qw/consumer_key consumer_secret request_token request_token_secret
+    access_token access_token_secret paste_url oauth_version extra_params/
+  )
+{
+    has $rw_attr => (is => 'rw');
+}
 
-has 'access_token_url' => (
-    is      => 'ro',
-    isa     => 'Str',
-    default => 'http://api.douban.com/access_token',
-);
+for my $ro_attr (qw/request_url access_url authorize_url realm/) {
+    has $ro_attr => (is => 'ro');
+}
 
-has 'site' => (
-    is      => 'rw',
-    isa     => 'Maybe[Str]',
-    default => 'http://www.douban.com',
-);
+has 'ua' => (is => 'rw', lazy_build => 1);
 
-has 'request_token_path' => (
-    is      => 'rw',
-    isa     => 'Maybe[Str]',
-    default => '/service/auth/request_token',
-);
+our $version = 1.08;
 
-has 'authorize_path' => (
-    is      => 'rw',
-    isa     => 'Maybe[Str]',
-    default => '/service/auth/authorize',
-);
-
-has 'access_token_path' => (
-    is      => 'rw',
-    isa     => 'Maybe[Str]',
-    default => '/service/auth/access_token',
-);
-
-
-has 'callback_url' => (
-    is        => 'rw',
-    isa       => 'Maybe[Str]',
-    predicate => 'has_callback',
-);
-
-sub _build_consumer {
-
+sub get_request_token {
     my $self = shift;
-
-    return Net::Douban::OAuth::Consumer->new(
-        consumer_key       => $self->consumer_key,
-        consumer_secret    => $self->consumer_secret,
-        request_token_path => $self->request_token_path,
-        access_token_path  => $self->access_token_path,
-        site               => $self->site,
+    my %args = @_;
+    $self->_get_token(
+        'request token',
+        consumer_secret => $self->consumer_secret,
+        request_url     => $self->request_url,
+        (@_),
+    );
+    $self->paste_url(
+            $self->authorize_url 
+          . '/?oauth_token=' 
+          . $self->request_token
+          . (
+            $args{callback_url}
+            ? '&oauth_callback=' . $args{callback_url}
+            : ""
+          )
     );
 }
 
-sub BUILD {
-    my ($self, $arg) = @_;
-    my %args = %{$arg};
-
-    if (   $args{access_token}
-        || $args{access_token_secret}
-        || $args{request_token}
-        || $args{request_token_secret})
-    {
-        $args{request_token_path} ||= $self->request_token_path;
-        $args{access_token_path}  ||= $self->access_token_path;
-        $args{site}               ||= $self->site;
-        my $consumer = Net::Douban::OAuth::Consumer->new(%args);
-        $self->consumer($consumer);
-    }
-}
-
-sub request_token {
+sub get_access_token {
     my $self = shift;
-    $self->consumer->get_request_token;
-    my $url =
-        $self->site
-      . $self->authorize_path
-      . '?oauth_token='
-      . $self->consumer->request_token;
-    $url .= '&oauth_callback=' . $self->callback_url if $self->has_callback;
-    $self->authorize_url($url);
-}
-
-sub access_token {
-    shift->consumer->get_access_token;
-}
-
-sub get {
-    my $self = shift;
-    croak "unauthorized" unless $self->consumer->authorized;
-    (my $request_url = shift) or croak "url needed";
-
-    my $res = $self->consumer->mana_protected_resource(
-        method      => 'GET',
-        request_url => $request_url,
+    $self->_get_token(
+        'access token',
+        consumer_secret => $self->consumer_secret,
+        token           => $self->request_token,
+        token_secret    => $self->request_token_secret,
+        request_url     => $self->access_url,
+        (@_),
     );
-    croak $res->status_line unless $res->is_success;
-    return $res;
 }
 
-sub post {
-    my $self = shift;
-    croak "unauthorized" unless $self->consumer->authorized;
-    my ($request_url, $content, $header) = @_;
-    croak "Url needed" unless $request_url;
-
-    my $res;
-    unless ($content) {
-        $res = $self->consumer->mana_protected_resource(
-            method      => 'POST',
-            request_url => $request_url,
-        );
+sub _get_token {
+    my $self    = shift;
+    my $type    = shift;
+    my $request = $self->_get_request($type, 'POST', @_);
+    my $res     = $self->ua->request(POST $request->to_url);
+    if (!$res->is_success) {
+        croak $res->status_line;
+        return;
     } else {
-        $res = $self->consumer->mana_protected_resource(
-            method      => 'POST',
-            request_url => $request_url,
-            content     => $content,
-            headers     => $header,
-        );
+        $self->_store_token($type, $res);
     }
-
-    croak $res->status_line unless $res->is_success;
-    return $res;
 }
 
-sub put {
+sub _get_request {
     my $self = shift;
-    croak "unauthorized" unless $self->consumer->authorized;
-    my ($request_url, $content, $header) = @_;
-    croak "Url/content needed" unless $request_url && $content;
+    my ($type, $method, %args) = @_;
 
-    my $res = $self->consumer->mana_protected_resource(
-        method      => 'PUT',
-        request_url => $request_url,
-        content     => $content,
-        headers     => $header,
+    my $request = Net::OAuth->request($type)->new(
+        consumer_key => $self->consumer_key,
+        %args,
+        timestamp        => time,
+        nonce            => time ^ $$ ^ int(rand 2 ^ 32),
+        signature_method => 'HMAC-SHA1',
+        request_method   => $method,
+        protocal_version => $self->oauth_version
+          && $self->oauth_version eq '1.0a'
+        ? Net::OAuth::PROTOCOL_VERSION_1_0A
+        : Net::OAuth::PROTOCOL_VERSION_1_0,
+    );
+    $request->sign;
+    $request;
+}
 
+sub load_token {
+    my ($self, %tokens) = @_;
+    for my $token_name (keys %tokens) {
+        eval { $self->$token_name($tokens{$token_name}) };
+        carp "Warninng: skipped $token_name, $@" if $@;
+    }
+}
+
+sub _store_token {
+    my ($self, $type, $res) = @_;
+    my $mesg = Net::OAuth->response($type)->from_post_body($res->content);
+    $type =~ s/\s+/_/g;
+    $self->$type($mesg->token);
+    $type .= '_secret';
+    $self->$type($mesg->token_secret);
+}
+
+sub _restricted_request {
+    my $self        = shift;
+    my $method      = uc shift;
+    my %args        = @_;
+    my $request_url = delete $args{request_url};
+
+    #my $extra   = $self->_tip_extra(\%args);
+    my $request = $self->_get_request(
+        'protected resource', $method,
+        consumer_secret => $self->consumer_secret,
+        token           => $self->access_token,
+        token_secret    => $self->access_token_secret,
+        request_url     => $request_url,
+        extra_params    => $method eq 'GET' ? \%args : {},
     );
 
-    croak $res->status_line unless $res->is_success;
-    return $res;
+    my $http_request;
+    if ($method eq 'GET') {
+        $http_request = HTTP::Request->new($method, $request->to_url);
+
+    } else {
+        no strict 'refs';
+#        $http_request = *{"HTTP::Request::Common::" . $method}->(
+        $http_request = $method->(
+            $request->request_url,
+            Authorization =>
+              $request->to_authorization_header($self->realm),
+            %args,
+        );
+
+    }
+    $self->ua->request($http_request);
 }
 
-sub delete {
-    my ($self, $request_url) = @_;
-    croak "unauthorized" unless $self->consumer->authorized;
-    croak "Url needed"   unless $request_url;
-
-    my $res = $self->consumer->mana_protected_resource(
-        method      => 'DELETE',
-        request_url => $request_url,
-    );
-
-    croak $res->status_line unless $res->is_success;
-    return $res;
+sub _build_ua {
+    eval { require LWP::UserAgent };
+    if ($@) {
+        croak "LWP::UserAgent not found $@";
+    }
+    my $ua = LWP::UserAgent->new();
+    $ua->env_proxy;
+    $ua;
 }
 
-sub validate {
+sub escape {
     my $self = shift;
-    my $token = shift || $self->consumer->access_token;
-    eval { $self->get($self->access_token_url . "/$token") };
-    return if $@;
-    return 1;
+    my $c    = shift;
+    my %foo  = (
+        '\'' => '&apos;',
+        '"'  => "&quot;",
+        '&'  => '&amp;',
+        '<'  => "&lt;",
+        ">"  => '&gt'
+    );
+    for my $key (keys %foo) {
+        $c =~ s/$key/$foo{$key}/g;
+    }
+    return $c;
 }
 
 1;
-
 __END__
-
-=pod
-
-=encoding utf8
 
 =head1 NAME
 
-    Net::Douban::OAuth - OAuth object for Net::Douban
+Net::Douban::OAuth - OAuth for Net::Douban
+
+=head1 VERSION
+
+Version 1.08
 
 =head1 SYNOPSIS
+
+OAuth object for Net::Douban
+
+    use Net::Douban;
     
-    my $oauth = Net::Douban::OAuth->new(
-        consumer_key => ,
-        consumer_secret => ,
+    my $social = Net::Douban->new(
+        consumer_key => 'CONSUMER_KEY',
+        consumer_secret => 'CONSUMER_SECRET',
     );
 
-    $oauth->callback_url($url);
-    $oauth->request_token;
-    print $oauth->authorize_url; # paste this url to your user
-    $oauth->access_token; # now this object is authorized 
-    $agent = Net::Douban->new(oauth => $oauth);
+    $social->get_request_token(callback_url = $callback_url);
 
-=head1 DESCRIPTION
+    ## get you user to this url
+    print $social->paste_url;
+    <>;
+
+    $social->get_access_token;
+
+    #then you can use this object to access user data
     
-OAuth object for douban.com base on L<Net::OAuth>
-
-=head1 METHOD
-
-=over 4
-
-=item B<new>
-
-Create the OAuth object for authentication. If the authenticated tokens are passed as the arguments, do remember to pass authorized => 1 too.
-
-=item B<request_token>
-
-get request token into $oauth->consumer
-
-=item B<access_token>
     
-get access_token into $oauth->consumer
+=head1 METHODS
 
-=item B<HTTP Request Methods>
-    
-    get
-    post
-    put
-    delete
+=head2 get_request_token
 
-=back
-
-=head1 SEE ALSO
-    
-L<Net::Douban> L<Moose> L<Net::OAuth> L<http://douban.com/service/apidoc/auth>
+=head2 get_access_token
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu, C<< <woosley.xu at gmail.com> >>
 
-=head1 COPYRIGHT & LICENSE
+=head1 LICENSE AND COPYRIGHT
 
-This software is copyright (c) 2010 by woosley.xu.
+Copyright 2011 woosley.xu.
 
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
 
 =cut

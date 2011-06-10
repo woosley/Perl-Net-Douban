@@ -6,16 +6,34 @@ use Carp qw/carp croak/;
 use Net::Douban::Atom;
 with 'Net::Douban::Roles::More';
 
-has 'collectionID' => (
-    is  => 'rw',
-    isa => 'Str',
-);
+has 'collectionID' => (is => 'rw', isa => 'Str');
 
-has 'collection_url' => (
-    is      => 'rw',
-    isa     => 'Url',
-    lazy    => 1,
-    default => sub { shift->base_url . '/collection' },
+our %api_hash = (
+    get_collection => {
+        path      => '/collection/{collectionID}',
+        method    => 'GET',
+        url_param => 'collectionID',
+    },
+
+    get_user_collection => {
+        path           => '/people/{userID}/collection',
+        method         => 'GET',
+        url_param      => 'userID',
+        required_param => 'cat',
+    },
+
+    put_collection => {
+        path      => '/collection/{collectionID}',
+        url_param => 'collectionID',
+        method    => 'PUT',
+    },
+
+    delete_collection => {
+        path      => '/collection/{collectionID}',
+        url_param => 'collectionID',
+        method    => 'PUT',
+    },
+    post_collection => { path   => '/', method => 'POST' },
 );
 
 sub get_collection {
@@ -53,7 +71,6 @@ sub delete_collection {
     $args{collectionID} ||= $self->collectionID;
     croak "collectionID missing" unless $args{collectionID};
     return $self->delete($self->collection_url . "/$args{collectionID}");
-
 }
 
 no Moose;
