@@ -7,17 +7,17 @@ use MooseX::StrictConstructor;
 
 our %api_hash = (
     get_user => {
-        url_param => 'userID',
+        has_url_param => 'userID',
         path      => '/people/{userID}',
         method    => 'GET'
     },
     get_contacts => {
-        url_param => 'userID',
+        has_url_param => 'userID',
         path      => '/people/{userID}/contacts',
         method    => 'GET',
     },
     get_friends => {
-        url_param => 'userID',
+        has_url_param => 'userID',
         path      => '/people/{userID}/friends',
         method    => 'GET',
     },

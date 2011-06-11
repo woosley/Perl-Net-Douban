@@ -32,6 +32,30 @@ sub args {
     return %ret;
 }
 
+sub __build_path {
+    my ($api, %args) = @_;
+
+    return $api->{path} unless $api->{has_url_param};
+    my $path = $api->{path};
+    my (@no, @path_list);
+    if (ref $path) {
+        push @path_list, @$path;
+    } else {
+        push @path_list, $path;
+    }
+
+    for my $path (@path_list) {
+        my $param = (split /{|}/, $path)[1];
+        if ($args{$param}) {
+            $path =~ s/\Q{$param}\E/$args{$param}/g;
+            return $path;
+        } else {
+            push @no, $param,;
+        }
+    }
+    croak "Missing augument: ", join("/", @no);
+}
+
 sub _build_method {
     my ($self, %api_hash) = @_;
     for my $key (keys %api_hash) {
@@ -39,29 +63,28 @@ sub _build_method {
         my $sub = sub {
             my $self        = shift;
             my %args        = @_;
-            my $url_param   = $api_hash{$key}{url_param};
             my $method      = $api_hash{$key}{method};
             my $content     = $api_hash{$key}{content};
             my $params      = $api_hash{$key}{params};
-            my $request_url = $self->api_base . $api_hash{$key}{path};
+            my $request_url = $self->api_base;
             my @args        = ($method);
 
             ## try to build request url
-            if ($url_param) {
-                croak "Argument $url_param missing"
-                  if (!exists $args{$url_param});
-                my $x = '{' .  $url_param . '}';
-                $request_url =~ s/\Q$x\E/$args{$url_param}/g;
-            }
+            $request_url .= __build_path($api_hash{$key}, %args);
 
             if ($params) {
-                croak "Argument $params missing" if (!exists $args{$params});
-                push @args, $params => $args{$params};
+                my @p = ref $params ? @$params : ($params);
+                my $exists = 0;
+                for my $pp (@p) {
+                    if (exists $args{$pp}) {
+                        push @args, $pp => $args{$pp};
+                        $exists++;
+                    }
+                }
+                croak "Missing parameters: ", join('/'), @p unless $exists;
             }
 
-#push @args, 'alt' => 'json' if $method eq 'GET';
             push @args, 'alt' => 'json';
-
             if ($content && $method eq 'POST') {
                 croak 'Missing param' unless @_;
                 my $decoded_content = decode_base64($content);

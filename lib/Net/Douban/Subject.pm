@@ -2,85 +2,45 @@ package Net::Douban::Subject;
 
 use Moose;
 use MooseX::StrictConstructor;
-use Net::Douban::Atom;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles::More';
+use namespace::autoclean;
+with 'Net::Douban::Roles';
 
-has 'subjectID' => (is => 'rw', isa => 'Str');
-
-has 'subject_url' => (
-    is      => 'rw',
-    isa     => 'Url',
-    lazy    => 1,
-    default => sub { shift->base_url . '/subject' },
+our %api_hash = (
+    get_book => {
+        path => ['/book/subject/{subjectID}', '/book/subject/isbn/{isbnID}'],
+        has_url_param => 1,
+        method        => 'GET',
+    },
+    get_movie => {
+        path =>
+          ['/movie/subject/{subjectID}', '/movie/subject/imdb/{imdbID}'],
+        has_url_param => 1,
+        method        => 'GET',
+    },
+    get_music => {
+        path          => '/music/subject/{subjectID}',
+        has_url_param => 1,
+        method        => 'GET',
+    },
+    search_music => {
+        path   => '/music/subjects',
+        params => ['q', 'tag'],
+        method => 'GET',
+    },
+    search_movie => {
+        path   => '/movie/subjects',
+        params => ['q', 'tag'],
+        method => 'GET',
+    },
+    search_book => {
+        path   => '/book/subjects',
+        params => ['q', 'tag'],
+        method => 'GET',
+    },
 );
 
-before qw/search_book search_music search_movie/ => sub {
-    my ($self, %args) = @_;
-    if (!exists $args{q} && !exists $args{tag}) {
-        croak "Missing parameters: tag or q needed";
-    }
-};
-
-sub get_book {
-    my ($self, %args) = @_;
-    my $url = $self->base_url;
-
-    if (exists $args{isbnID}) {
-        $url .= "/book/subject/isbn/$args{isbnID}";
-    } elsif (exists $args{subjectID}) {
-        $url .= "/book/subject/$args{subjectID}";
-    } else {
-        $self->subjectID or croak "SubjectID or isbnID missing";
-        $url .= "/book/subject/" . $self->subjectID;
-    }
-
-    return Net::Douban::Atom->new($self->get($url));
-}
-
-sub get_movie {
-    my ($self, %args) = @_;
-    my $url = $self->base_url;
-
-    if (exists $args{imdbID}) {
-        $url .= "/movie/subject/imdb/$args{imdbID}";
-    } elsif (exists $args{subjectID}) {
-        $url .= "/movie/subject/$args{subjectID}";
-    } else {
-        $self->subjectID or croak "imdbID or subjectID missing";
-        $url .= "/movie/subject/" . $self->subjectID;
-    }
-
-    return Net::Douban::Atom->new($self->get($url));
-}
-
-sub get_music {
-    my ($self, %args) = @_;
-    $args{subjectID} ||= $self->subjectID;
-    croak "subjectID missing" unless $args{subjectID};
-    return Net::Douban::Atom->new(
-        $self->get($self->base_url . "/music/subject/$args{subjectID}"));
-}
-
-sub search_music {
-    my ($self, %args) = @_;
-    return Net::Douban::Atom->new(
-        $self->get($self->base_url . "/music/subjects", %args));
-}
-
-sub search_book {
-    my ($self, %args) = @_;
-    return Net::Douban::Atom->new(
-        $self->get($self->base_url . "/book/subjects", %args));
-}
-
-sub search_movie {
-    my ($self, %args) = @_;
-    return Net::Douban::Atom->new(
-        $self->get($self->base_url . "/movie/subjects", %args));
-}
-
-no Moose;
+__PACKAGE__->_build_method(%api_hash);
 __PACKAGE__->meta->make_immutable;
 1;
 __END__
