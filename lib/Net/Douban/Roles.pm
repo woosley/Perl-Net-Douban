@@ -50,7 +50,7 @@ sub _build_method {
             if ($url_param) {
                 croak "Argument $url_param missing"
                   if (!exists $args{$url_param});
-                my $x = '${' . uc $url_param . '}';
+                my $x = '{' .  $url_param . '}';
                 $request_url =~ s/\Q$x\E/$args{$url_param}/g;
             }
 

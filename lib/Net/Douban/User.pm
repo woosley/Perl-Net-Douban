@@ -5,8 +5,6 @@ with 'Net::Douban::Roles';
 use Carp qw/carp croak/;
 use MooseX::StrictConstructor;
 
-has 'userID' => (is => 'rw', isa => 'Str',);
-
 our %api_hash = (
     get_user => {
         url_param => 'userID',
@@ -23,7 +21,7 @@ our %api_hash = (
         path      => '/people/{userID}/friends',
         method    => 'GET',
     },
-    search_user => {param => 'q', path => '/people/', method => 'GET'},
+    search_user => {params => 'q', path => '/people', method => 'GET'},
     me => {path => '/people/%40me', method => 'GET'},
 );
 
