@@ -20,6 +20,8 @@ has 'res_callback' => (
     default => sub { \&_wrape_response },
 );
 
+has 'realm' => (is => 'ro', default => 'http://www.douban.com');
+
 sub args {
     my $self = shift;
     return unless blessed($self) && $self->isa("Net::Douban");
@@ -56,6 +58,21 @@ sub __build_path {
     croak "Missing augument: ", join("/", @no);
 }
 
+sub __build_content {
+    my ($api, %args) = @_;
+    return unless $api->{content} && $api->{content_params};
+    my $decoded_content = decode_base64($api->{content});
+    foreach my $param (@{$api->{content_params}}) {
+        croak "Missing augument: $param" unless exists $args{$param};
+        my $escaped = __escape($args{$param});
+        $decoded_content =~ s/\Q{$param}\E/$escaped/g;
+    }
+    return (
+        Content      => $decoded_content,
+        Content_Type => 'application/atom+xml'
+    );
+}
+
 sub _build_method {
     my ($self, %api_hash) = @_;
     for my $key (keys %api_hash) {
@@ -64,13 +81,13 @@ sub _build_method {
             my $self        = shift;
             my %args        = @_;
             my $method      = $api_hash{$key}{method};
-            my $content     = $api_hash{$key}{content};
             my $params      = $api_hash{$key}{params};
             my $request_url = $self->api_base;
             my @args        = ($method);
 
             ## try to build request url
             $request_url .= __build_path($api_hash{$key}, %args);
+            push @args, __build_content($api_hash{$key}, %args);
 
             if ($params) {
                 my @p = ref $params ? @$params : ($params);
@@ -84,17 +101,18 @@ sub _build_method {
                 croak "Missing parameters: ", join('/'), @p unless $exists;
             }
 
-            push @args, 'alt' => 'json';
-            if ($content && $method eq 'POST') {
-                croak 'Missing param' unless @_;
-                my $decoded_content = decode_base64($content);
-                my $c               = $self->escape($_[0]);
-                my $mark            = '${CONTENT}';
-                $decoded_content =~ s/\Q$mark\E/$c/g;
-                push @args,
-                  Content      => $decoded_content,
-                  Content_Type => q{application/atom+xml};
-            }
+            push @args, 'alt' => 'json' if $method eq 'GET';
+
+#if ($content) {
+#                croak 'Missing param' unless @_;
+#                my $decoded_content = decode_base64($content);
+#                my $c               = $self->escape($_[0]);
+#                my $mark            = '${CONTENT}';
+#                $decoded_content =~ s/\Q$mark\E/$c/g;
+#                push @args,
+#                  Content      => $decoded_content,
+#                  Content_Type => q{application/atom+xml};
+#            }
             push @args, request_url => $request_url;
             $self->res_callback->($self->_restricted_request(@args));
         };
@@ -119,6 +137,21 @@ sub build_url {
         $mark = '&';
     }
     return $url;
+}
+
+sub __escape {
+    my $c   = shift;
+    my %foo = (
+        '\'' => '&apos;',
+        '"'  => "&quot;",
+        '&'  => '&amp;',
+        '<'  => "&lt;",
+        ">"  => '&gt'
+    );
+    for my $key (keys %foo) {
+        $c =~ s/$key/$foo{$key}/g;
+    }
+    return $c;
 }
 
 package Net::Douban::Types;

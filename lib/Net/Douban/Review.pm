@@ -2,104 +2,83 @@ package Net::Douban::Review;
 
 use Moose;
 use MooseX::StrictConstructor;
-use Net::Douban::Atom;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles::More';
+with 'Net::Douban::Roles';
+use namespace::autoclean;
 
-has 'reviewID' => (
-    is  => 'rw',
-    isa => 'Str',
+our %api_hash = (
+    get_review => {
+        path          => '/review/{reviewID}',
+        has_url_param => 1,
+        method        => 'GET',
+    },
+    get_user_review => {
+        path          => '/people/{userID}/reviews',
+        method        => 'GET',
+        has_url_param => 1,
+    },
+    get_movie_review => {
+        path => [
+            '/movie/subject/{subjectID}/reviews',
+            '/movie/subject/imdb/{imdbID}/reviews'
+        ],
+        has_url_param => 1,
+        method        => 'GET',
+    },
+    get_book_review => {
+        path => [
+            '/book/subject/{subjectID}/reviews',
+            '/book/subject/isbn/{isbn}/reviews'
+        ],
+        has_url_param => 1,
+        method        => 'GET',
+    },
+    get_music_review => {
+        path          => '/music/subject/{subjectID}/reviews',
+        has_url_param => 1,
+        method        => 'GET',
+    },
+    post_review => {
+        path           => '/reviews',
+        method         => 'POST',
+        content_params => ['subjectID', 'content', 'rating', 'title'],
+        content        => <<'EOF',
+PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4gPGVudHJ5IHhtbG5zOm5zMD0i
+aHR0cDovL3d3dy53My5vcmcvMjAwNS9BdG9tIj4gPGRiOnN1YmplY3QgeG1sbnM6ZGI9Imh0dHA6
+Ly93d3cuZG91YmFuLmNvbS94bWxucy8iPiA8aWQ+aHR0cDovL2FwaS5kb3ViYW4uY29tL21vdmll
+L3N1YmplY3Qve3N1YmplY3RJRH08L2lkPiA8L2RiOnN1YmplY3Q+IDxjb250ZW50Pntjb250ZW50
+fTwvY29udGVudD4gPGdkOnJhdGluZyB4bWxuczpnZD0iaHR0cDovL3NjaGVtYXMuZ29vZ2xlLmNv
+bS9nLzIwMDUiIHZhbHVlPSJ7cmF0aW5nfSIgPjwvZ2Q6cmF0aW5nPiA8dGl0bGU+e3RpdGxlfTwv
+dGl0bGU+PC9lbnRyeT4K
+EOF
+    },
+
+    put_review => {
+        path          => '/reviews/{reviewID}',
+        method        => 'POST',
+        has_url_param => 1,
+        content_params =>
+          ['subjectID', 'reviewID', 'title', 'content', 'rating'],
+        content => <<'EOF',
+PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz48ZW50cnkgeG1sbnM6bnMwPSJo
+dHRwOi8vd3d3LnczLm9yZy8yMDA1L0F0b20iPjxpZD5odHRwOi8vYXBpLmRvdWJhbi5jb20vcmV2
+aWV3L3tyZXZpZXdJRH08L2lkPjxkYjpzdWJqZWN0IHhtbG5zOmRiPSJodHRwOi8vd3d3LmRvdWJh
+bi5jb20veG1sbnMvIj48aWQ+aHR0cDovL2FwaS5kb3ViYW4uY29tL21vdmllL3N1YmplY3Qve3N1
+YmplY3RJRH08L2lkPjwvZGI6c3ViamVjdD48Y29udGVudD57Y29udGVudH08L2NvbnRlbnQ+IDxn
+ZDpyYXRpbmcgeG1sbnM6Z2Q9Imh0dHA6Ly9zY2hlbWFzLmdvb2dsZS5jb20vZy8yMDA1IiB2YWx1
+ZT0ie3JhdGluZ30iID48L2dkOnJhdGluZz4gPHRpdGxlPnt0aXRsZX08L3RpdGxlPjwvZW50cnk+
+Cg==
+EOF
+    },
+
+    delete_review => {
+        path          => '/reviews/{reviewID}',
+        method        => 'DELETE',
+        has_url_param => 1,
+    },
 );
 
-has 'review_url' => (
-    is      => 'rw',
-    isa     => 'Url',
-    lazy    => 1,
-    default => sub { shift->base_url . '/review' }
-);
-
-sub get_review {
-    my ($self, %args) = @_;
-    $args{reviewID} ||= $self->reviewID;
-    croak "reviewID missing" unless exists $args{reviewID};
-    return Net::Douban::Atom->new(
-        $self->get($self->review_url . "/$args{reviewID}"));
-}
-
-sub get_user_review {
-    my ($self, %args) = @_;
-    my $uid = delete $args{userID};
-    croak "userID missing" unless defined $uid;
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$uid/reviews", %args));
-}
-
-sub get_book_review {
-    my ($self, %args) = @_;
-    my $subjectID = delete $args{subjectID};
-    my $isbnID    = delete $args{isbnID};
-    my $url       = $self->base_url . "/book/subject";
-    croak "Missing parameters: isbnID or subjectID needed"
-      unless defined $subjectID
-          or defined $isbnID;
-    if ($isbnID) {
-        $url .= "/isbn/$isbnID/reviews";
-    } else {
-        $url .= "/$subjectID/reviews";
-    }
-    return Net::Douban::Atom->new($self->get($url, %args));
-}
-
-sub get_movie_review {
-    my ($self, %args) = @_;
-    my $subjectID = delete $args{subjectID};
-    my $imdbID    = delete $args{imdbID};
-    my $url       = $self->base_url . "/movie/subject";
-    croak "Missing parameters: imdbID or subjectID needed"
-      unless defined $subjectID
-          or defined $imdbID;
-    if ($imdbID) {
-        $url .= "/imdb/$imdbID/reviews";
-    } else {
-        $url .= "/$subjectID/reviews";
-    }
-    return Net::Douban::Atom->new($self->get($url, %args));
-}
-
-sub get_music_review {
-    my ($self, %args) = @_;
-    my $subjectID = delete $args{subjectID};
-    croak "Missing parameters:  subjectID needed"
-      unless defined $subjectID;
-    return Net::Douban::Atom->new(
-        $self->get(
-            $self->base_url . "/music/subject/$subjectID/reviews", %args
-        )
-    );
-}
-
-sub post_review {
-    my ($self, %args) = @_;
-    croak "post xml needed!" unless $args{xml};
-    return $self->post($self->review_url . 's', xml => $args{xml},);
-}
-
-sub delete_review {
-    my ($self, %args) = @_;
-    $args{reviewID} ||= $self->reviewID;
-    croak "reviewID missing" unless $args{reviewID};
-    return $self->delete($self->review_url . "/$args{reviewID}",);
-}
-
-sub put_review {
-    my ($self, %args) = @_;
-    $args{reviewID} ||= $self->reviewID;
-    croak "reviewID missing" unless $args{reviewID};
-    croak "put xml needed!" unless $args{xml};
-    return $self->put($self->review_url . "/$args{reviewID}", xml => $args{xml});
-}
-
-no Moose;
+__PACKAGE__->_build_method(%api_hash);
 __PACKAGE__->meta->make_immutable;
 1;
 

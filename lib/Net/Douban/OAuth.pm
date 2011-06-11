@@ -2,8 +2,8 @@ package Net::Douban::OAuth;
 use Moose::Role;
 use Carp qw/carp croak/;
 use Net::OAuth;
+#use namespace::autoclean;
 use HTTP::Request::Common qw/PUT DELETE POST GET/;
-use namespace::autoclean;
 
 for my $rw_attr (
     qw/consumer_key consumer_secret request_token request_token_secret
@@ -13,7 +13,7 @@ for my $rw_attr (
     has $rw_attr => (is => 'rw');
 }
 
-for my $ro_attr (qw/request_url access_url authorize_url realm/) {
+for my $ro_attr (qw/request_url access_url authorize_url/) {
     has $ro_attr => (is => 'ro');
 }
 
@@ -148,21 +148,6 @@ sub _build_ua {
     $ua;
 }
 
-sub escape {
-    my $self = shift;
-    my $c    = shift;
-    my %foo  = (
-        '\'' => '&apos;',
-        '"'  => "&quot;",
-        '&'  => '&amp;',
-        '<'  => "&lt;",
-        ">"  => '&gt'
-    );
-    for my $key (keys %foo) {
-        $c =~ s/$key/$foo{$key}/g;
-    }
-    return $c;
-}
 
 1;
 __END__
