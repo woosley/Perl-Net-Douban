@@ -75,7 +75,7 @@ sub _get_request {
         consumer_key => $self->consumer_key,
         %args,
         timestamp        => time,
-        nonce            => time ^ $$ ^ int(rand 2 ^ 32),
+        nonce            => _gen_nonce(),
         signature_method => 'HMAC-SHA1',
         request_method   => $method,
         protocal_version => $self->oauth_version
@@ -85,6 +85,16 @@ sub _get_request {
     );
     $request->sign;
     $request;
+}
+
+sub _gen_nonce {
+    return time ^ $$ ^ int(rand 2 ^ 32);
+#    my @charset = ('a' .. 'z', '0' .. '9');
+#    my $nonce = '';
+#    for (1 .. 30) {
+#        $nonce .= $charset[rand @charset];
+#    }
+#    return $nonce;
 }
 
 sub load_token {
@@ -123,17 +133,14 @@ sub _restricted_request {
     my $http_request;
     if ($method eq 'GET') {
         $http_request = HTTP::Request->new($method, $request->to_url);
-
     } else {
         no strict 'refs';
-#        $http_request = *{"HTTP::Request::Common::" . $method}->(
         $http_request = $method->(
             $request->request_url,
             Authorization =>
               $request->to_authorization_header($self->realm),
             %args,
         );
-
     }
     $self->ua->request($http_request);
 }
@@ -147,7 +154,6 @@ sub _build_ua {
     $ua->env_proxy;
     $ua;
 }
-
 
 1;
 __END__

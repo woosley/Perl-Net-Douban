@@ -35,7 +35,7 @@ sub args {
 }
 
 sub __build_path {
-    my ($api, %args) = @_;
+    my ($api, $args) = @_;
 
     return $api->{path} unless $api->{has_url_param};
     my $path = $api->{path};
@@ -48,8 +48,8 @@ sub __build_path {
 
     for my $path (@path_list) {
         my $param = (split /{|}/, $path)[1];
-        if ($args{$param}) {
-            $path =~ s/\Q{$param}\E/$args{$param}/g;
+        if (my $x = $args->{$param}) {
+            $path =~ s/\Q{$param}\E/$x/g;
             return $path;
         } else {
             push @no, $param,;
@@ -59,14 +59,19 @@ sub __build_path {
 }
 
 sub __build_content {
-    my ($api, %args) = @_;
+    my ($api, $args) = @_;
     return unless $api->{content} && $api->{content_params};
     my $decoded_content = decode_base64($api->{content});
+
+    $decoded_content = $api->{_build_content}->($decoded_content, $args)
+      if $api->{_build_content};
+
     foreach my $param (@{$api->{content_params}}) {
-        croak "Missing augument: $param" unless exists $args{$param};
-        my $escaped = __escape($args{$param});
+        croak "Missing augument: $param" unless exists $args->{$param};
+        my $escaped = __escape($args->{$param});
         $decoded_content =~ s/\Q{$param}\E/$escaped/g;
     }
+
     return (
         Content      => $decoded_content,
         Content_Type => 'application/atom+xml'
@@ -86,8 +91,9 @@ sub _build_method {
             my @args        = ($method);
 
             ## try to build request url
-            $request_url .= __build_path($api_hash{$key}, %args);
-            push @args, __build_content($api_hash{$key}, %args);
+
+            $request_url .= __build_path($api_hash{$key}, \%args);
+            push @args, __build_content($api_hash{$key}, \%args);
 
             if ($params) {
                 my @p = ref $params ? @$params : ($params);
@@ -102,19 +108,18 @@ sub _build_method {
             }
 
             push @args, 'alt' => 'json' if $method eq 'GET';
-
-#if ($content) {
-#                croak 'Missing param' unless @_;
-#                my $decoded_content = decode_base64($content);
-#                my $c               = $self->escape($_[0]);
-#                my $mark            = '${CONTENT}';
-#                $decoded_content =~ s/\Q$mark\E/$c/g;
-#                push @args,
-#                  Content      => $decoded_content,
-#                  Content_Type => q{application/atom+xml};
-#            }
             push @args, request_url => $request_url;
-            $self->res_callback->($self->_restricted_request(@args));
+
+            ## pass optional auguments to _restricted_request
+            my $optional = $api_hash{$key}{'optional_params'};
+            my @others =
+              $optional
+              ? (grep {$_}
+              map { exists $args{$_} && $_ => $args{$_} } @$optional)
+              : ();
+
+            $self->res_callback->(
+                $self->_restricted_request(@args, @others));
         };
         $self->meta->add_method($key, $sub);
     }
