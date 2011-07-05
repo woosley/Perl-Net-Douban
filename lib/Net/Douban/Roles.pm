@@ -4,6 +4,7 @@ use Carp qw/carp croak/;
 use Moose::Role;
 use namespace::autoclean;
 use MIME::Base64;
+use JSON::Any;
 
 with "Net::Douban::OAuth";
 our $VERSION = '1.08';
@@ -16,6 +17,7 @@ has 'api_base' =>
 has 'res_callback' => (
     is      => 'rw',
     isa     => 'CodeRef',
+    clearer => 'clear_res_callback',
     lazy    => 1,
     default => sub { \&_wrape_response },
 );
@@ -89,9 +91,9 @@ sub _build_method {
             my $params      = $api_hash{$key}{params};
             my $request_url = $self->api_base;
             my @args        = ($method);
+            my $res         = delete $args{res_callback};
 
             ## try to build request url
-
             $request_url .= __build_path($api_hash{$key}, \%args);
             push @args, __build_content($api_hash{$key}, \%args);
 
@@ -107,19 +109,21 @@ sub _build_method {
                 croak "Missing parameters: ", join('/'), @p unless $exists;
             }
 
-            push @args, 'alt' => 'json' if $method eq 'GET';
+            push @args, 'alt'       => 'json';
             push @args, request_url => $request_url;
 
             ## pass optional auguments to _restricted_request
             my $optional = $api_hash{$key}{'optional_params'};
             my @others =
               $optional
-              ? (grep {$_}
-              map { exists $args{$_} && $_ => $args{$_} } @$optional)
+              ? (
+                grep {$_}
+                map { exists $args{$_} && $_ => $args{$_} } @$optional
+              )
               : ();
 
-            $self->res_callback->(
-                $self->_restricted_request(@args, @others));
+            return $res->($self->_restricted_request(@args, @others)) if $res;
+            $self->res_callback->($self->_restricted_request(@args, @others));
         };
         $self->meta->add_method($key, $sub);
     }
@@ -128,7 +132,9 @@ sub _build_method {
 sub _wrape_response {
     my $res = shift;
     croak $res->status_line unless $res->is_success;
-    return $res->decoded_content;
+    return $res->decoded_content unless $res->content_type =~ /json/i;
+    my $j = JSON::Any->new();
+    return $j->from_json($res->decoded_content);
 }
 
 sub build_url {

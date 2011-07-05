@@ -1,58 +1,78 @@
 package Net::Douban::Note;
-
 use Moose;
 use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-use Net::Douban::Atom;
+with 'Net::Douban::Roles';
+use namespace::autoclean;
 
-with 'Net::Douban::Roles::More';
+our %api_hash = (
 
-has 'noteID' => (
-    is  => 'rw',
-    isa => 'Str',
+    get_note => {
+        path      => '/note/{noteID}',
+        has_url_param => 1,
+        method    => 'GET',
+    },
+
+    get_user_notes => {
+        has_url_param => 1,
+        path      => '/people/{userID}/notes',
+        method    => 'GET',
+    },
+
+    post_note => {
+        path           => '/notes',
+        method         => 'POST',
+        content_params => ['content', 'title'],
+        _build_content => \&__check_private_reply,
+        content        => <<'EOF',
+PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4gPGVudHJ5IHhtbG5zPSJodHRw
+Oi8vd3d3LnczLm9yZy8yMDA1L0F0b20iIHhtbG5zOmRiPSJodHRwOi8vd3d3LmRvdWJhbi5jb20v
+eG1sbnMvIj4gPHRpdGxlPnt0aXRsZX08L3RpdGxlPiA8Y29udGVudD57Y29udGVudH08L2NvbnRl
+bnQ+IHtwcml2YXRlfXtjYW5fcmVwbHl9PC9lbnRyeT4K
+EOF
+    },
+
+    put_note => {
+        path           => '/note/{noteID}',
+        has_url_param => 1,
+        method         => 'PUT',
+        content_params => ['content', 'title'],
+        _build_content => \&__check_private_reply,
+        content        => <<'EOF',
+PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4gPGVudHJ5IHhtbG5zPSJodHRw
+Oi8vd3d3LnczLm9yZy8yMDA1L0F0b20iIHhtbG5zOmRiPSJodHRwOi8vd3d3LmRvdWJhbi5jb20v
+eG1sbnMvIj4gPHRpdGxlPnt0aXRsZX08L3RpdGxlPiA8Y29udGVudD57Y29udGVudH08L2NvbnRl
+bnQ+IHtwcml2YXRlfXtjYW5fcmVwbHl9PC9lbnRyeT4K
+EOF
+    },
+
+    delete_note => {
+        path      => '/note/{noteID}',
+        has_url_param => 1,
+        method    => 'DELETE',
+    },
 );
 
-has 'note_url' => (
-	is	=> 'rw',
-	isa => 'Url',
-	lazy => 1,
-	default => sub { shift->base_url . '/note'},
-);
-
-sub get_note {
-    my ($self, %args) = @_;
-    $args{noteID} ||= $self->noteID;
-    return Net::Douban::Atom->new(
-        $self->get($self->note_url . "/$args{noteID}"));
+sub __check_private_reply {
+    my ($content, $args) = @_;
+    if ($args->{private}) {
+        my $entry = '<db:attribute name="privacy">private</db:attribute>';
+        $content =~ s/{private}/$entry/g;
+    } else{
+        my $entry = '<db:attribute name="privacy">public</db:attribute>';
+        $content =~ s/{private}/$entry/g;
+    }
+    if (!exists $args->{can_reply} || $args->{can_reply}) {
+        my $entry = '<db:attribute name="can_reply">yes</db:attribute>';
+        $content =~ s/{can_reply}/$entry/g;
+    } else {
+        my $entry = '<db:attribute name="can_reply">no</db:attribute>';
+        $content =~ s/{can_reply}/$entry/g;
+    }
+    return $content;
 }
 
-sub get_user_note {
-    my ($self, %args) = @_;
-    my $uid = delete $args{userID} or croak "userID needed";
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$uid/notes", %args));
-}
-
-sub delete_note {
-    my ($self, %args) = @_;
-    $args{noteID} ||= $self->noteID;
-    return $self->delete($self->note_url . "/$args{noteID}");
-}
-
-sub post_note {
-    my ($self, %args) = @_;
-    croak 'post xml needed' unless exists $args{xml};
-    return $self->post($self->note_url . "s", xml => $args{xml});
-}
-
-sub put_note {
-    my ($self, %args) = @_;
-    croak 'put xml needed' unless exists $args{xml};
-    $args{noteID} ||= $self->noteID;
-    return $self->put($self->note_url . "/$args{noteID}", xml => $args{xml});
-}
-
-no Moose;
+__PACKAGE__->_build_method(%api_hash);
 __PACKAGE__->meta->make_immutable;
 1;
 

@@ -68,9 +68,11 @@ sub __check_private_tag {
     if ($args->{private}) {
         my $entry = '<db:attribute name="privacy">private</db:attribute>';
         $content =~ s/{private}/$entry/g;
+    }else{
+        my $entry = '<db:attribute name="privacy">public</db:attribute>';
+        $content =~ s/{private}/$entry/g;
     }
     if (my $tags = $args->{tags}) {
-
         my @tags = ref $args ? @$tags : ($tags);
         my $entry = join " ", map { '<db:tag name="' . $_ . '" />' } @tags;
         $content =~ s/{tags}/$entry/;
@@ -79,7 +81,6 @@ sub __check_private_tag {
 }
 
 __PACKAGE__->_build_method(%api_hash);
-
 __PACKAGE__->meta->make_immutable;
 1;
 
