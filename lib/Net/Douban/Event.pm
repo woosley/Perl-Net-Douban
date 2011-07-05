@@ -3,133 +3,99 @@ package Net::Douban::Event;
 use Moose;
 use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-use Net::Douban::Atom;
-with 'Net::Douban::Roles::More';
+with 'Net::Douban::Roles';
+use namespace::autoclean;
 
-has 'eventID' => (
-    is  => 'rw',
-    isa => 'Str',
+our %api_hash = (
+    get_event => {
+        path => '/event/{eventID}',
+        has_url_param => 1,
+        method => 'GET',
+    },
+
+    get_event_participants => {
+        path => '/event/{eventID}/participants',
+        has_url_param => 1,
+        method => 'GET',
+    },
+
+    get_event_wishers => {
+        path => '/event/{eventID}/wishers',
+        has_url_param => 1,
+        method => 'GET',
+    },
+
+    get_user_events => {
+        path => '/people/{userID}/events',
+        has_url_param => 1,
+        method => 'GET',
+    },
+
+    get_user_participates => {
+        path => '/people/{userID}/events/participate',
+        has_url_param => 1,
+        method => 'GET',
+    },
+
+    get_user_wishes => {
+        path => '/people/{userID}/events/wish',
+        has_url_param => 1,
+        method => 'GET',
+    },
+
+    get_user_initiates => {
+        path => '/people/{userID}/events/initiate',
+        has_url_param => 1,
+        method => 'GET',
+    },
+
+    get_location_events => {
+        path => '/event/location/{locationID}',
+        has_url_param => 1,
+        optional_params => ['type'],
+        method => 'GET',
+    },
+
+    search_events => {
+        path => '/events',
+        params => ['q', 'location'],
+        method => 'GET',
+    },
+
+# nothing but stupid to do post  
+#   post_event => {
+#        path => '/events',
+#        method => 'POST',
+#        stupid => 1,
+#    },
+    
+    post_event_participant => {
+        path => '/event/{eventID}/participants',
+        method => 'POST',
+        has_url_param => 1,
+    },
+    
+    post_event_wisher => {
+        path => '/event/{eventID}/wishers',
+        method => 'POST',
+        has_url_param => 1,
+    },
+
+    delete_event_paticipant => {
+        path => '/event/{eventID}/participants',
+        method => 'DELETE',
+        has_url_param => 1,
+    },
+
+    delete_event_wisher => {
+        path => '/event/{eventID}/wishers',
+        method => 'DELETE',
+        has_url_param => 1,
+    },
 );
 
-has 'event_url' => (
-    is      => 'rw',
-    isa     => 'Url',
-    lazy    => 1,
-    default => sub { shift->base_url . '/event' },
-);
 
-sub get_event {
-    my ($self, %args) = @_;
-    $args{eventID} ||= $self->eventID;
-    croak "eventID need!" unless exists $args{eventID};
-    return Net::Douban::Atom->new(
-        $self->get($self->event_url . "/$args{eventID}"));
-}
-
-sub get_event_wishers {
-    my ($self, %args) = @_;
-    $args{eventID} ||= $self->eventID;
-    croak "eventID need!" unless exists $args{eventID};
-    return Net::Douban::Atom->new(
-        $self->get($self->event_url . "/$args{eventID}/wishers"));
-}
-
-sub get_event_participants {
-    my ($self, %args) = @_;
-    $args{eventID} ||= $self->eventID;
-    croak "eventID need!" unless exists $args{eventID};
-    return Net::Douban::Atom->new(
-        $self->get($self->event_url . "/$args{eventID}/participants"));
-}
-
-sub get_user_participate {
-    my ($self, %args) = @_;
-    my $uid = delete $args{userID} or croak "userID needed";
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$uid/events/participate", %args));
-}
-
-sub get_user_initiate {
-    my ($self, %args) = @_;
-    my $uid = delete $args{userID} or croak "userID needed";
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$uid/events/initiate", %args));
-}
-
-sub get_user_wish {
-    my ($self, %args) = @_;
-    my $uid = delete $args{userID} or croak "userID needed";
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$uid/events/wish", %args));
-}
-
-sub get_user_events {
-    my ($self, %args) = @_;
-    my $uid = delete $args{userID} or croak "userID needed";
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$uid/events", %args));
-}
-
-sub get_city_events {
-    my ($self, %args) = @_;
-    my $locationID = delete $args{locationID} or croak "LocationID needed!";
-    return Net::Douban::Atom->new(
-        $self->get($self->event_url . "/location/$locationID", %args));
-}
-
-sub search {
-    my ($self, %args) = @_;
-    croak "locationID needed!" unless exists $args{locationID};
-    return Net::Douban::Atom->new($self->get($self->event_url . "s", %args));
-}
-
-sub post_event {
-    my ($self, %args) = @_;
-    croak "post xml needed!" unless exists $args{xml};
-    return $self->post($self->event_url . "s", xml => $args{xml});
-}
-
-sub put_event {
-    my ($self, %args) = @_;
-    $args{eventID} ||= $self->eventID;
-    croak "eventID need!" unless exists $args{eventID};
-    croak "post xml needed!" unless exists $args{xml};
-    return $self->put($self->event_url . "/$args{eventID}", xml => $args{xml});
-}
-
-sub join_event {
-    my ($self, %args) = @_;
-    $args{eventID} ||= $self->eventID;
-    return $self->post($self->event_url . "/$args{eventID}/participants");
-}
-
-sub wish_event {
-    my ($self, %args) = @_;
-    $args{eventID} ||= $self->eventID;
-    return $self->post($self->event_url . "/$args{eventID}/wishers");
-}
-
-sub delete_event {
-    my ($self, %args) = @_;
-    croak "post xml needed" unless exists $args{xml};
-    $args{eventID} ||= $self->eventID;
-    return $self->post($self->event_url . "/$args{eventID}/delete",
-        xml => $args{xml});
-}
-
-sub leave_event {
-    my ($self, %args) = @_;
-    $args{eventID} ||= $self->eventID;
-    return $self->delete($self->event_url . "/$args{eventID}/participants");
-}
-
-sub quit_event {
-    my ($self, %args) = @_;
-    $args{eventID} ||= $self->eventID;
-    return $self->delete($self->event_url . "/$args{eventID}/wishers");
-}
-
-no Moose;
+__PACKAGE__->_build_method(%api_hash);
 __PACKAGE__->meta->make_immutable;
 1;
 

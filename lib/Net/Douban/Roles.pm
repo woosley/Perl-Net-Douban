@@ -96,7 +96,8 @@ sub _build_method {
             ## try to build request url
             $request_url .= __build_path($api_hash{$key}, \%args);
             push @args, __build_content($api_hash{$key}, \%args);
-
+                
+            ## at list on params needed
             if ($params) {
                 my @p = ref $params ? @$params : ($params);
                 my $exists = 0;
