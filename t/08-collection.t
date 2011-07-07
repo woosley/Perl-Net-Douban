@@ -1,6 +1,6 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More tests => 12;    # last test to print
+use Test::More tests => 8;    # last test to print
 use Test::Exception;
 
 BEGIN {

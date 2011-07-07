@@ -37,7 +37,7 @@ sub args {
 }
 
 sub __build_path {
-    my ($api, $args) = @_;
+    my ($self, $api, $args) = @_;
 
     return $api->{path} unless $api->{has_url_param};
     my $path = $api->{path};
@@ -48,20 +48,35 @@ sub __build_path {
         push @path_list, $path;
     }
 
-    for my $path (@path_list) {
-        my $param = (split /{|}/, $path)[1];
-        if (my $x = $args->{$param}) {
-            $path =~ s/\Q{$param}\E/$x/g;
-            return $path;
-        } else {
-            push @no, $param,;
+    FOO: for my $path (@path_list) {
+        my $p;
+        while (1) {
+            my ($type, $ele) = do {
+                if ($path =~ /\G([^{]+)/gc) {
+                    (0, $1);
+                } elsif ($path =~ /\G{(\w+)}/gc) {
+                    ('param', $1);
+                } else {
+                    last;
+                }
+            };
+            if ($type) {
+                if (!exists $args->{$ele}) {
+                    push @no, $ele;
+                    next FOO;
+                }
+                $p .= $args->{$ele};
+            } else {
+                $p .= $ele;
+            }
         }
+        return $p;
     }
     croak "Missing augument: ", join("/", @no);
 }
 
 sub __build_content {
-    my ($api, $args) = @_;
+    my ($self, $api, $args) = @_;
     return unless $api->{content} && $api->{content_params};
     my $decoded_content = decode_base64($api->{content});
 
@@ -94,9 +109,9 @@ sub _build_method {
             my $res         = delete $args{res_callback};
 
             ## try to build request url
-            $request_url .= __build_path($api_hash{$key}, \%args);
-            push @args, __build_content($api_hash{$key}, \%args);
-                
+            $request_url .= $self->__build_path($api_hash{$key}, \%args);
+            push @args, $self->__build_content($api_hash{$key}, \%args);
+
             ## at list on params needed
             if ($params) {
                 my @p = ref $params ? @$params : ($params);
