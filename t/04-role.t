@@ -32,7 +32,6 @@ throws_ok { $role->__build_path($api, {userID => 'hello'}) }
     qr/Missing augument: collectionID/, "not enough augment";
 
 $api->{path} = '/people/x/fo/';
-
 is($role->__build_path($api, $args), '/people/x/fo/', "path build");
 
 

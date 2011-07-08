@@ -4,39 +4,26 @@ use Moose;
 use MooseX::StrictConstructor;
 use Net::Douban::Atom;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles::More';
+with 'Net::Douban::Roles';
+use namespace::autoclean;
 
 
-sub get_movie_tag {
-    my ($self, %args) = @_;
-    croak "subjectID needed" unless exists $args{subjectID};
-    return Net::Douban::Atom->new(
-        $self->get($self->base_url . "/movie/subject/$args{subjectID}/tags"));
-}
+our %api_hash = (
+    get_tags => {
+        path => '/{cat}/subject/{subjectID}/tags',
+        method => 'GET',
+        has_url_param => 1,
+    },
 
-sub get_book_tag {
-    my ($self, %args) = @_;
-    croak "subjectID needed" unless exists $args{subjectID};
-    return Net::Douban::Atom->new(
-        $self->get($self->base_url . "/book/subject/$args{subjectID}/tags"));
-}
+    get_user_tags => {
+        path => '/people/{userID}/tags?cat={cat}',
+        method => 'GET',
+        has_url_param => 1,
+    },
+);
 
-sub get_music_tag {
-    my ($self, %args) = @_;
-    croak "subjectID needed" unless exists $args{subjectID};
-    return Net::Douban::Atom->new(
-        $self->get($self->base_url . "/music/subject/$args{subjectID}/tags"));
-}
-
-sub get_tag {
-    my ($self, %args) = @_;
-    my $uid = delete $args{userID} or croak "userID needed";
-    croak "cat needed" unless exists $args{cat};
-    return Net::Douban::Atom->new(
-        $self->get($self->user_url . "/$args{userID}/tags", %args));
-}
-
-no Moose;
+__PACKAGE__->_build_method(%api_hash);
 __PACKAGE__->meta->make_immutable;
+
 1;
 __END__

@@ -2,10 +2,8 @@ package Net::Douban::Entry;
 
 use Moose;
 use MooseX::StrictConstructor;
-use Net::Douban::DBSubject;
 use Carp qw/carp croak/;
 
-#use Smart::Comments;
 extends qw/XML::Atom::Entry/;
 
 has 'namespace' => (
@@ -122,7 +120,7 @@ __END__
 
 =head1 NAME
 
-Net::Douban::Entry
+Net::Douban::Entry (Deprecated)
 
 =head1 SYNOPSIS
 	

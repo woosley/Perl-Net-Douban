@@ -1,11 +1,9 @@
-use strict;
-use warnings;
 use lib './lib';
-use Test::More tests => 13;
+use Test::More tests => 12;
 
 use_ok('Net::Douban');
 for my $pack (
-    qw/User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog Atom Entry/
+    qw/User Note Tag Collection Recommendation Event Review Subject Doumail Miniblog Entry/
   )
 {
     use_ok("Net::Douban::$pack");

@@ -16,7 +16,7 @@ cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");
 can_ok($review, keys %api_hash);
 
 SKIP: {
-    skip 'set $ENV{NETWORK_TEST} to enable network tests', 8,
+    skip 'set $ENV{NETWORK_TEST} to enable network tests', 7
       unless $ENV{NETWORK_TEST};
     $review->res_callback(sub {shift});
     $review->load_token(%{pdakeys()});

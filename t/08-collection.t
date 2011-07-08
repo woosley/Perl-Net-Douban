@@ -1,6 +1,6 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More tests => 8;    # last test to print
+use Test::More tests => 9;    # last test to print
 use Test::Exception;
 
 BEGIN {
@@ -16,7 +16,7 @@ cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");
 can_ok($collection, keys %api_hash);
 
 SKIP: {
-    skip 'set $ENV{NETWORK_TEST} to enable network tests', 8
+    skip 'set $ENV{NETWORK_TEST} to enable network tests', 5
       unless $ENV{NETWORK_TEST};
     $collection->res_callback(sub {shift});
     $collection->load_token(%{pdakeys()});

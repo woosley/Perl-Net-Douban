@@ -135,7 +135,7 @@ __END__
 
 =head1 NAME
 
-Net::Douban::Atom - Atom parser
+Net::Douban::Atom - Atom parser (Deprecated)
 
 =head1 SYNOPSIS
 	
