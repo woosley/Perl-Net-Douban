@@ -1,6 +1,6 @@
 package Net::Douban::Collection;
 
-use Moose;
+use Moose::Role;
 use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
 with 'Net::Douban::Roles';
@@ -81,7 +81,6 @@ sub __check_private_tag {
 }
 
 __PACKAGE__->_build_method(%api_hash);
-__PACKAGE__->meta->make_immutable;
 1;
 
 __END__

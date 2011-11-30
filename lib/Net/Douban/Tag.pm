@@ -1,10 +1,10 @@
 package Net::Douban::Tag;
 
-use Moose;
+use Moose::Role;
 use MooseX::StrictConstructor;
 use Net::Douban::Atom;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles';
+requires '_build_method';
 use namespace::autoclean;
 
 
@@ -23,7 +23,6 @@ our %api_hash = (
 );
 
 __PACKAGE__->_build_method(%api_hash);
-__PACKAGE__->meta->make_immutable;
 
 1;
 __END__

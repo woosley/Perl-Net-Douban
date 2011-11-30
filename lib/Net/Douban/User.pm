@@ -1,8 +1,9 @@
 package Net::Douban::User;
-use Moose;
+
+use Moose::Role;
 use namespace::autoclean;
-with 'Net::Douban::Roles';
 use Carp qw/carp croak/;
+use Net::Douban::Utils;
 use MooseX::StrictConstructor;
 
 our %api_hash = (
@@ -11,12 +12,12 @@ our %api_hash = (
         path      => '/people/{userID}',
         method    => 'GET'
     },
-    get_contacts => {
+    get_user_contacts => {
         has_url_param => 'userID',
         path      => '/people/{userID}/contacts',
         method    => 'GET',
     },
-    get_friends => {
+    get_user_friends => {
         has_url_param => 'userID',
         path      => '/people/{userID}/friends',
         method    => 'GET',
@@ -25,8 +26,8 @@ our %api_hash = (
     me => {path => '/people/%40me', method => 'GET'},
 );
 
-__PACKAGE__->_build_method(%api_hash);
-__PACKAGE__->meta->make_immutable;
+_build_method(__PACKAGE__, %api_hash);
+
 1;
 
 __END__

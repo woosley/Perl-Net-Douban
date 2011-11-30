@@ -1,10 +1,10 @@
 package Net::Douban::Review;
 
-use Moose;
+use Moose::Role;
 use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles';
 use namespace::autoclean;
+requires '_build_method';
 
 our %api_hash = (
     get_review => {
@@ -79,7 +79,6 @@ EOF
 );
 
 __PACKAGE__->_build_method(%api_hash);
-__PACKAGE__->meta->make_immutable;
 1;
 
 __END__

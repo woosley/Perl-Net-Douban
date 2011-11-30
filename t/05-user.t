@@ -22,9 +22,9 @@ SKIP: {
     is($user->me()->is_success, 1, "get myself is successful");
     is($user->get_user(userID => 'redicaps')->is_success,
         1, "get user 'redicaps'");
-    is($user->get_contacts(userID => 'redicaps')->is_success,
+    is($user->get_user_contacts(userID => 'redicaps')->is_success,
         1, "get user's contacts");
-    is($user->get_friends(userID => 'Net-Douban')->is_success,
+    is($user->get_user_friends(userID => 'Net-Douban')->is_success,
         1, "get user's friends");
     is($user->search_user(q => 'abei')->is_success,
         1, "search abei");

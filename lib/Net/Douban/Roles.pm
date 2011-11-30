@@ -6,12 +6,14 @@ use namespace::autoclean;
 use MIME::Base64;
 use JSON::Any;
 
-with "Net::Douban::OAuth";
+requires '_restricted_request';
+
 our $VERSION = '1.08';
+
 has 'apikey'      => (is => 'rw', isa => 'Str');
 has 'private_key' => (is => 'rw', isa => 'Str');
-has 'start_index' => (is => 'rw', isa => 'PInt', default => 0);
-has 'max_results' => (is => 'rw', isa => 'PInt', default => 10);
+has 'start_index' => (is => 'rw', default => 0);
+has 'max_results' => (is => 'rw', default => 10);
 has 'api_base' =>
   (is => 'ro', isa => 'Str', default => 'http://api.douban.com');
 has 'res_callback' => (
@@ -22,18 +24,12 @@ has 'res_callback' => (
     default => sub { \&_wrape_response },
 );
 
-has 'realm' => (is => 'ro', default => 'http://www.douban.com');
-
-sub args {
-    my $self = shift;
-    return unless blessed($self) && $self->isa("Net::Douban");
-    my %ret;
-    for my $arg (qw/apikey start_index max_results/) {
-        if (defined $self->$arg) {
-            $ret{$arg} = $self->$arg;
-        }
-    }
-    return %ret;
+sub _wrape_response {
+    my $res = shift;
+    croak $res->status_line unless $res->is_success;
+    return $res->decoded_content unless $res->content_type =~ /json/i;
+    my $j = JSON::Any->new();
+    return $j->from_json($res->decoded_content);
 }
 
 sub __build_path {
@@ -95,77 +91,6 @@ sub __build_content {
     );
 }
 
-sub _build_method {
-    my ($self, %api_hash) = @_;
-    for my $key (keys %api_hash) {
-
-        my $sub = sub {
-            my $self        = shift;
-            my %args        = @_;
-            my $method      = $api_hash{$key}{method};
-            my $params      = $api_hash{$key}{params};
-            my $request_url = $self->api_base;
-            my @args        = ($method);
-            my $res         = delete $args{res_callback};
-
-            ## try to build request url
-            $request_url .= $self->__build_path($api_hash{$key}, \%args);
-            push @args, $self->__build_content($api_hash{$key}, \%args);
-
-            ## at list on params needed
-            if ($params) {
-                my @p = ref $params ? @$params : ($params);
-                my $exists = 0;
-                for my $pp (@p) {
-                    if (exists $args{$pp}) {
-                        push @args, $pp => $args{$pp};
-                        $exists++;
-                    }
-                }
-                croak "Missing parameters: ", join('/'), @p unless $exists;
-            }
-
-            push @args, 'alt'       => 'json';
-            push @args, request_url => $request_url;
-
-            ## pass optional auguments to _restricted_request
-            my $optional = $api_hash{$key}{'optional_params'};
-            my @others =
-              $optional
-              ? (
-                grep {$_}
-                map { exists $args{$_} && $_ => $args{$_} } @$optional
-              )
-              : ();
-
-            return $res->($self->_restricted_request(@args, @others)) if $res;
-            $self->res_callback->($self->_restricted_request(@args, @others));
-        };
-        $self->meta->add_method($key, $sub);
-    }
-}
-
-sub _wrape_response {
-    my $res = shift;
-    croak $res->status_line unless $res->is_success;
-    return $res->decoded_content unless $res->content_type =~ /json/i;
-    my $j = JSON::Any->new();
-    return $j->from_json($res->decoded_content);
-}
-
-sub build_url {
-    my $self = shift;
-    my $url  = shift;
-    my %args = @_;
-    my $mark = $url =~ /\?/ ? '&' : '?';
-    while (my ($key, $value) = each %args) {
-        $key =~ s/-/_/g;
-        $url .= $mark . "$key=$value";
-        $mark = '&';
-    }
-    return $url;
-}
-
 sub __escape {
     my $c   = shift;
     my %foo = (
@@ -180,6 +105,8 @@ sub __escape {
     }
     return $c;
 }
+
+has 'realm' => (is => 'ro', default => 'http://www.douban.com');
 
 package Net::Douban::Types;
 use Moose::Util::TypeConstraints;

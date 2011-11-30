@@ -1,10 +1,10 @@
 package Net::Douban::Subject;
 
-use Moose;
+use Moose::Role;
 use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
 use namespace::autoclean;
-with 'Net::Douban::Roles';
+requires '_build_method';
 
 our %api_hash = (
     get_book => {
@@ -41,7 +41,6 @@ our %api_hash = (
 );
 
 __PACKAGE__->_build_method(%api_hash);
-__PACKAGE__->meta->make_immutable;
 1;
 __END__
 

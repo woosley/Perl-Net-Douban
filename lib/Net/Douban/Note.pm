@@ -1,8 +1,9 @@
 package Net::Douban::Note;
-use Moose;
+
+use Moose::Role;
 use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles';
+requires '_build_method';
 use namespace::autoclean;
 
 our %api_hash = (
@@ -73,7 +74,6 @@ sub __check_private_reply {
 }
 
 __PACKAGE__->_build_method(%api_hash);
-__PACKAGE__->meta->make_immutable;
 1;
 
 __END__

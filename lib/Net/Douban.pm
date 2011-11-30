@@ -2,30 +2,58 @@ package Net::Douban;
 use namespace::autoclean;
 use Moose;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles';
+with 'Net::Douban::OAuth';
+with "Net::Douban::Roles";
+#
+#for my $name (
+#    qw/User Note Tag Collection Recommendation Event Review
+#    Subject Doumail Miniblog/
+#  )
+#{
+#
+#    my $lowercased = lc $name;
+#    no strict 'refs';
+#    my $builder = '_build_' . "$lowercased";
+#    __PACKAGE__->meta->add_method(
+#        $builder => sub {
+#            my $self  = shift;
+#            my $class = "Net::Douban::$name";
+#            eval "require $class";
+#            croak $@ if $@;
+#            my $obj = "Net::Douban::$name"->new($self->args, @_,);
+#        }
+#    );
+#
+#    has $lowercased => (is => 'ro', lazy => 1, builder => $builder);
+#}
 
-for my $name (
-    qw/User Note Tag Collection Recommendation Event Review
-    Subject Doumail Miniblog/
-  )
-{
 
-    my $lowercased = lc $name;
-    no strict 'refs';
-    my $builder = '_build_' . "$lowercased";
-    __PACKAGE__->meta->add_method(
-        $builder => sub {
-            my $self  = shift;
-            my $class = "Net::Douban::$name";
-            eval "require $class";
-            croak $@ if $@;
-            my $obj = "Net::Douban::$name"->new($self->args, @_,);
+around BUILDARGS => sub {
+    my $orig = shift;
+    my $class = shift;
+    my %args = @_;
+    if($args{Traits} && $args{Roles}){
+        warn "Roles will be ignored when we have Traits";
+    }
+    if($args{Traits}){
+        my @traits = ref $args{Traits} ? @{$args{Traits}} :
+            ($args{Traits});
+        for my $t (@traits){
+            with "Net::Douban::Traits::$t";
         }
-    );
+    }elsif($args{Roles}){
+        my @roles = ref $args{Roles} ? @{$args{Roles}} :
+            ($args{Roles});
+        with "Net::Douban::$_" foreach @roles;
+    }else{
+        croak "Without Traits or Roles, I can not do anything";
+    }
+    delete $args{Roles};
+    delete $args{Traits};
+    $class->$orig(%args);
+};
 
-    has $lowercased => (is => 'ro', lazy => 1, builder => $builder);
-}
-__PACKAGE__->meta->make_immutable;
+#__PACKAGE__->meta->make_immutable;
 
 1;
 __END__
