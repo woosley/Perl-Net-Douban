@@ -1,9 +1,8 @@
 package Net::Douban::Collection;
 
 use Moose::Role;
-use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-with 'Net::Douban::Roles';
+use Net::Douban::Utils;
 use namespace::autoclean;
 
 our %api_hash = (
@@ -80,7 +79,7 @@ sub __check_private_tag {
     return $content;
 }
 
-__PACKAGE__->_build_method(%api_hash);
+_build_method(__PACKAGE__, %api_hash);
 1;
 
 __END__
@@ -92,14 +91,8 @@ __END__
     Net::Douban::Collection
 
 =head1 SYNOPSIS
-
-	use Net::Douban::Collection;
-	my $coll = Net::Douban::Collection->new(
-        
-		collectionID => '....',
-        # or
-        oauth => $consumer,
-	);
+    
+    my $c = Net::Douban->init(Roles => 'Collections');
 
 =head1 DESCRIPTION
 
@@ -111,19 +104,32 @@ Interface to douban.com API collection section
 
 =item B<get_collection>
 
+argument:  collectionID
+
 =item B<get_user_collection>
 
-=item B<add_collection>
+argument:   userID
 
+optional arguments: [qw/cat tag status updated-max updated-min/],
+    
 =item B<put_collection>
 
+arguments:  ['collectionID', 'rating', 'content', 'subjectID', 'status', 'collectionID'],
+
 =item B<delete_collection>
+
+argument:  collectionID
+
+=item B<post_collection>
+
+arguments:  ['rating', 'content', 'subjectID', 'status'],
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://www.douban.com/service/apidoc/reference/collection>
+L<Net::Douban> L<Net::Douban::Gift> L<Moose>
+L<http://www.douban.com/service/apidoc/reference/collection>
 
 =head1 AUTHOR
 
@@ -131,7 +137,7 @@ woosley.xu<woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

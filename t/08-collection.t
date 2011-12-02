@@ -4,11 +4,11 @@ use Test::More tests => 9;    # last test to print
 use Test::Exception;
 
 BEGIN {
-    use_ok("Net::Douban::Collection");
+    use_ok("Net::Douban");
 }
 
-my $collection = Net::Douban::Collection->new();
-isa_ok($collection, 'Net::Douban::Collection');
+my $collection = Net::Douban->init(Roles => 'Collection');
+isa_ok($collection, 'Net::Douban');
 my %api_hash = %{Net::Douban::Collection::api_hash};
 
 cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");

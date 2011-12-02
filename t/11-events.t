@@ -4,11 +4,11 @@ use Test::More tests => 13;
 use Test::Exception;
 
 BEGIN {
-    use_ok("Net::Douban::Event");
+    use_ok("Net::Douban");
 }
 
-my $event = Net::Douban::Event->new();
-isa_ok($event, 'Net::Douban::Event');
+my $event = Net::Douban->init(Roles => 'Event');
+isa_ok($event, 'Net::Douban');
 my %api_hash = %{Net::Douban::Event::api_hash};
 
 cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");

@@ -19,7 +19,6 @@ for my $ro_attr (qw/request_url access_url authorize_url/) {
 
 has 'ua' => (is => 'rw', lazy_build => 1);
 
-our $version = 1.08;
 
 sub get_request_token {
     my $self = shift;
@@ -89,12 +88,6 @@ sub _get_request {
 
 sub _gen_nonce {
     return time ^ $$ ^ int(rand 2 ^ 32);
-#    my @charset = ('a' .. 'z', '0' .. '9');
-#    my $nonce = '';
-#    for (1 .. 30) {
-#        $nonce .= $charset[rand @charset];
-#    }
-#    return $nonce;
 }
 
 sub load_token {
@@ -158,21 +151,17 @@ sub _build_ua {
 1;
 __END__
 
+=pod
+
 =head1 NAME
 
 Net::Douban::OAuth - OAuth for Net::Douban
 
-=head1 VERSION
-
-Version 1.08
-
 =head1 SYNOPSIS
-
-OAuth object for Net::Douban
 
     use Net::Douban;
     
-    my $social = Net::Douban->new(
+    my $c = Net::Douban->new(
         consumer_key => 'CONSUMER_KEY',
         consumer_secret => 'CONSUMER_SECRET',
     );
@@ -200,7 +189,7 @@ woosley.xu, C<< <woosley.xu at gmail.com> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 woosley.xu.
+Copyright 2010 - 2011 woosley.xu.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

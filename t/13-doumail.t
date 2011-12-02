@@ -4,11 +4,11 @@ use Test::More tests => 7;
 use Test::Exception;
 
 BEGIN {
-    use_ok("Net::Douban::Doumail");
+    use_ok("Net::Douban");
 }
 
-my $mail = Net::Douban::Doumail->new();
-isa_ok($mail, 'Net::Douban::Doumail');
+my $mail = Net::Douban->init(Roles => 'Doumail');
+isa_ok($mail, 'Net::Douban');
 my %api_hash = %{Net::Douban::Doumail::api_hash};
 
 cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");

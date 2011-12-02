@@ -1,9 +1,10 @@
-use Test::More 'no_plan';    # last test to print
+use Test::More  tests => 6;
 use Test::Exception;
 {
 
     package Role;
     use Moose;
+    with 'Net::Douban::OAuth';
     with "Net::Douban::Roles";
 }
 

@@ -10,12 +10,7 @@ requires '_restricted_request';
 
 our $VERSION = '1.08';
 
-has 'apikey'      => (is => 'rw', isa => 'Str');
-has 'private_key' => (is => 'rw', isa => 'Str');
-has 'start_index' => (is => 'rw', default => 0);
-has 'max_results' => (is => 'rw', default => 10);
-has 'api_base' =>
-  (is => 'ro', isa => 'Str', default => 'http://api.douban.com');
+
 has 'res_callback' => (
     is      => 'rw',
     isa     => 'CodeRef',
@@ -23,6 +18,7 @@ has 'res_callback' => (
     lazy    => 1,
     default => sub { \&_wrape_response },
 );
+
 
 sub _wrape_response {
     my $res = shift;
@@ -44,7 +40,7 @@ sub __build_path {
         push @path_list, $path;
     }
 
-    FOO: for my $path (@path_list) {
+  FOO: for my $path (@path_list) {
         my $p;
         while (1) {
             my ($type, $ele) = do {
@@ -106,22 +102,7 @@ sub __escape {
     return $c;
 }
 
-has 'realm' => (is => 'ro', default => 'http://www.douban.com');
 
-package Net::Douban::Types;
-use Moose::Util::TypeConstraints;
-
-## url
-subtype
-  'Url' => as 'Str',
-  => where { $_ =~ m/^https?:\/\/.*\w$/ },
-  => message {"invalid url!"};
-
-## positive int
-subtype
-  'PInt' => as 'Int',
-  => where { $_ >= 0 },
-  => message {"not a positive int"};
 1;
 __END__
 
@@ -135,49 +116,20 @@ Net::Douban::Roles - basic Moose role for Net::Douban
 	
 	with 'Net::Douban::Roles'
 
-=head1 DESCRIPTION
-
-This PM file includes Net::Douban::Roles and Net::Douban::Types. Net::Douban::Roles provides most of the attributes for Net::Douban::*; Net::Douban::Types is the type constraint system for Net::Douban 
-
-=head1 ATTRIBUTES
-
-=over 4
-
-=item B<oauth>
-
-oauth object for Net::Douban
-
-=item B<ua>
-
-user-agent object for Net::Douban, provided by default
-
-=item B<apikey>
-
-=item B<private_key>
-
-=item B<start_index>
-
-url start-index argument, set to 0 by default
-
-=item B<max_results>
-
-url max-results argument, set to 10 by default
-
-=back
-
 =head1 SEE ALSO
     
-L<Net::Douban> L<Net::Douban::Roles::More> L<Moose> L<http://douban.com/service/apidoc>
+L<Net::Douban>  L<Moose> L<http://douban.com/service/apidoc>
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
-=head1 COPYRIGHT & LICENSE
+=head1 COPYRIGHT
+	
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
-This software is copyright (c) 2010 by woosley.xu.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.10.0 or,
+at your option, any later version of Perl 5 you may have available.
 
 =cut

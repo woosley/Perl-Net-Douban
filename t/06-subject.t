@@ -1,14 +1,14 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More tests => 12;    # last test to print
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
-    use_ok("Net::Douban::Subject");
+    use_ok("Net::Douban", "use Net::Douban");
 }
 
-my $subject = Net::Douban::Subject->new();
-isa_ok($subject, 'Net::Douban::Subject');
+my $subject = Net::Douban->init(Roles => 'Subject');
+isa_ok($subject, 'Net::Douban');
 my %api_hash = %{Net::Douban::Subject::api_hash};
 
 cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");

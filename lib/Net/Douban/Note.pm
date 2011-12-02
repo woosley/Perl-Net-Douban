@@ -1,9 +1,8 @@
 package Net::Douban::Note;
 
 use Moose::Role;
-use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-requires '_build_method';
+use Net::Douban::Utils;
 use namespace::autoclean;
 
 our %api_hash = (
@@ -73,7 +72,7 @@ sub __check_private_reply {
     return $content;
 }
 
-__PACKAGE__->_build_method(%api_hash);
+_build_method(__PACKAGE__, %api_hash);
 1;
 
 __END__
@@ -86,16 +85,7 @@ Net::Douban::Note
 
 =head1 SYNOPSIS
 
-	use Net::Douban::Note;
-	$note = Net::Douban::Note->new(
-		apikey => '....',
-        # or
-        oauth => $consumer,
-	);
-
-	$atom = $note->get_note(noteID => ... ) 
-	$atom = $note->get_user_note(userID => 'Net-Douban');
-	$atom = $note->post_note(xml => $xml);
+    my $c = Net::Douban->init(Roles => 'Note');
 
 =head1 DESCRIPTION
 
@@ -103,33 +93,42 @@ Interface to douban.com API Note section
 
 =head1 METHODS
 
-Those methods return a Net::Douban::Atom object which can be use to get data conveniently
-
 =over
 
-=item B<get_user>
+=item B<get_note>
 
-=item B<get_user_note>
+argument:   noteID
 
-=item B<delet_note>
+=item B<get_user_notes>
+
+argument:   userID
+
+=item B<delete_note>
+
+argument:   noteID
 
 =item B<post_note>
 
+argument:   content, title 
+
 =item B<put_note>
+
+argument:   content, title, noteID
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<http://www.douban.com/service/apidoc/reference/note>
+L<Net::Douban> L<Net::Douban::Gift> L<Moose>
+L<http://www.douban.com/service/apidoc/reference/collection>
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

@@ -1,10 +1,9 @@
 package Net::Douban::Recommendation;
 
 use Moose::Role;
-use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-requires '_build_method';
 use namespace::autoclean;
+use Net::Douban::Utils;
 
 our %api_hash = (
     get_recom => {
@@ -63,7 +62,7 @@ EOF
     },
 );
 
-__PACKAGE__->_build_method(%api_hash);
+_build_method(__PACKAGE__, %api_hash);
 1;
 
 __END__
@@ -76,15 +75,7 @@ Net::Douban::Recommendation
 
 =head1 SYNOPSIS
 
-	use Net::Douban::Recommendation;
-	my $recom = Net::Douban::Recommendation->new(
-		apikey => '....',
-        # or
-        oauth => $consumer,
-	);
-
-	$atom = $recom->get_recom(recomID => ...);
-	$atom = $event->get_user_recom(userID => ...);
+    my $c = Net::Douban->init(Roles => 'Recommendation');
 
 =head1 DESCRIPTION
 
@@ -92,37 +83,50 @@ Interface to douban.com API Event section
 
 =head1 METHODS
 
-Most of the get methods return a Net::Douban::Atom object which can be use to get data conveniently
-
 =over
 
 =item B<get_recom>
 
-=item B<get_comments>
+argument:   recomID
 
 =item B<get_user_recom>
 
+argument:   userID 
+
+=item B<get_recom_comments >
+
+argument:   recomID 
+
 =item B<post_recom>
+
+arguments:  ['title', 'comment', 'link'],
 
 =item B<delete_recom>
 
+argument:   recomID 
+
 =item B<post_comment>
 
+argument:   recomID, content
+
 =item B<delete_comment>
+
+argument:   recomID, commentID
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<http://www.douban.com/service/apidoc/reference/recommendation>
+L<Net::Douban> L<Net::Douban::Gift> L<Moose>
+L<http://www.douban.com/service/apidoc/reference/recommendation>
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

@@ -1,10 +1,9 @@
 package Net::Douban::User;
 
 use Moose::Role;
-use namespace::autoclean;
 use Carp qw/carp croak/;
 use Net::Douban::Utils;
-use MooseX::StrictConstructor;
+use namespace::autoclean;
 
 our %api_hash = (
     get_user => {

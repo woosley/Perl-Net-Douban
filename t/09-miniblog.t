@@ -4,11 +4,11 @@ use Test::More 'no_plan';
 use Test::Exception;
 
 BEGIN {
-    use_ok("Net::Douban::Miniblog");
+    use_ok("Net::Douban");
 }
 
-my $saying = Net::Douban::Miniblog->new();
-isa_ok($saying, 'Net::Douban::Miniblog');
+my $saying = Net::Douban->init(Roles => 'Miniblog');
+isa_ok($saying, 'Net::Douban');
 my %api_hash = %{Net::Douban::Miniblog::api_hash};
 
 cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");

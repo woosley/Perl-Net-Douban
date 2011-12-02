@@ -1,10 +1,9 @@
 package Net::Douban::Miniblog;
 
 use Moose::Role;
-use MooseX::StrictConstructor;
-use Carp qw/carp croake;
-requires '_build_method';
+use Carp qw/carp croak/;
 use namespace::autoclean;
+use Net::Douban::Utils;
 
 our %api_hash = (
     get_user_miniblog => {
@@ -54,7 +53,7 @@ EOF
     },
 );
 
-__PACKAGE__->_build_method(%api_hash);
+_build_method(__PACKAGE__, %api_hash);
 1;
 
 __END__
@@ -67,15 +66,7 @@ Net::Douban::Miniblog
 
 =head1 SYNOPSIS
 
-	use Net::Douban::Miniblog;
-	$miniblog = Net::Douban::Miniblog->new(
-		apikey => '....',
-        # or
-        oauth => $consumer,
-	);
-
-	$atom = $miniblog->get_user_miniblog(userID => 'Net-Douban');
-	$atom = $miniblog->get_contact_miniblog(userID => 'Net-Douban');
+    my $c = Net::Douban->init(Roles => 'Miniblog');
 
 =head1 DESCRIPTION
 
@@ -83,35 +74,46 @@ Interface to douban.com API Miniblog section
 
 =head1 METHODS
 
-Those methods return a Net::Douban::Atom object which can be use to get data conveniently
-
 =over
 
 =item B<get_user_miniblog>
 
+argument:   userID
+
 =item B<get_contact_miniblog>
 
-=item B<post_saying>
+argument:   userID
+
+=item B<post_miniblog>
+
+argument:   content 
 
 =item B<delete_miniblog>
 
-=item B<get_reply>
+argument:   miniblogID 
 
-=item B<post_reply>
+=item B<get_miniblog_comments>
+
+argument:   miniblogID 
+
+=item B<post_miniblog_comment>
+
+argument:  ['miniblogID', 'content']
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<http://www.douban.com/service/apidoc/reference/miniblog>
+L<Net::Douban> L<Net::Douban::Gift> L<Moose>
+L<http://www.douban.com/service/apidoc/reference/collection>
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

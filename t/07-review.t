@@ -4,11 +4,11 @@ use Test::More tests => 11;
 use Test::Exception;
 
 BEGIN {
-    use_ok("Net::Douban::Review");
+    use_ok("Net::Douban");
 }
 
-my $review = Net::Douban::Review->new();
-isa_ok($review, 'Net::Douban::Review');
+my $review = Net::Douban->init(Roles => 'Review');
+isa_ok($review, 'Net::Douban');
 my %api_hash = %{Net::Douban::Review::api_hash};
 
 cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");

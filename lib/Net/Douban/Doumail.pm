@@ -1,10 +1,9 @@
 package Net::Douban::Doumail;
 
 use Moose::Role;
-use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-requires '_build_method';
 use namespace::autoclean;
+use Net::Douban::Utils;
 
 our %api_hash = (
     get_mail_inbox => {
@@ -69,7 +68,7 @@ bWxucy8iIHhtbG5zOmdkPSJodHRwOi8vc2NoZW1hcy5nb29nbGUuY29tL2cvMjAwNSIgeG1sbnM6
 b3BlbnNlYXJjaD0iaHR0cDovL2E5LmNvbS8tL3NwZWMvb3BlbnNlYXJjaHJzcy8xLjAvIj4ge2Vu
 dHJpZXN9IDwvZmVlZD4K
 EOF
-        _build_content => \&check_mailID,
+        _build_content => \&_check_mailID,
     },
 
     delete_mail => {
@@ -139,7 +138,7 @@ EOF
 
 }
 
-__PACKAGE__->_build_method(%api_hash);
+_build_method(__PACKAGE__, %api_hash);
 1;
 
 =pod
@@ -149,10 +148,7 @@ __PACKAGE__->_build_method(%api_hash);
 
 =head1 SYNOPSIS
 
-	use Net::Douban::Doumail;
-	my $mail= Net::Douban::Doumail->new(
-        ...
-	);
+	my $c = Net::Douban->new(Roles => 'Doumail');
 
 =head1 DESCRIPTION
 
@@ -162,37 +158,50 @@ Interface to douban.com API  mail section
 
 =over
 
-=item B<inbox>
+=item B<get_mail_inbox>
 
-=item B<unread>
+=item B<get_mail_unread>
 
-=item B<outbox>
+=item B<get_mail_outbox>
 
-=item B<get_doumail>
+=item B<get_mail>
 
-=item B<post_doumail>
+argument:   doumailID
 
-=item B<delete_doumail>
+=item B<post_mail>
 
-=item B<mark_read>
+arguments:  ['title', 'content', 'receiver'],
 
-=item B<delete>
+=item B<mark_mail_as_read>
 
-=item B<mark>
+argument:   doumailID
+
+=item B<mark_mails_as_read>
+
+argument:   mailIDs => [ ... ]
+
+=item B<delete_mail>
+
+argument:   doumailID
+
+=item B<delete_mails>
+
+argument:   mailIDs => [ ... ]
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> L<http://douban.com/service/apidoc/reference/douamil>
+L<Net::Douban> L<Net::Douban::Gift> L<Moose>
+L<http://www.douban.com/service/apidoc/reference/collection>
 
 =head1 AUTHOR
 
-woosley.xu<woosley.xu@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

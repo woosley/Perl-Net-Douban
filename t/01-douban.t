@@ -1,18 +1,21 @@
-use strict;
-use warnings;
+use lib './t/lib';
+use Test::Douban;
+use Test::Exception;
+use Test::More 'no_plan';
 
-use Test::More tests => 6;    # last test to print
+package My::Trait;
+{
+    use Moose::Role;
+    with "Net::Douban::Review"
+}
+
+package main;
 use_ok('Net::Douban') or exit;
-my $douban = Net::Douban->new('max_results' => '5', apikey => 'sap5kyif');
-isa_ok($douban, 'Net::Douban');
 
-my $user = $douban->user;
-isa_ok($douban->user, 'Net::Douban::User');
-is($user->max_results, 5, 'max results is 5');
-is($user->apikey, 'sap5kyif', 'api key is sap5kyif');
+my $b = Net::Douban->init(Traits => '+My::Trait');
+isa_ok($b, 'Net::Douban');
+can_ok($b, 'get_user_review');
+my $c = Net::Douban->init(Roles => 'User');
+isa_ok($c, 'Net::Douban');
+can_ok($c, 'get_user');
 
-$user->max_results(10);
-
-
-my $user2 = $douban->user;
-is_deeply($user, $user2, "objects are same strcuture");

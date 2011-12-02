@@ -1,10 +1,9 @@
 package Net::Douban::Subject;
 
 use Moose::Role;
-use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
 use namespace::autoclean;
-requires '_build_method';
+use Net::Douban::Utils;
 
 our %api_hash = (
     get_book => {
@@ -40,7 +39,7 @@ our %api_hash = (
     },
 );
 
-__PACKAGE__->_build_method(%api_hash);
+_build_method(__PACKAGE__, %api_hash);
 1;
 __END__
 
@@ -52,16 +51,7 @@ Net::Douban::Subject
 
 =head1 SYNOPSIS
 
-	use Net::Douban::Subject;
-	my $subject = Net::Douban::Subject->new(
-        subjectID => 2023013,
-		apikey => '....',
-        # or
-        oauth => $consumer,
-	);
-
-	$atom = $subject->get_book(isbnID => 7543639103);
-    $atom = $subject->search_book(tag => 'cowboy', start_index => 5, max_results => 10);
+	my $c = Net::Douban->init(Roles => 'Subject');
 
 =head1 DESCRIPTION
 
@@ -69,37 +59,46 @@ Interface to douban.com API Subject section
 
 =head1 METHODS
 
-Those methods return a Net::Douban::Atom object which can be use to get data conveniently
-
 =over
 
 =item B<get_book>
 
+argument:   subjectID | isbnID 
+
 =item B<get_movie>
+
+argument:   subjectID | imdbID
 
 =item B<get_music>
 
+argument:   subjectID
+
 =item B<search_book>
 
-parameter q(keyword) or tag needed for the search methods
+argument: q, tag
 
 =item B<search_music>
 
+argument: q, tag
+
 =item B<search_movie>
+
+argument: q, tag
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<http://www.douban.com/service/apidoc/reference/subject>
+L<Net::Douban> L<Net::Douban::Traits::Gift> L<Moose> 
+B<http://www.douban.com/service/apidoc/reference/subject>
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

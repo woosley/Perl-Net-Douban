@@ -4,11 +4,11 @@ use Test::More tests => 9;
 use Test::Exception;
 
 BEGIN {
-    use_ok("Net::Douban::Note");
+    use_ok("Net::Douban");
 }
 
-my $note = Net::Douban::Note->new();
-isa_ok($note, 'Net::Douban::Note');
+my $note = Net::Douban->init(Roles => 'Note');
+isa_ok($note, 'Net::Douban');
 my %api_hash = %{Net::Douban::Note::api_hash};
 
 cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");

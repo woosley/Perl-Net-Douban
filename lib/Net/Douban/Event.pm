@@ -1,9 +1,8 @@
 package Net::Douban::Event;
 
 use Moose::Role;
-use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
-requires '_build_method';
+use Net::Douban::Utils;
 use namespace::autoclean;
 
 our %api_hash = (
@@ -95,7 +94,7 @@ our %api_hash = (
 );
 
 
-__PACKAGE__->_build_method(%api_hash);
+_build_method(__PACKAGE__, %api_hash);
 1;
 
 __END__
@@ -108,16 +107,7 @@ Net::Douban::Event
 
 =head1 SYNOPSIS
 
-	use Net::Douban::Event;
-	my $event = Net::Douban::Event->new(
-		apikey => '....',
-        # or
-        oauth => $consumer,
-	);
-
-	$atom = $event->get_event;
-	$atom = $event->get_event_wishers;
-    $atom = $event->search(q => 'douban', locationID => 'all', start_index => 5, max_results => 10);
+	my $event = Net::Douban->init(Roles => 'Event');
 
 =head1 DESCRIPTION
 
@@ -125,53 +115,76 @@ Interface to douban.com API Event section
 
 =head1 METHODS
 
-Most of the get methods return a Net::Douban::Atom object which can be use to get data conveniently
-
 =over
 
 =item B<get_event>
 
-=item B<get_event_wishers>
+argument:   eventID
 
 =item B<get_event_participants>
 
-=item B<get_user_participants>
+argument:   eventID
 
-=item B<get_user_wish>
+=item B<get_event_wishers>
 
-=item B<get_user_event>
+argument:   eventID
 
-=item B<get_city_events>
+=item B<get_user_events>
 
-=item B<search>
+argument:   userID
 
-=item B<post_event>
+=item B<get_user_wishes>
 
-=item B<join_event>
+argument:   userID
 
-=item B<put_event>
+=item B<get_user_participates>
 
-=item B<wish_event>
+argument:   userID
 
-=item B<delete_event>
+=item B<get_user_initiates>
 
-=item B<leave_event>
+argument:   userID
 
-=item B<quit_event>
+=item B<get_location_events>
+
+argument:  locationID 
+
+optional arguments: ['type'],
+
+=item B<search_events>
+
+argument:  [qw/q location/] 
+
+=item B<post_event_wisher>
+
+argument:   eventID
+
+=item B<post_event_participant>
+
+argument:   eventID
+
+=item B<delete_event_wisher>
+
+argument:   eventID
+
+=item B<delete_event_paticipant>
+
+argument:   eventID
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<http://www.douban.com/service/apidoc/reference/event>
+L<Net::Douban> L<Net::Douban::Gift> L<Moose>
+L<http://www.douban.com/service/apidoc/reference/collection>
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,

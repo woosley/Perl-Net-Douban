@@ -4,7 +4,7 @@ use Moose::Role;
 use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
 use namespace::autoclean;
-requires '_build_method';
+use Net::Douban::Utils;
 
 our %api_hash = (
     get_review => {
@@ -28,7 +28,7 @@ our %api_hash = (
     get_book_review => {
         path => [
             '/book/subject/{subjectID}/reviews',
-            '/book/subject/isbn/{isbn}/reviews'
+            '/book/subject/isbn/{isbnID}/reviews'
         ],
         has_url_param => 1,
         method        => 'GET',
@@ -78,7 +78,7 @@ EOF
     },
 );
 
-__PACKAGE__->_build_method(%api_hash);
+_build_method(__PACKAGE__, %api_hash);
 1;
 
 __END__
@@ -91,15 +91,7 @@ Net::Douban::Review
 
 =head1 SYNOPSIS
 
-	use Net::Douban::Review;
-	my $review = Net::Douban::Review->new(
-		apikey => '....',
-        # or
-        oauth => $consumer,
-	);
-
-	$atom = $review->get_review(reviewID => 1138468);
-    $atom = $review->get_user_review(userID => '2265138', start_index => 5, max_results => 10);
+    $c = Net::Doban->init(Roles => 'Review');
 
 =head1 DESCRIPTION
 
@@ -107,47 +99,54 @@ Interface to douban.com API Review section
 
 =head1 METHODS
 
-Those get methods return a Net::Douban::Atom object which can be use to get data conveniently
-
 =over
 
 =item B<get_review>
 
+argument:   reviewID
+
 =item B<get_user_review>
 
-userID required
+argument:   userID
 
 =item B<get_book_review>
 
-=item B<get_moview_review>
+argument:   subjectID | isbnID 
+
+=item B<get_movie_review>
+
+argument:   subjectID | imdbID
 
 =item B<get_music_review>
 
+arugment:   subjectID
+
 =item B<post_review>
 
-post XML required
+arguments:  ['subjectID', 'content', 'rating', 'title'],
 
 =item B<put_review>
 
-modify your review, reviewID and put XML required
+arguments:  ['reviewID', 'subjectID', 'reviewID', 'title', 'content', 'rating'],
 
 =item B<delete_review>
 
-reviewID required
+argument:   reviewID
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<http://www.douban.com/service/apidoc/reference/review>
+L<Net::Douban> L<Net::Douban::Traits::Gift> L<Moose> 
+B<http://www.douban.com/service/apidoc/reference/review>
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,
