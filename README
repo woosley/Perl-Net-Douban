@@ -1,65 +1,106 @@
-NAME
-    Net::Douban - Perl client for douban.com
+=pod
 
-SYNOPSIS
-        use Net::Douban;
-        use Net::Douban::OAuth;
-        my $consumer = Net::Douban::OAuth->new(...);
-        # do authenticate 
-        $consumer->request_token;
-        $consumer->access_token;
+=head1 NAME
 
-        my $client = Net::Douban->new( oauth =>$consumer);
+Net::Douban - Perl client for douban.com
 
-        my $atom = $client->User(userID => 'Net-Douban')->get_user;
-        print $atom->id;
-        ....
+=head1 SYNOPSIS
+    
+    use Net::Douban;
+    my $client = Net::Douban->init(Traits => 'Gift');
+    my $client = Net::Douban->init(Roles => [qw/User Review .../]);
+    $client->res_callback(sub{shift});
+    
+    print $client->get_user_contact(userID => 'Net-Douban')->decoded_content;
 
-DESCRIPTION
-    Net::Douban is a perl client wrapper on the Chinese website 'Douban.com'
-    API.
+=head1 DESCRIPTION
 
-METHODS
-    new
-            $client = Net::Douban->new(oauth => $consumer, apikey => $key);
+Net::Douban is a perl client wrapper on the Chinese website 'douban.com' API.
 
-    Auto-Generated Objects
-            #Net::Douba::User object
-            $client->User;
+=head1 METHODS
 
-            #Net::Douban::Event object
-            $client->Event;
-            ...
+=over
 
-        Auto-generated objects include: User Note Tag Collection
-        Recommendation Event Review Subject Doumail Miniblog OAuth
+=item B<init>
 
-Website data Access
-    Generally an apikey is required for you to access the douban.com
-    service. Goto <http://www.douban.com/service/apikey/> for an apikey
+B<init> is the B<new> for C<Net::Douban>. it is here because of
+C<MooseX::Traits> limits
 
-    If you want to access some private or so called protected data, you have
-    to use a authenticated oauth object, which has basic implements on the
-    HTTP methods just like "GET POST PUT DELETE", to access the protected
-    data, Net::Douban::OAuth can do this for you. Goto
-    <http://www.douban.com/service/apidoc/auth> for more douban.com OAuth
-    document.
+    $client = Net::Douban->init(Traits => 'Gift');
+    $client = Net::Douban->init(Roles  => 'User');
 
-  We don't generate XML for you
-    If you want to post data to some page. Net::Douban::* can do the basic
-    POST/DELETE/PUT works, but it won't generate any XML for you, so you
-    have to call those methods with a (xml => $XML) argument;
+=back
 
-SEE ALSO
-    Net::Douban Net::Douban::Atom Net::Douban::OAuth Moose XML::Atom
-    <http://douban.com/service/apidoc>
+=head1 OAuth
 
-AUTHOR
-    woosley.xu<redicaps@gmail.com>
+Here is how to get the tokens before you can access the website
+    
+    my $c = Net::Douban->init(consumer_key =>'...', consumer_secret =>'...');
+    $c->get_request_token;
+    ## ask your customer go to this url to allow the access to his account
+    print $c->paste_url();
+    <>;
+    $c->get_access_token;
+    ## now you can save those tokens 
+    say $c->request_token, $c->request_token_secret, $c->access_token,
+        $c->access_token_secret;
+   
+    ## next time you can load tokens,all tokens are needed, the key for
+    the hash is the name of the method.
+    $c->load_token(%token_hash);
 
-COPYRIGHT & LICENSE
-    This software is copyright (c) 2010 by woosley.xu.
+=head1 API
 
-    This is free software; you can redistribute it and/or modify it under
-    the same terms as the Perl 5 programming language system itself.
+=head2 Roles
 
+    $client = Net::Douban->init(Roles  => [qw/User Review/]);
+
+B<Roles> are just individual douban  API sections. You can pass B<Roles>
+to the constructure, then those sections are loaded to the object.
+Avalable roles are qw/User Subject Review Collection Miniblog Note Event
+Recommendation Review Doumail Tag/
+
+
+=head2 Traits
+
+Traits are special Roles, Right now just there is just a
+L<Net::Douban::Traits::Gift>, you can write your own trait, refer to
+L<Net::Douban::Traits::Gift> to see how to do it.
+
+When you want to use Traits under your own namespace(that is not under
+Net::Douban), you should pass it with a '+' in front of the name;
+
+    $c = Net::Douban->init("Traits" => '+My::Trait');
+
+=head2 res_callback
+
+You can use your own res_callback to handle the returned
+L<HTTP::Response> object by:
+
+    $client->res_callback(sub{....});
+
+The only argument for this callback is B<$res> return from
+L<LWP::UserAgent>
+
+=head2 Paging
+
+Paging is support by passing argments 'start-index' and 'max-results' to
+search functions.
+
+=head1 SEE ALSO
+    
+L<Net::Douban::OAuth> L<Net::Douban::Traits::Gift> L<Net::Douban::User>
+L<Net::Douban::Utils>
+
+=head1 AUTHOR
+
+woosley.xu C<woosley.xu@gmail.com>
+
+=head1 COPYRIGHT & LICENSE
+
+This software is copyright (c) 2010 - 2011 by woosley.xu.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
