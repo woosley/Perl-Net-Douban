@@ -176,7 +176,7 @@ argument:   eventID
 =head1 SEE ALSO
 
 L<Net::Douban> L<Net::Douban::Gift> L<Moose>
-L<http://www.douban.com/service/apidoc/reference/collection>
+L<http://www.douban.com/service/apidoc/reference/event>
 
 =head1 AUTHOR
 

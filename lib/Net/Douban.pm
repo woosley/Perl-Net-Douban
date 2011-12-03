@@ -8,7 +8,7 @@ with 'MooseX::Traits';
 with "Net::Douban::Roles";
 
 has 'api_base' =>
-  (is => 'ro', isa => 'Str', default => 'http://api.douban.com');
+    (is => 'ro', isa => 'Str', default => 'http://api.douban.com');
 has 'realm' => (is => 'ro', default => 'http://www.douban.com');
 
 has '+request_url' => (
@@ -140,7 +140,8 @@ L<HTTP::Response> object by:
     $client->res_callback(sub{....});
 
 The only argument for this callback is B<$res> return from
-L<LWP::UserAgent>
+L<LWP::UserAgent>. By default, res_callback will return the decoded JSON
+hash.
 
 =head2 Paging
 

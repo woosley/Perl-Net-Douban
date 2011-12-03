@@ -166,13 +166,13 @@ Net::Douban::OAuth - OAuth for Net::Douban
         consumer_secret => 'CONSUMER_SECRET',
     );
 
-    $social->get_request_token(callback_url = $callback_url);
+    $c->get_request_token(callback_url = $callback_url);
 
     ## get you user to this url
-    print $social->paste_url;
+    print $c->paste_url;
     <>;
 
-    $social->get_access_token;
+    $c->get_access_token;
 
     #then you can use this object to access user data
     

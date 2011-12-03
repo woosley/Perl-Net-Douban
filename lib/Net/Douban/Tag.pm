@@ -56,7 +56,7 @@ arguments: cat, userID
 =head1 SEE ALSO
 
 L<Net::Douban> L<Net::Douban::Traits::Gift> L<Moose> 
-B<http://www.douban.com/service/apidoc/reference/subject>
+B<http://www.douban.com/service/apidoc/reference/tag>
 
 =head1 AUTHOR
 

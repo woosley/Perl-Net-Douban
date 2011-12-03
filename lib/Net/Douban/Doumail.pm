@@ -141,7 +141,9 @@ EOF
 _build_method(__PACKAGE__, %api_hash);
 1;
 
+__END__
 =pod
+
 =head1 NAME
 
     Net::Douban::Doumail
@@ -193,7 +195,7 @@ argument:   mailIDs => [ ... ]
 =head1 SEE ALSO
 
 L<Net::Douban> L<Net::Douban::Gift> L<Moose>
-L<http://www.douban.com/service/apidoc/reference/collection>
+L<http://www.douban.com/service/apidoc/reference/doumail>
 
 =head1 AUTHOR
 

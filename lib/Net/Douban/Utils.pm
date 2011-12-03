@@ -73,3 +73,36 @@ sub build_url {
 }
 1;
 
+__END__
+
+=pod
+
+=head1 NAME
+
+Net::Douban::Utils - Utils for Net::Douban
+
+=head1 SYNOPSIS
+
+    use Net::Douban::Utils
+
+=head1 DESCRIPTION
+
+M<Net::Douban::Utils> has just one exported function B<__build_method>
+
+=head1 SEE ALSO
+    
+L<Net::Douban> L<Net::Douban::Traits::Gift> L<Net::Douban::User>
+
+=head1 AUTHOR
+
+woosley.xu C<woosley.xu@gmail.com>
+
+=head1 COPYRIGHT & LICENSE
+
+This software is copyright (c) 2010 - 2011 by woosley.xu.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+

@@ -39,53 +39,46 @@ Net::Douban::User
 
 =head1 SYNOPSIS
 
-	use Net::Douban::User;
-	my $user = Net::Douban::User->new(
-		userID => 'Net-Douban',
-		apikey => '....',
-        # or
-        oauth => $consumer,
-	);
-	$user->userID('abei');
-
-	$atom = $user->get_user;
-	$atom = $user->get_friends;
-	$atom = $user->get_contacts;
-    $atom = $user->search(q => 'douban', start_index => 5, max_results => 10);
-
+    my $c = Net::Douban->new('Roles' => 'User');
+    
 =head1 DESCRIPTION
 
 Interface to douban.com API User section
 
 =head1 METHODS
 
-Those methods return a Net::Douban::Atom object which can be use to get data conveniently
-
 =over
 
 =item B<get_user>
 
-=item B<get_contacts>
+argument:   userID
+=item B<get_user_contacts>
 
-=item B<get_friends>
+argument:   userID
 
-=item B<get_auth_user>
+=item B<get_user_friends>
 
-=item B<search>
+argument:   userID
+
+=item B<search_user>
+
+argument:   userID
+
+=item B<me>
 
 =back
 
 =head1 SEE ALSO
 
-L<Net::Douban> L<Net::Douban::Atom> L<Moose> L<XML::Atom> B<http://www.douban.com/service/apidoc/reference/user>
+L<Net::Douban> L<Moose> B<http://www.douban.com/service/apidoc/reference/user>
 
 =head1 AUTHOR
 
-woosley.xu<redicaps@gmail.com>
+woosley.xu C<woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	
-Copyright (C) 2010 by Woosley.Xu
+Copyright (C) 2010 - 2011 by Woosley.Xu
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,
