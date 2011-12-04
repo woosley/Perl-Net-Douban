@@ -155,7 +155,7 @@ L<Net::Douban::Utils>
 
 =head1 AUTHOR
 
-woosley.xu C<woosley.xu@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT & LICENSE
 

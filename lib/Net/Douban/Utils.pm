@@ -95,7 +95,7 @@ L<Net::Douban> L<Net::Douban::Traits::Gift> L<Net::Douban::User>
 
 =head1 AUTHOR
 
-woosley.xu C<woosley.xu@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT & LICENSE
 

@@ -74,7 +74,7 @@ L<Net::Douban> L<Moose> B<http://www.douban.com/service/apidoc/reference/user>
 
 =head1 AUTHOR
 
-woosley.xu C<woosley.xu@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	

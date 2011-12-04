@@ -133,7 +133,7 @@ L<http://www.douban.com/service/apidoc/reference/collection>
 
 =head1 AUTHOR
 
-woosley.xu<woosley.xu@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT
 	

@@ -65,7 +65,7 @@ __END__
 
 =head1 NAME
 
-Net::Douban::Traits::Gift;
+Net::Douban::Traits::Gift - Gift for Traits
 
 =head1 SYNOPSIS
 
