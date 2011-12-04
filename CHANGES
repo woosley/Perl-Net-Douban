@@ -1,6 +1,7 @@
 1.10
     - add CHANGES
     - update POD
+    - add support for max-results and start-index
 
 1.09
     - update with new interface

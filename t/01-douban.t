@@ -1,8 +1,8 @@
 use lib './t/lib';
 use Test::Douban;
 use Test::Exception;
-use Test::More 'no_plan';
-
+use Test::More 'tests' => 6;
+use Data::Printer;
 package My::Trait;
 {
     use Moose::Role;
@@ -18,4 +18,13 @@ can_ok($b, 'get_user_review');
 my $c = Net::Douban->init(Roles => 'User');
 isa_ok($c, 'Net::Douban');
 can_ok($c, 'get_user');
+
+SKIP: {
+    skip 'set $ENV{NETWORK_TEST} to enable network tests', 1
+      unless $ENV{NETWORK_TEST};
+    $c->load_token(%{pdakeys()});
+
+    my $contacts = $c->get_user_contacts(userID => 'redicaps', 'start-index' => 1, 'max-results' => 2);  
+    is(scalar @{$contacts->{entry}}, 2, "get 2 results");
+}
 

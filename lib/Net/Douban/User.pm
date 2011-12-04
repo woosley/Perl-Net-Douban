@@ -14,6 +14,7 @@ our %api_hash = (
     get_user_contacts => {
         has_url_param => 'userID',
         path      => '/people/{userID}/contacts',
+        optional_params => [qw/start-index max-results/],
         method    => 'GET',
     },
     get_user_friends => {
