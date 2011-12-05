@@ -1,3 +1,5 @@
+1.11 
+    - fix a missing comma bug
 1.10
     - add CHANGES
     - update POD
