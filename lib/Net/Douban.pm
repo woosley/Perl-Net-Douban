@@ -146,7 +146,7 @@ hash.
 =head2 Paging
 
 Paging is support by passing argments 'start-index' and 'max-results' to
-search functions.
+search and get functions.
 
 =head1 SEE ALSO
     
