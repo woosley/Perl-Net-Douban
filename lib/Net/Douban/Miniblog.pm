@@ -9,12 +9,14 @@ our %api_hash = (
     get_user_miniblog => {
         has_url_param => 'userID',
         path          => '/people/{userID}/miniblog',
+        optional_params => [qw/start-index max-results/],
         method        => 'GET',
     },
 
     get_contact_miniblog => {
         has_url_param => 'userID',
         path          => '/people/{userID}/miniblog/contacts',
+        optional_params => [qw/start-index max-results/],
         method        => 'GET',
     },
 
@@ -38,6 +40,7 @@ EOF
     get_miniblog_comments => {
         has_url_param => 'miniblogID',
         path          => '/miniblog/{miniblogID}/comments',
+        optional_params => [qw/start-index max-results/],
         method        => 'POST',
     },
 

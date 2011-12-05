@@ -24,16 +24,19 @@ our %api_hash = (
     },
     search_music => {
         path   => '/music/subjects',
+        optional_params => [qw/start-index max-results/],
         params => ['q', 'tag'],
         method => 'GET',
     },
     search_movie => {
         path   => '/movie/subjects',
         params => ['q', 'tag'],
+        optional_params => [qw/start-index max-results/],
         method => 'GET',
     },
     search_book => {
         path   => '/book/subjects',
+        optional_params => [qw/start-index max-results/],
         params => ['q', 'tag'],
         method => 'GET',
     },

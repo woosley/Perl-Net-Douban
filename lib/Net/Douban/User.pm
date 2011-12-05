@@ -8,21 +8,26 @@ use namespace::autoclean;
 our %api_hash = (
     get_user => {
         has_url_param => 'userID',
-        path      => '/people/{userID}',
-        method    => 'GET'
+        path          => '/people/{userID}',
+        method        => 'GET'
     },
     get_user_contacts => {
-        has_url_param => 'userID',
-        path      => '/people/{userID}/contacts',
+        has_url_param   => 'userID',
+        path            => '/people/{userID}/contacts',
         optional_params => [qw/start-index max-results/],
-        method    => 'GET',
+        method          => 'GET',
     },
     get_user_friends => {
-        has_url_param => 'userID',
-        path      => '/people/{userID}/friends',
-        method    => 'GET',
+        has_url_param   => 'userID',
+        path            => '/people/{userID}/friends',
+        optional_params => [qw/start-index max-results/],
+        method          => 'GET',
     },
-    search_user => {params => 'q', path => '/people', method => 'GET'},
+    search_user => {
+        params => 'q',
+        path   => '/people',
+        method => 'GET' optional_params => [qw/start-index max-results/],
+    },
     me => {path => '/people/%40me', method => 'GET'},
 );
 

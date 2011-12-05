@@ -6,7 +6,6 @@ use MIME::Base64;
 use JSON::Any;
 use base 'Exporter';
 use namespace::autoclean;
-our $VERSION = '1.08';
 our @EXPORT = ('_build_method');
 sub _build_method {
     my ($self, %api_hash) = @_;

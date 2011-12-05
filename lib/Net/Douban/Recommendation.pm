@@ -14,12 +14,14 @@ our %api_hash = (
 
     get_user_recom => {
         path => '/people/{userID}/recommendations',
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
     },
 
     get_recom_comments => {
         path => '/recommendation/{recomID}/comments',
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
     },

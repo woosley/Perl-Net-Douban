@@ -14,7 +14,7 @@ our %api_hash = (
 
     get_user_collection => {
         path            => '/people/{userID}/collection',
-        optional_params => [qw/cat tag status updated-max updated-min/],
+        optional_params => [qw/cat tag status updated-max updated-min start-index max-results/],
         method          => 'GET',
         has_url_param   => '1',
     },

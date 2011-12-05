@@ -15,6 +15,7 @@ our %api_hash = (
     get_user_review => {
         path          => '/people/{userID}/reviews',
         method        => 'GET',
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
     },
     get_movie_review => {
@@ -23,6 +24,7 @@ our %api_hash = (
             '/movie/subject/imdb/{imdbID}/reviews'
         ],
         has_url_param => 1,
+        optional_params => [qw/start-index max-results/],
         method        => 'GET',
     },
     get_book_review => {
@@ -30,12 +32,14 @@ our %api_hash = (
             '/book/subject/{subjectID}/reviews',
             '/book/subject/isbn/{isbnID}/reviews'
         ],
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method        => 'GET',
     },
     get_music_review => {
         path          => '/music/subject/{subjectID}/reviews',
         has_url_param => 1,
+        optional_params => [qw/start-index max-results/],
         method        => 'GET',
     },
     post_review => {

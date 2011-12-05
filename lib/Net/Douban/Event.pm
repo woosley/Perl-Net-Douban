@@ -14,18 +14,21 @@ our %api_hash = (
 
     get_event_participants => {
         path => '/event/{eventID}/participants',
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
     },
 
     get_event_wishers => {
         path => '/event/{eventID}/wishers',
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
     },
 
     get_user_events => {
         path => '/people/{userID}/events',
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
     },
@@ -33,30 +36,34 @@ our %api_hash = (
     get_user_participates => {
         path => '/people/{userID}/events/participate',
         has_url_param => 1,
+        optional_params => [qw/start-index max-results/],
         method => 'GET',
     },
 
     get_user_wishes => {
         path => '/people/{userID}/events/wish',
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
     },
 
     get_user_initiates => {
         path => '/people/{userID}/events/initiate',
+        optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
     },
 
     get_location_events => {
         path => '/event/location/{locationID}',
+        optional_params => [qw/start-index max-results type/],
         has_url_param => 1,
-        optional_params => ['type'],
         method => 'GET',
     },
 
     search_events => {
         path => '/events',
+        optional_params => [qw/start-index max-results/],
         params => ['q', 'location'],
         method => 'GET',
     },

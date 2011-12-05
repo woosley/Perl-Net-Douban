@@ -8,9 +8,6 @@ use JSON::Any;
 
 requires '_restricted_request';
 
-our $VERSION = '1.08';
-
-
 has 'res_callback' => (
     is      => 'rw',
     isa     => 'CodeRef',

@@ -9,12 +9,14 @@ use namespace::autoclean;
 our %api_hash = (
     get_tags => {
         path => '/{cat}/subject/{subjectID}/tags',
+        optional_params => [qw/start-index max-results/],
         method => 'GET',
         has_url_param => 1,
     },
 
     get_user_tags => {
         path => '/people/{userID}/tags?cat={cat}',
+        optional_params => [qw/start-index max-results/],
         method => 'GET',
         has_url_param => 1,
     },

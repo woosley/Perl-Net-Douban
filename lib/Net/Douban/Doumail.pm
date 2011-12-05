@@ -8,16 +8,19 @@ use Net::Douban::Utils;
 our %api_hash = (
     get_mail_inbox => {
         path   => '/doumail/inbox',
+        optional_params => [qw/start-index max-results/],
         method => 'GET',
     },
 
     get_mail_unread => {
         path   => '/doumail/inbox/unread',
+        optional_params => [qw/start-index max-results/],
         method => 'GET',
     },
 
     get_mail_outbox => {
         path   => '/doumail/outbox',
+        optional_params => [qw/start-index max-results/],
         method => 'GET',
     },
 

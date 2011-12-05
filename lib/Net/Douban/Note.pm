@@ -16,6 +16,7 @@ our %api_hash = (
     get_user_notes => {
         has_url_param => 1,
         path      => '/people/{userID}/notes',
+        optional_params => [qw/start-index max-results/],
         method    => 'GET',
     },
 
