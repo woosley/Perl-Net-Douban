@@ -26,7 +26,8 @@ our %api_hash = (
     search_user => {
         params => 'q',
         path   => '/people',
-        method => 'GET' optional_params => [qw/start-index max-results/],
+        method => 'GET',
+        optional_params => [qw/start-index max-results/],
     },
     me => {path => '/people/%40me', method => 'GET'},
 );
