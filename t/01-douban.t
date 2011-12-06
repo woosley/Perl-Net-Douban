@@ -2,7 +2,6 @@ use lib './t/lib';
 use Test::Douban;
 use Test::Exception;
 use Test::More 'tests' => 6;
-use Data::Printer;
 package My::Trait;
 {
     use Moose::Role;
