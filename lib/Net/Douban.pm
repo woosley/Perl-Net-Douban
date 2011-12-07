@@ -1,30 +1,42 @@
 package Net::Douban;
-use namespace::autoclean;
+use URI;
 use Moose;
+use Moose::Util::TypeConstraints;
 use MooseX::StrictConstructor;
 use Carp qw/carp croak/;
 with 'Net::Douban::OAuth';
 with 'MooseX::Traits';
 with "Net::Douban::Roles";
+use namespace::autoclean;
 
-has 'api_base' =>
-    (is => 'ro', isa => 'Str', default => 'http://api.douban.com');
+subtype 'Net::Douban::URI' => as class_type('URI');
+coerce 'Net::Douban::URI' => from 'Str' => via { URI->new($_, 'http') };
+
 has 'realm' => (is => 'ro', default => 'http://www.douban.com');
 
+has 'api_base' => (
+    is      => 'rw',
+    isa     => 'Net::Douban::URI',
+    default => sub { URI->new('http://api.douban.com') },
+);
+
 has '+request_url' => (
-    is      => 'ro',
-    isa     => 'Str',
-    default => 'http://www.douban.com/service/auth/request_token',
+    is  => 'rw',
+    isa => 'Net::Douban::URI',
+    default =>
+      sub { URI->new('http://www.douban.com/service/auth/request_token') },
 );
 has '+access_url' => (
-    is      => 'ro',
-    isa     => 'Str',
-    default => 'http://www.douban.com/service/auth/access_token',
+    is  => 'rw',
+    isa => 'Net::Douban::URI',
+    default =>
+      sub { URI->new('http://www.douban.com/service/auth/access_token') },
 );
 has '+authorize_url' => (
-    is      => 'ro',
-    isa     => 'Str',
-    default => 'http://www.douban.com/service/auth/authorize',
+    is  => 'rw',
+    isa => 'Net::Douban::URI',
+    default =>
+      sub { URI->new('http://www.douban.com/service/auth/authorize') },
 );
 
 sub init {
@@ -51,7 +63,7 @@ sub init {
     delete $args{Roles};
     delete $args{Traits};
     return $class->new(%args);
-};
+}
 
 __PACKAGE__->meta->make_immutable;
 

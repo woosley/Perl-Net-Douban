@@ -26,11 +26,11 @@ sub get_request_token {
     $self->_get_token(
         'request token',
         consumer_secret => $self->consumer_secret,
-        request_url     => $self->request_url,
+        request_url     => $self->request_url->canonical,
         (@_),
     );
     $self->paste_url(
-            $self->authorize_url 
+            $self->authorize_url->canonical 
           . '/?oauth_token=' 
           . $self->request_token
           . (
@@ -48,7 +48,7 @@ sub get_access_token {
         consumer_secret => $self->consumer_secret,
         token           => $self->request_token,
         token_secret    => $self->request_token_secret,
-        request_url     => $self->access_url,
+        request_url     => $self->access_url->canonical,
         (@_),
     );
 }
@@ -119,7 +119,7 @@ sub _restricted_request {
         consumer_secret => $self->consumer_secret,
         token           => $self->access_token,
         token_secret    => $self->access_token_secret,
-        request_url     => $request_url,
+        request_url     => $request_url->canonical,
         extra_params    => $method eq 'GET' ? \%args : {},
     );
 

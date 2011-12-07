@@ -1,5 +1,10 @@
+1.12 
+    - remove Data::Printer in test suit
+    - use URI as the urls type
+
 1.11 
     - fix a missing comma bug
+
 1.10
     - add CHANGES
     - update POD

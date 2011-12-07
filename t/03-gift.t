@@ -1,7 +1,7 @@
 use lib 't/lib';
 use Test::Douban;
 use Net::Douban;
-use Test::More 'no_plan';
+use Test::More 'tests' => 9;
 use Test::Exception;
 throws_ok { Net::Douban->init() } qr/^Without/, "Missing augument";
 my $gift = Net::Douban->init("Traits" => 'Gift');

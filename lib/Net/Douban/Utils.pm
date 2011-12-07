@@ -7,6 +7,7 @@ use JSON::Any;
 use base 'Exporter';
 use namespace::autoclean;
 our @EXPORT = ('_build_method');
+
 sub _build_method {
     my ($self, %api_hash) = @_;
     for my $key (keys %api_hash) {
@@ -18,10 +19,12 @@ sub _build_method {
             my $params      = $api_hash{$key}{params};
             my $request_url = $self->api_base;
             my @args        = ($method);
+
             #my $res         = delete $args{res_callback};
 
             ## try to build request url
-            $request_url .= $self->__build_path($api_hash{$key}, \%args);
+            $request_url->path_query($self->__build_path($api_hash{$key}, \%args));
+
             push @args, $self->__build_content($api_hash{$key}, \%args);
 
             ## at list on params needed
@@ -50,13 +53,12 @@ sub _build_method {
               )
               : ();
 
-            #return $res->($self->_restricted_request(@args, @others)) if $res;
+           #return $res->($self->_restricted_request(@args, @others)) if $res;
             $self->res_callback->($self->_restricted_request(@args, @others));
         };
         $self->meta->add_method($key, $sub);
     }
 }
-
 
 sub build_url {
     my $self = shift;
