@@ -12,7 +12,7 @@ use namespace::autoclean;
 subtype 'Net::Douban::URI' => as class_type('URI');
 coerce 'Net::Douban::URI' => from 'Str' => via { URI->new($_, 'http') };
 
-has 'realm' => (is => 'ro', default => 'http://www.douban.com');
+has 'realm' => (is => 'ro', default => 'www.douban.com');
 
 has 'api_base' => (
     is      => 'rw',
