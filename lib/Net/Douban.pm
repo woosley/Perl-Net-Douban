@@ -9,8 +9,13 @@ with 'MooseX::Traits';
 with "Net::Douban::Roles";
 use namespace::autoclean;
 
-subtype 'Net::Douban::URI' => as class_type('URI');
-coerce 'Net::Douban::URI' => from 'Str' => via { URI->new($_, 'http') };
+subtype 'Net::Douban::URI',
+    as class_type('URI'),
+    ## this regex is taken from FormValidator::Lite::Constraint::URL 
+    where {$_->canonical =~ /^s?https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+$/},
+    message {'Invalid URL'};
+    
+coerce 'Net::Douban::URI' => from 'Str' => via { URI->new($_) };
 
 has 'realm' => (is => 'ro', default => 'http://www.douban.com');
 

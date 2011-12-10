@@ -1,7 +1,7 @@
 use lib './t/lib';
 use Test::Douban;
 use Test::Exception;
-use Test::More 'tests' => 6;
+use Test::More 'tests' => 8;
 package My::Trait;
 {
     use Moose::Role;
@@ -17,6 +17,9 @@ can_ok($b, 'get_user_review');
 my $c = Net::Douban->init(Roles => 'User');
 isa_ok($c, 'Net::Douban');
 can_ok($c, 'get_user');
+isa_ok($c->request_url, 'URI');
+throws_ok {$c->request_url('www.douban.com')} qr/Invalid URL/, "invalid URL";
+
 
 SKIP: {
     skip 'set $ENV{NETWORK_TEST} to enable network tests', 1

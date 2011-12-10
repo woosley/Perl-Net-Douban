@@ -14,7 +14,7 @@ for my $rw_attr (
 }
 
 for my $ro_attr (qw/request_url access_url authorize_url/) {
-    has $ro_attr => (is => 'ro');
+    has $ro_attr => (is => 'rw');
 }
 
 has 'ua' => (is => 'rw', lazy_build => 1);

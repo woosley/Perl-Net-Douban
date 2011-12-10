@@ -1,3 +1,7 @@
+1.13
+    - make URI better
+    - fix test bug
+
 1.12 
     - remove Data::Printer in test suit
     - use URI as the urls type
