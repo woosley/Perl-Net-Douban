@@ -1,3 +1,8 @@
+1.14 
+    - use douban_method to add method to package, which is how you can
+    extend moose
+    - update test suit
+
 1.13
     - make URI better
     - fix test bug

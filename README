@@ -4,6 +4,10 @@
 
 Net::Douban - Perl client for douban.com
 
+=head1 VERSION
+
+version 1.13
+
 =head1 SYNOPSIS
     
     use Net::Douban;
@@ -80,12 +84,13 @@ L<HTTP::Response> object by:
     $client->res_callback(sub{....});
 
 The only argument for this callback is B<$res> return from
-L<LWP::UserAgent>
+L<LWP::UserAgent>. By default, res_callback will return the decoded JSON
+hash.
 
 =head2 Paging
 
 Paging is support by passing argments 'start-index' and 'max-results' to
-search functions.
+search and get functions.
 
 =head1 SEE ALSO
     
@@ -94,7 +99,7 @@ L<Net::Douban::Utils>
 
 =head1 AUTHOR
 
-woosley.xu C<woosley.xu@gmail.com>
+woosley.xu <woosley.xu@gmail.com>
 
 =head1 COPYRIGHT & LICENSE
 
@@ -103,4 +108,3 @@ This software is copyright (c) 2010 - 2011 by woosley.xu.
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut
