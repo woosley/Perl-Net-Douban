@@ -1,6 +1,6 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More tests => 6;
+use Test::More tests => 5;
 use Test::Exception;
 
 BEGIN {
@@ -9,11 +9,7 @@ BEGIN {
 
 my $tag = Net::Douban->init(Roles => 'Tag');
 isa_ok($tag, 'Net::Douban');
-my %api_hash = %{Net::Douban::Tag::api_hash};
-
-cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");
-
-can_ok($tag, keys %api_hash);
+can_ok($tag, 'get_user_tags');
 
 SKIP: {
     skip 'set $ENV{NETWORK_TEST} to enable network tests', 2

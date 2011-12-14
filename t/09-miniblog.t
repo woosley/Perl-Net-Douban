@@ -1,6 +1,6 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More 'tests' => 7;
+use Test::More 'tests' => 6;
 use Test::Exception;
 
 BEGIN {
@@ -9,11 +9,8 @@ BEGIN {
 
 my $saying = Net::Douban->init(Roles => 'Miniblog');
 isa_ok($saying, 'Net::Douban');
-my %api_hash = %{Net::Douban::Miniblog::api_hash};
 
-cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");
-
-can_ok($saying, keys %api_hash);
+can_ok($saying, 'get_user_miniblog');
 
 SKIP: {
     skip 'set $ENV{NETWORK_TEST} to enable network tests', 3

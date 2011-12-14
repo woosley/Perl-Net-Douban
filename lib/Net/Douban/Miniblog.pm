@@ -5,58 +5,54 @@ use Carp qw/carp croak/;
 use namespace::autoclean;
 use Net::Douban::Utils;
 
-our %api_hash = (
-    get_user_miniblog => {
-        has_url_param => 'userID',
-        path          => '/people/{userID}/miniblog',
-        optional_params => [qw/start-index max-results/],
-        method        => 'GET',
-    },
+douban_method get_user_miniblog => {
+    has_url_param   => 'userID',
+    path            => '/people/{userID}/miniblog',
+    optional_params => [qw/start-index max-results/],
+    method          => 'GET',
+};
 
-    get_contact_miniblog => {
-        has_url_param => 'userID',
-        path          => '/people/{userID}/miniblog/contacts',
-        optional_params => [qw/start-index max-results/],
-        method        => 'GET',
-    },
+douban_method get_contact_miniblog => {
+    has_url_param   => 'userID',
+    path            => '/people/{userID}/miniblog/contacts',
+    optional_params => [qw/start-index max-results/],
+    method          => 'GET',
+};
 
-    post_miniblog=> {
-        path    => '/miniblog/saying',
-        method  => 'POST',
-        content_params => ['content'],
-        content => <<'EOF',
+douban_method post_miniblog => {
+    path           => '/miniblog/saying',
+    method         => 'POST',
+    content_params => ['content'],
+    content        => <<'EOF',
 PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4gPGVudHJ5IHhtbG5zOm5zMD0i
 aHR0cDovL3d3dy53My5vcmcvMjAwNS9BdG9tIiB4bWxuczpkYj0iaHR0cDovL3d3dy5kb3ViYW4u
 Y29tL3htbG5zLyI+IDxjb250ZW50Pntjb250ZW50fTwvY29udGVudD4gPC9lbnRyeT4K
 EOF
-    },
+};
 
-    delete_miniblog=> {
-        has_url_param => 'miniblogID',
-        path          => '/miniblog/{miniblogID}',
-        method        => 'DELETE',
-    },
+douban_method delete_miniblog => {
+    has_url_param => 'miniblogID',
+    path          => '/miniblog/{miniblogID}',
+    method        => 'DELETE',
+};
 
-    get_miniblog_comments => {
-        has_url_param => 'miniblogID',
-        path          => '/miniblog/{miniblogID}/comments',
-        optional_params => [qw/start-index max-results/],
-        method        => 'POST',
-    },
+douban_method get_miniblog_comments => {
+    has_url_param   => 'miniblogID',
+    path            => '/miniblog/{miniblogID}/comments',
+    optional_params => [qw/start-index max-results/],
+    method          => 'POST',
+};
 
-    post_miniblog_comment => {
-        has_url_param => 'miniblogID',
-        path          => '/miniblog/{miniblogID}/comments',
-        method        => 'POST',
-        content_params => ['content'],
-        content       => <<'EOF',
+douban_method post_miniblog_comment => {
+    has_url_param  => 'miniblogID',
+    path           => '/miniblog/{miniblogID}/comments',
+    method         => 'POST',
+    content_params => ['content'],
+    content        => <<'EOF',
 PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4gPGVudHJ5PiA8Y29udGVudD57
 Y29udGVudH08L2NvbnRlbnQ+IDwvZW50cnk+IAo=
 EOF
-    },
-);
-
-_build_method(__PACKAGE__, %api_hash);
+};
 1;
 
 __END__

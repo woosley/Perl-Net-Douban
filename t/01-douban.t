@@ -1,7 +1,7 @@
 use lib './t/lib';
 use Test::Douban;
 use Test::Exception;
-use Test::More 'tests' => 8;
+use Test::More 'tests' => 9;
 package My::Trait;
 {
     use Moose::Role;

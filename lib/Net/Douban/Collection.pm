@@ -5,34 +5,34 @@ use Carp qw/carp croak/;
 use Net::Douban::Utils;
 use namespace::autoclean;
 
-our %api_hash = (
-    get_collection => {
-        path          => '/collection/{collectionID}',
-        method        => 'GET',
-        has_url_param => '1',
-    },
+douban_method get_collection => {
+    path          => '/collection/{collectionID}',
+    method        => 'GET',
+    has_url_param => '1',
+};
 
-    get_user_collection => {
-        path            => '/people/{userID}/collection',
-        optional_params => [qw/cat tag status updated-max updated-min start-index max-results/],
-        method          => 'GET',
-        has_url_param   => '1',
-    },
+douban_method get_user_collection => {
+    path => '/people/{userID}/collection',
+    optional_params =>
+      [qw/cat tag status updated-max updated-min start-index max-results/],
+    method        => 'GET',
+    has_url_param => '1',
+};
 
-    delete_collection => {
-        path          => '/collection/{collectionID}',
-        has_url_param => '1',
-        method        => 'DELETE',
-    },
+douban_method delete_collection => {
+    path          => '/collection/{collectionID}',
+    has_url_param => '1',
+    method        => 'DELETE',
+};
 
-    put_collection => {
-        path          => '/collection/{collectionID}',
-        has_url_param => '1',
-        method        => 'PUT',
-        _build_content => \&__check_private_tag,
-        content_params =>
-          ['rating', 'content', 'subjectID', 'status', 'collectionID'],
-        content => <<'EOF',
+douban_method put_collection => {
+    path           => '/collection/{collectionID}',
+    has_url_param  => '1',
+    method         => 'PUT',
+    _build_content => \&__check_private_tag,
+    content_params =>
+      ['rating', 'content', 'subjectID', 'status', 'collectionID'],
+    content => <<'EOF',
 PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4gPGVudHJ5IHhtbG5zOm5zMD0i
 aHR0cDovL3d3dy53My5vcmcvMjAwNS9BdG9tIiB4bWxuczpkYj0iaHR0cDovL3d3dy5kb3ViYW4u
 Y29tL3htbG5zLyI+IDxpZD5odHRwOi8vYXBpLmRvdWJhbi5jb20vY29sbGVjdGlvbi97Y29sbGVj
@@ -43,14 +43,14 @@ ZD5odHRwOi8vYXBpLmRvdWJhbi5jb20vbW92aWUvc3ViamVjdC97c3ViamVjdElEfTwvaWQ+IDwv
 ZGI6c3ViamVjdD4ge3ByaXZhdGV9IDwvZW50cnk+Cg==
 EOF
 
-    },
+};
 
-    post_collection => {
-        path           => '/collection',
-        method         => 'POST',
-        content_params => ['rating', 'content', 'subjectID', 'status'],
-        _build_content => \&__check_private_tag,
-        content        => <<'EOF',
+douban_method post_collection => {
+    path           => '/collection',
+    method         => 'POST',
+    content_params => ['rating', 'content', 'subjectID', 'status'],
+    _build_content => \&__check_private_tag,
+    content        => <<'EOF',
 PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4gPGVudHJ5IHhtbG5zOm5zMD0i
 aHR0cDovL3d3dy53My5vcmcvMjAwNS9BdG9tIiB4bWxuczpkYj0iaHR0cDovL3d3dy5kb3ViYW4u
 Y29tL3htbG5zLyI+IDxkYjpzdGF0dXM+e3N0YXR1c308L2RiOnN0YXR1cz4ge3RhZ3N9IDxnZDpy
@@ -59,15 +59,14 @@ e3JhdGluZ30iIC8+IDxjb250ZW50Pntjb250ZW50fTwvY29udGVudD4gPGRiOnN1YmplY3Q+IDxp
 ZD5odHRwOi8vYXBpLmRvdWJhbi5jb20vbW92aWUvc3ViamVjdC97c3ViamVjdElEfTwvaWQ+IDwv
 ZGI6c3ViamVjdD4ge3ByaXZhdGV9IDwvZW50cnk+IAo=
 EOF
-    },
-);
+};
 
 sub __check_private_tag {
     my ($content, $args) = @_;
     if ($args->{private}) {
         my $entry = '<db:attribute name="privacy">private</db:attribute>';
         $content =~ s/{private}/$entry/g;
-    }else{
+    } else {
         my $entry = '<db:attribute name="privacy">public</db:attribute>';
         $content =~ s/{private}/$entry/g;
     }
@@ -79,7 +78,6 @@ sub __check_private_tag {
     return $content;
 }
 
-_build_method(__PACKAGE__, %api_hash);
 1;
 
 __END__

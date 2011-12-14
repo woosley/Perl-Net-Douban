@@ -5,61 +5,58 @@ use Carp qw/carp croak/;
 use Net::Douban::Utils;
 use namespace::autoclean;
 
-our %api_hash = (
+douban_method get_note => {
+    path          => '/note/{noteID}',
+    has_url_param => 1,
+    method        => 'GET',
+};
 
-    get_note => {
-        path      => '/note/{noteID}',
-        has_url_param => 1,
-        method    => 'GET',
-    },
+douban_method get_user_notes => {
+    has_url_param   => 1,
+    path            => '/people/{userID}/notes',
+    optional_params => [qw/start-index max-results/],
+    method          => 'GET',
+};
 
-    get_user_notes => {
-        has_url_param => 1,
-        path      => '/people/{userID}/notes',
-        optional_params => [qw/start-index max-results/],
-        method    => 'GET',
-    },
-
-    post_note => {
-        path           => '/notes',
-        method         => 'POST',
-        content_params => ['content', 'title'],
-        _build_content => \&__check_private_reply,
-        content        => <<'EOF',
+douban_method post_note => {
+    path           => '/notes',
+    method         => 'POST',
+    content_params => ['content', 'title'],
+    _build_content => \&__check_private_reply,
+    content        => <<'EOF',
 PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4gPGVudHJ5IHhtbG5zPSJodHRw
 Oi8vd3d3LnczLm9yZy8yMDA1L0F0b20iIHhtbG5zOmRiPSJodHRwOi8vd3d3LmRvdWJhbi5jb20v
 eG1sbnMvIj4gPHRpdGxlPnt0aXRsZX08L3RpdGxlPiA8Y29udGVudD57Y29udGVudH08L2NvbnRl
 bnQ+IHtwcml2YXRlfXtjYW5fcmVwbHl9PC9lbnRyeT4K
 EOF
-    },
+};
 
-    put_note => {
-        path           => '/note/{noteID}',
-        has_url_param => 1,
-        method         => 'PUT',
-        content_params => ['content', 'title'],
-        _build_content => \&__check_private_reply,
-        content        => <<'EOF',
+douban_method put_note => {
+    path           => '/note/{noteID}',
+    has_url_param  => 1,
+    method         => 'PUT',
+    content_params => ['content', 'title'],
+    _build_content => \&__check_private_reply,
+    content        => <<'EOF',
 PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4gPGVudHJ5IHhtbG5zPSJodHRw
 Oi8vd3d3LnczLm9yZy8yMDA1L0F0b20iIHhtbG5zOmRiPSJodHRwOi8vd3d3LmRvdWJhbi5jb20v
 eG1sbnMvIj4gPHRpdGxlPnt0aXRsZX08L3RpdGxlPiA8Y29udGVudD57Y29udGVudH08L2NvbnRl
 bnQ+IHtwcml2YXRlfXtjYW5fcmVwbHl9PC9lbnRyeT4K
 EOF
-    },
+};
 
-    delete_note => {
-        path      => '/note/{noteID}',
-        has_url_param => 1,
-        method    => 'DELETE',
-    },
-);
+douban_method delete_note => {
+    path          => '/note/{noteID}',
+    has_url_param => 1,
+    method        => 'DELETE',
+};
 
 sub __check_private_reply {
     my ($content, $args) = @_;
     if ($args->{private}) {
         my $entry = '<db:attribute name="privacy">private</db:attribute>';
         $content =~ s/{private}/$entry/g;
-    } else{
+    } else {
         my $entry = '<db:attribute name="privacy">public</db:attribute>';
         $content =~ s/{private}/$entry/g;
     }
@@ -73,7 +70,6 @@ sub __check_private_reply {
     return $content;
 }
 
-_build_method(__PACKAGE__, %api_hash);
 1;
 
 __END__

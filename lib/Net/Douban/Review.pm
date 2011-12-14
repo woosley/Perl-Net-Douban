@@ -1,52 +1,49 @@
 package Net::Douban::Review;
 
 use Moose::Role;
-use MooseX::StrictConstructor;
-use Carp qw/carp croak/;
 use namespace::autoclean;
 use Net::Douban::Utils;
 
-our %api_hash = (
-    get_review => {
-        path          => '/review/{reviewID}',
-        has_url_param => 1,
-        method        => 'GET',
-    },
-    get_user_review => {
-        path          => '/people/{userID}/reviews',
-        method        => 'GET',
-        optional_params => [qw/start-index max-results/],
-        has_url_param => 1,
-    },
-    get_movie_review => {
-        path => [
-            '/movie/subject/{subjectID}/reviews',
-            '/movie/subject/imdb/{imdbID}/reviews'
-        ],
-        has_url_param => 1,
-        optional_params => [qw/start-index max-results/],
-        method        => 'GET',
-    },
-    get_book_review => {
-        path => [
-            '/book/subject/{subjectID}/reviews',
-            '/book/subject/isbn/{isbnID}/reviews'
-        ],
-        optional_params => [qw/start-index max-results/],
-        has_url_param => 1,
-        method        => 'GET',
-    },
-    get_music_review => {
-        path          => '/music/subject/{subjectID}/reviews',
-        has_url_param => 1,
-        optional_params => [qw/start-index max-results/],
-        method        => 'GET',
-    },
-    post_review => {
-        path           => '/reviews',
-        method         => 'POST',
-        content_params => ['subjectID', 'content', 'rating', 'title'],
-        content        => <<'EOF',
+douban_method get_review => {
+    path          => '/review/{reviewID}',
+    has_url_param => 1,
+    method        => 'GET',
+};
+douban_method get_user_review => {
+    path            => '/people/{userID}/reviews',
+    method          => 'GET',
+    optional_params => [qw/start-index max-results/],
+    has_url_param   => 1,
+};
+douban_method get_movie_review => {
+    path => [
+        '/movie/subject/{subjectID}/reviews',
+        '/movie/subject/imdb/{imdbID}/reviews'
+    ],
+    has_url_param   => 1,
+    optional_params => [qw/start-index max-results/],
+    method          => 'GET',
+};
+douban_method get_book_review => {
+    path => [
+        '/book/subject/{subjectID}/reviews',
+        '/book/subject/isbn/{isbnID}/reviews'
+    ],
+    optional_params => [qw/start-index max-results/],
+    has_url_param   => 1,
+    method          => 'GET',
+};
+douban_method get_music_review => {
+    path            => '/music/subject/{subjectID}/reviews',
+    has_url_param   => 1,
+    optional_params => [qw/start-index max-results/],
+    method          => 'GET',
+};
+douban_method post_review => {
+    path           => '/reviews',
+    method         => 'POST',
+    content_params => ['subjectID', 'content', 'rating', 'title'],
+    content        => <<'EOF',
 PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4gPGVudHJ5IHhtbG5zOm5zMD0i
 aHR0cDovL3d3dy53My5vcmcvMjAwNS9BdG9tIj4gPGRiOnN1YmplY3QgeG1sbnM6ZGI9Imh0dHA6
 Ly93d3cuZG91YmFuLmNvbS94bWxucy8iPiA8aWQ+aHR0cDovL2FwaS5kb3ViYW4uY29tL21vdmll
@@ -55,15 +52,14 @@ fTwvY29udGVudD4gPGdkOnJhdGluZyB4bWxuczpnZD0iaHR0cDovL3NjaGVtYXMuZ29vZ2xlLmNv
 bS9nLzIwMDUiIHZhbHVlPSJ7cmF0aW5nfSIgPjwvZ2Q6cmF0aW5nPiA8dGl0bGU+e3RpdGxlfTwv
 dGl0bGU+PC9lbnRyeT4K
 EOF
-    },
+};
 
-    put_review => {
-        path          => '/reviews/{reviewID}',
-        method        => 'POST',
-        has_url_param => 1,
-        content_params =>
-          ['subjectID', 'reviewID', 'title', 'content', 'rating'],
-        content => <<'EOF',
+douban_method put_review => {
+    path           => '/reviews/{reviewID}',
+    method         => 'POST',
+    has_url_param  => 1,
+    content_params => ['subjectID', 'reviewID', 'title', 'content', 'rating'],
+    content        => <<'EOF',
 PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz48ZW50cnkgeG1sbnM6bnMwPSJo
 dHRwOi8vd3d3LnczLm9yZy8yMDA1L0F0b20iPjxpZD5odHRwOi8vYXBpLmRvdWJhbi5jb20vcmV2
 aWV3L3tyZXZpZXdJRH08L2lkPjxkYjpzdWJqZWN0IHhtbG5zOmRiPSJodHRwOi8vd3d3LmRvdWJh
@@ -73,16 +69,13 @@ ZDpyYXRpbmcgeG1sbnM6Z2Q9Imh0dHA6Ly9zY2hlbWFzLmdvb2dsZS5jb20vZy8yMDA1IiB2YWx1
 ZT0ie3JhdGluZ30iID48L2dkOnJhdGluZz4gPHRpdGxlPnt0aXRsZX08L3RpdGxlPjwvZW50cnk+
 Cg==
 EOF
-    },
+};
 
-    delete_review => {
-        path          => '/reviews/{reviewID}',
-        method        => 'DELETE',
-        has_url_param => 1,
-    },
-);
-
-_build_method(__PACKAGE__, %api_hash);
+douban_method delete_review => {
+    path          => '/reviews/{reviewID}',
+    method        => 'DELETE',
+    has_url_param => 1,
+};
 1;
 
 __END__

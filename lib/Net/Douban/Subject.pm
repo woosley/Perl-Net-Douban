@@ -5,44 +5,39 @@ use Carp qw/carp croak/;
 use namespace::autoclean;
 use Net::Douban::Utils;
 
-our %api_hash = (
-    get_book => {
-        path => ['/book/subject/{subjectID}', '/book/subject/isbn/{isbnID}'],
-        has_url_param => 1,
-        method        => 'GET',
-    },
-    get_movie => {
-        path =>
-          ['/movie/subject/{subjectID}', '/movie/subject/imdb/{imdbID}'],
-        has_url_param => 1,
-        method        => 'GET',
-    },
-    get_music => {
-        path          => '/music/subject/{subjectID}',
-        has_url_param => 1,
-        method        => 'GET',
-    },
-    search_music => {
-        path   => '/music/subjects',
-        optional_params => [qw/start-index max-results/],
-        params => ['q', 'tag'],
-        method => 'GET',
-    },
-    search_movie => {
-        path   => '/movie/subjects',
-        params => ['q', 'tag'],
-        optional_params => [qw/start-index max-results/],
-        method => 'GET',
-    },
-    search_book => {
-        path   => '/book/subjects',
-        optional_params => [qw/start-index max-results/],
-        params => ['q', 'tag'],
-        method => 'GET',
-    },
-);
-
-_build_method(__PACKAGE__, %api_hash);
+douban_method get_book => {
+    path => ['/book/subject/{subjectID}', '/book/subject/isbn/{isbnID}'],
+    has_url_param => 1,
+    method        => 'GET',
+};
+douban_method get_movie => {
+    path => ['/movie/subject/{subjectID}', '/movie/subject/imdb/{imdbID}'],
+    has_url_param => 1,
+    method        => 'GET',
+};
+douban_method get_music => {
+    path          => '/music/subject/{subjectID}',
+    has_url_param => 1,
+    method        => 'GET',
+};
+douban_method search_music => {
+    path            => '/music/subjects',
+    optional_params => [qw/start-index max-results/],
+    params          => ['q', 'tag'],
+    method          => 'GET',
+};
+douban_method search_movie => {
+    path            => '/movie/subjects',
+    params          => ['q', 'tag'],
+    optional_params => [qw/start-index max-results/],
+    method          => 'GET',
+};
+douban_method search_book => {
+    path            => '/book/subjects',
+    optional_params => [qw/start-index max-results/],
+    params          => ['q', 'tag'],
+    method          => 'GET',
+};
 1;
 __END__
 

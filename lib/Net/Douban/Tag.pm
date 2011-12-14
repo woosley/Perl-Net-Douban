@@ -5,24 +5,19 @@ use Moose::Role;
 use Net::Douban::Utils;
 use namespace::autoclean;
 
+douban_method get_tags => {
+    path            => '/{cat}/subject/{subjectID}/tags',
+    optional_params => [qw/start-index max-results/],
+    method          => 'GET',
+    has_url_param   => 1,
+};
 
-our %api_hash = (
-    get_tags => {
-        path => '/{cat}/subject/{subjectID}/tags',
-        optional_params => [qw/start-index max-results/],
-        method => 'GET',
-        has_url_param => 1,
-    },
-
-    get_user_tags => {
-        path => '/people/{userID}/tags?cat={cat}',
-        optional_params => [qw/start-index max-results/],
-        method => 'GET',
-        has_url_param => 1,
-    },
-);
-
-_build_method(__PACKAGE__, %api_hash);
+douban_method get_user_tags => {
+    path            => '/people/{userID}/tags?cat={cat}',
+    optional_params => [qw/start-index max-results/],
+    method          => 'GET',
+    has_url_param   => 1,
+};
 
 1;
 __END__

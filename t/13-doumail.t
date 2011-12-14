@@ -1,6 +1,6 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More tests => 7;
+use Test::More tests => 6;
 use Test::Exception;
 
 BEGIN {
@@ -9,11 +9,8 @@ BEGIN {
 
 my $mail = Net::Douban->init(Roles => 'Doumail');
 isa_ok($mail, 'Net::Douban');
-my %api_hash = %{Net::Douban::Doumail::api_hash};
 
-cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");
-
-can_ok($mail, keys %api_hash);
+can_ok($mail, 'get_mail_outbox');
 
 SKIP: {
     skip 'set $ENV{NETWORK_TEST} to enable network tests', 3

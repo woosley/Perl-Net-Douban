@@ -1,6 +1,6 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More tests => 11;
+use Test::More tests => 10;
 use Test::Exception;
 
 BEGIN {
@@ -9,11 +9,7 @@ BEGIN {
 
 my $review = Net::Douban->init(Roles => 'Review');
 isa_ok($review, 'Net::Douban');
-my %api_hash = %{Net::Douban::Review::api_hash};
-
-cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");
-
-can_ok($review, keys %api_hash);
+can_ok($review, 'get_user_review');
 
 SKIP: {
     skip 'set $ENV{NETWORK_TEST} to enable network tests', 7

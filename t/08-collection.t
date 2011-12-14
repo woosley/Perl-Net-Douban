@@ -1,6 +1,6 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More tests => 9;    # last test to print
+use Test::More tests => 8;
 use Test::Exception;
 
 BEGIN {
@@ -9,11 +9,7 @@ BEGIN {
 
 my $collection = Net::Douban->init(Roles => 'Collection');
 isa_ok($collection, 'Net::Douban');
-my %api_hash = %{Net::Douban::Collection::api_hash};
-
-cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");
-
-can_ok($collection, keys %api_hash);
+can_ok($collection, 'get_collection');
 
 SKIP: {
     skip 'set $ENV{NETWORK_TEST} to enable network tests', 5

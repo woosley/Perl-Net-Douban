@@ -1,6 +1,6 @@
 use lib './t/lib';
 use Test::Douban;
-use Test::More tests => 13;
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
@@ -9,11 +9,8 @@ BEGIN {
 
 my $event = Net::Douban->init(Roles => 'Event');
 isa_ok($event, 'Net::Douban');
-my %api_hash = %{Net::Douban::Event::api_hash};
 
-cmp_ok(scalar keys %api_hash, ">", 0, "api_hash defined");
-
-can_ok($event, keys %api_hash);
+can_ok($event, 'get_event');
 
 SKIP: {
     skip 'set $ENV{NETWORK_TEST} to enable network tests', 9

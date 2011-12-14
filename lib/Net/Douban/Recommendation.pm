@@ -5,28 +5,27 @@ use Carp qw/carp croak/;
 use namespace::autoclean;
 use Net::Douban::Utils;
 
-our %api_hash = (
-    get_recom => {
+    douban_method get_recom => {
         path => '/recommendation/{recomID}',
         has_url_param => 1,
         method => 'GET',
-    },
+    };
 
-    get_user_recom => {
+    douban_method get_user_recom => {
         path => '/people/{userID}/recommendations',
         optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
-    },
+    };
 
-    get_recom_comments => {
+    douban_method get_recom_comments => {
         path => '/recommendation/{recomID}/comments',
         optional_params => [qw/start-index max-results/],
         has_url_param => 1,
         method => 'GET',
-    },
+    };
 
-    post_recom => {
+    douban_method post_recom => {
         path => '/recommendations',
         method => 'POST',
         content_params => ['title', 'comment', 'link'],
@@ -39,15 +38,15 @@ aXRsZT57dGl0bGV9PC90aXRsZT4gPGRiOmF0dHJpYnV0ZSBuYW1lPSJjb21tZW50Ij57Y29tbWVu
 dH08L2RiOmF0dHJpYnV0ZT4gPGxpbmsgaHJlZj0ie2xpbmt9IiByZWw9InJlbGF0ZWQiIC8+PC9l
 bnRyeT4gCg==
 EOF
-    },
+    };
 
-    delete_recom => {
+    douban_method delete_recom => {
         path => '/recommendation/{recomID}',
         method => 'DELETE',
         has_url_param => 1,
-    },
+    };
 
-    post_comment => {
+    douban_method post_comment => {
         path => '/recommendation/{recomID}/comments',
         method => 'POST',
         has_url_param => 1,
@@ -56,15 +55,12 @@ EOF
 PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4gPGVudHJ5PiA8Y29udGVudD57
 Y29udGVudH08L2NvbnRlbnQ+IDwvZW50cnk+IAo=
 EOF
-    },
-    delete_comment => {
+    };
+    douban_method delete_comment => {
         path => '/recommendation/{recomID}/comment/{commentID}/',
         has_url_param => 1,
         method => 'DELETE',
-    },
-);
-
-_build_method(__PACKAGE__, %api_hash);
+    };
 1;
 
 __END__
