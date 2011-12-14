@@ -1,63 +1,80 @@
 package Net::Douban::Utils;
-
 use Carp qw/carp croak/;
-use Moose ();
 use MIME::Base64;
 use JSON::Any;
-use base 'Exporter';
 use namespace::autoclean;
-our @EXPORT = ('_build_method');
+use Moose::Exporter;
 
-sub _build_method {
-    my ($self, %api_hash) = @_;
-    for my $key (keys %api_hash) {
+Moose::Exporter->setup_import_methods(with_meta => ['douban_method']);
 
-        my $sub = sub {
-            my $self        = shift;
-            my %args        = @_;
-            my $method      = $api_hash{$key}{method};
-            my $params      = $api_hash{$key}{params};
-            my $request_url = $self->api_base;
-            my @args        = ($method);
+sub _meta_method_obj {
+    my $meta = shift;
+    Moose::Meta::Class->create_anon_class(
+        superclasses => [$meta->method_metaclass],
+        roles        => ['Net::Douban::Utils::Role'],
+        cache        => 1,
+    )->name;
+}
 
-            #my $res         = delete $args{res_callback};
+sub douban_method {
+    my ($meta, $name, @args) = @_;
+    my $code = _gen_method(@args);
+    $meta->add_method(
+        $name => _meta_method_obj($meta)->wrap(
+            $code,
+            name                => $name,
+            package_name        => $meta->name,
+            associate_metaclass => $meta,
+        ),
+    );
+}
 
-            ## try to build request url
-            $request_url->path_query($self->__build_path($api_hash{$key}, \%args));
+sub _gen_method {
+    my $options = shift;
+    return sub {
+        my $self        = shift;
+        my %args        = @_;
+        my $method      = $options->{method};
+        my $params      = $options->{params};
+        my $request_url = $self->api_base;
+        my @args        = ($method);
 
-            push @args, $self->__build_content($api_hash{$key}, \%args);
+        #my $res         = delete $args{res_callback};
 
-            ## at list on params needed
-            if ($params) {
-                my @p = ref $params ? @$params : ($params);
-                my $exists = 0;
-                for my $pp (@p) {
-                    if (exists $args{$pp}) {
-                        push @args, $pp => $args{$pp};
-                        $exists++;
-                    }
+        ## try to build request url
+        $request_url->path_query($self->__build_path($options, \%args));
+
+        push @args, $self->__build_content($options, \%args);
+
+        ## at list on params needed
+        if ($params) {
+            my @p = ref $params ? @$params : ($params);
+            my $exists = 0;
+            for my $pp (@p) {
+                if (exists $args{$pp}) {
+                    push @args, $pp => $args{$pp};
+                    $exists++;
                 }
-                croak "Missing parameters: ", join('/'), @p unless $exists;
             }
+            croak "Missing parameters: ", join('/'), @p unless $exists;
+        }
 
-            push @args, 'alt'       => 'json';
-            push @args, request_url => $request_url;
+        push @args, 'alt'       => 'json';
+        push @args, request_url => $request_url;
 
-            ## pass optional auguments to _restricted_request
-            my $optional = $api_hash{$key}{'optional_params'};
-            my @others =
-              $optional
-              ? (
-                grep {$_}
-                map { exists $args{$_} && $_ => $args{$_} } @$optional
-              )
-              : ();
+        ## pass optional auguments to _restricted_request
+        my $optional = $options->{'optional_params'};
+        my @others =
+          $optional
+          ? (
+            grep {$_}
+            map { exists $args{$_} && $_ => $args{$_} } @$optional
+          )
+          : ();
 
-           #return $res->($self->_restricted_request(@args, @others)) if $res;
-            $self->res_callback->($self->_restricted_request(@args, @others));
-        };
-        $self->meta->add_method($key, $sub);
-    }
+        #return $res->($self->_restricted_request(@args, @others)) if $res;
+        $self->res_callback->($self->_restricted_request(@args, @others));
+    };
 }
 
 sub build_url {
