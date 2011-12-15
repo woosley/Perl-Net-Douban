@@ -101,11 +101,18 @@ Net::Douban::Utils - Utils for Net::Douban
 
 =head1 SYNOPSIS
 
+    package Foo;
     use Net::Douban::Utils
-
+    # set up 'get_user' method for package Foo
+    douban_method 'get_user' => {
+        has_url_param => 'userID',
+        path          => '/people/{userID}',
+        method        => 'GET'
+    };
+    
 =head1 DESCRIPTION
 
-M<Net::Douban::Utils> has just one exported function B<__build_method>
+M<Net::Douban::Utils> has just one exported function B<douban_method>,
 
 =head1 SEE ALSO
     

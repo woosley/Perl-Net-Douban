@@ -1,110 +1,88 @@
-=pod
+NAME
+    Net::Douban - Perl client for douban.com
 
-=head1 NAME
+VERSION
+    version 1.14
 
-Net::Douban - Perl client for douban.com
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
+SYNOPSIS
+        use Net::Douban;
+        my $client = Net::Douban->init(Traits => 'Gift');
+        my $client = Net::Douban->init(Roles => [qw/User Review .../]);
+        $client->res_callback(sub{shift});
     
-    use Net::Douban;
-    my $client = Net::Douban->init(Traits => 'Gift');
-    my $client = Net::Douban->init(Roles => [qw/User Review .../]);
-    $client->res_callback(sub{shift});
-    
-    print $client->get_user_contact(userID => 'Net-Douban')->decoded_content;
+        print $client->get_user_contact(userID => 'Net-Douban')->decoded_content;
 
-=head1 DESCRIPTION
+DESCRIPTION
+    Net::Douban is a perl client wrapper on the Chinese website 'douban.com'
+    API.
 
-Net::Douban is a perl client wrapper on the Chinese website 'douban.com' API.
+METHODS
+    init
+        init is the new for "Net::Douban". it is here because of
+        "MooseX::Traits" limits
 
-=head1 METHODS
+            $client = Net::Douban->init(Traits => 'Gift');
+            $client = Net::Douban->init(Roles  => 'User');
 
-=over
+OAuth
+    Here is how to get the tokens before you can access the website
 
-=item B<init>
-
-B<init> is the B<new> for C<Net::Douban>. it is here because of
-C<MooseX::Traits> limits
-
-    $client = Net::Douban->init(Traits => 'Gift');
-    $client = Net::Douban->init(Roles  => 'User');
-
-=back
-
-=head1 OAuth
-
-Here is how to get the tokens before you can access the website
-    
-    my $c = Net::Douban->init(consumer_key =>'...', consumer_secret =>'...');
-    $c->get_request_token;
-    ## ask your customer go to this url to allow the access to his account
-    print $c->paste_url();
-    <>;
-    $c->get_access_token;
-    ## now you can save those tokens 
-    say $c->request_token, $c->request_token_secret, $c->access_token,
-        $c->access_token_secret;
+        my $c = Net::Douban->init(consumer_key =>'...', consumer_secret =>'...');
+        $c->get_request_token;
+        ## ask your customer go to this url to allow the access to his account
+        print $c->paste_url();
+        <>;
+        $c->get_access_token;
+        ## now you can save those tokens 
+        say $c->request_token, $c->request_token_secret, $c->access_token,
+            $c->access_token_secret;
    
-    ## next time you can load tokens,all tokens are needed, the key for
-    the hash is the name of the method.
-    $c->load_token(%token_hash);
+        ## next time you can load tokens,all tokens are needed, the key for
+        the hash is the name of the method.
+        $c->load_token(%token_hash);
 
-=head1 API
+API
+  Roles
+        $client = Net::Douban->init(Roles  => [qw/User Review/]);
 
-=head2 Roles
+    Roles are just individual douban API sections. You can pass Roles to the
+    constructure, then those sections are loaded to the object. Avalable
+    roles are qw/User Subject Review Collection Miniblog Note Event
+    Recommendation Review Doumail Tag/
 
-    $client = Net::Douban->init(Roles  => [qw/User Review/]);
+  Traits
+    Traits are special Roles, Right now just there is just a
+    Net::Douban::Traits::Gift, you can write your own trait, refer to
+    Net::Douban::Traits::Gift to see how to do it.
 
-B<Roles> are just individual douban  API sections. You can pass B<Roles>
-to the constructure, then those sections are loaded to the object.
-Avalable roles are qw/User Subject Review Collection Miniblog Note Event
-Recommendation Review Doumail Tag/
+    When you want to use Traits under your own namespace(that is not under
+    Net::Douban), you should pass it with a '+' in front of the name;
 
+        $c = Net::Douban->init("Traits" => '+My::Trait');
 
-=head2 Traits
+  res_callback
+    You can use your own res_callback to handle the returned HTTP::Response
+    object by:
 
-Traits are special Roles, Right now just there is just a
-L<Net::Douban::Traits::Gift>, you can write your own trait, refer to
-L<Net::Douban::Traits::Gift> to see how to do it.
+        $client->res_callback(sub{....});
 
-When you want to use Traits under your own namespace(that is not under
-Net::Douban), you should pass it with a '+' in front of the name;
+    The only argument for this callback is $res return from LWP::UserAgent.
+    By default, res_callback will return the decoded JSON hash.
 
-    $c = Net::Douban->init("Traits" => '+My::Trait');
+  Paging
+    Paging is support by passing argments 'start-index' and 'max-results' to
+    search and get functions.
 
-=head2 res_callback
+SEE ALSO
+    Net::Douban::OAuth Net::Douban::Traits::Gift Net::Douban::User
+    Net::Douban::Utils
 
-You can use your own res_callback to handle the returned
-L<HTTP::Response> object by:
+AUTHOR
+    woosley.xu <woosley.xu@gmail.com>
 
-    $client->res_callback(sub{....});
+COPYRIGHT & LICENSE
+    This software is copyright (c) 2010 - 2011 by woosley.xu.
 
-The only argument for this callback is B<$res> return from
-L<LWP::UserAgent>. By default, res_callback will return the decoded JSON
-hash.
-
-=head2 Paging
-
-Paging is support by passing argments 'start-index' and 'max-results' to
-search and get functions.
-
-=head1 SEE ALSO
-    
-L<Net::Douban::OAuth> L<Net::Douban::Traits::Gift> L<Net::Douban::User>
-L<Net::Douban::Utils>
-
-=head1 AUTHOR
-
-woosley.xu <woosley.xu@gmail.com>
-
-=head1 COPYRIGHT & LICENSE
-
-This software is copyright (c) 2010 - 2011 by woosley.xu.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 
